@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <PackageId>NatureRecorder.Data</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Authors>Dave Walker</Authors>
+    <Copyright>Copyright (c) 2020 Dave Walker</Copyright>
+    <Owners>Dave Walker</Owners>
+    <PackageProjectUrl>https://github.com/davewalker5/NatureRecorderDb</PackageProjectUrl>
+    <PackageReleaseNotes>First Release</PackageReleaseNotes>
+    <Summary>Database context and factory for the wildlife sightings recorder</Summary>
+    <PackageTags>Nature Recorder Wildlife Database Context</PackageTags>
+    <Title>Nature Recorder Data Access</Title>
+    <Description>Database context and factory for the wildlife sightings recorder</Description>
   </PropertyGroup>
 
   <ItemGroup>

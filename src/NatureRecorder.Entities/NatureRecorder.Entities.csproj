@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <PackageId>NatureRecorder.Entities</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Authors>Dave Walker</Authors>
+    <Copyright>Copyright (c) 2020 Dave Walker</Copyright>
+    <Owners>Dave Walker</Owners>
+    <PackageProjectUrl>https://github.com/davewalker5/NatureRecorderDb</PackageProjectUrl>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <Summary>Entity definitions for the wildlife sightings recorder</Summary>
+    <PackageTags>Nature Recorder Wildlife Entities</PackageTags>
+    <Title>Nature Recorder Entities</Title>
+    <Description>Entity definitions for the wildlife sightings recorder</Description>
+    <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

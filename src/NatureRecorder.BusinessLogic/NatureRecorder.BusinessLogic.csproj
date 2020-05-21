@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <PackageId>NatureRecorder.BusinessLogic</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Authors>Dave Walker</Authors>
+    <Copyright>Copyright (c) 2020 Dave Walker</Copyright>
+    <Owners>Dave Walker</Owners>
+    <PackageProjectUrl>https://github.com/davewalker5/NatureRecorderDb</PackageProjectUrl>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <Summary>Business logic for the wildlife sightings application</Summary>
+    <PackageTags>Nature Recorder Wildlife Business Logic</PackageTags>
+    <Title>Nature Recorder Business Logic</Title>
+    <Description>Business logic for the wildlife sightings application</Description>
   </PropertyGroup>
 
   <ItemGroup>
