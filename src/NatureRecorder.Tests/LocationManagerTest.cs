@@ -12,6 +12,13 @@ namespace NatureRecorder.Tests
     public class LocationManagerTest
     {
         private const string EntityName = "Bagley Wood";
+        private const string Address = "";
+        private const string City = "Kennington";
+        private const string County = "Oxfordshire";
+        private const string Postcode = "";
+        private const string Country = "United Kingdom";
+        private const decimal Latitude = 51.7810M;
+        private const decimal Longitude = 1.2611M;
         private const string AsyncEntityName = "College Lake";
 
         private NatureRecorderFactory _factory;
@@ -21,13 +28,13 @@ namespace NatureRecorder.Tests
         {
             NatureRecorderDbContext context = new NatureRecorderDbContextFactory().CreateInMemoryDbContext();
             _factory = new NatureRecorderFactory(context);
-            _factory.Locations.Add(EntityName);
+            _factory.Locations.Add(EntityName, Address, City, County, Postcode, Country, Latitude, Longitude);
         }
 
         [TestMethod]
         public void AddDuplicateTest()
         {
-            _factory.Locations.Add(EntityName);
+            _factory.Locations.Add(EntityName, "", "", "", "", "", null, null);
             Assert.AreEqual(1, _factory.Locations.List(null, 1, 100).Count());
         }
 
@@ -38,12 +45,19 @@ namespace NatureRecorder.Tests
             Assert.IsNotNull(entity);
             Assert.IsTrue(entity.Id > 0);
             Assert.AreEqual(EntityName, entity.Name);
+            Assert.AreEqual(Address, entity.Address);
+            Assert.AreEqual(City, entity.City);
+            Assert.AreEqual(County, entity.County);
+            Assert.AreEqual(Postcode, entity.Postcode);
+            Assert.AreEqual(Country, entity.Country);
+            Assert.AreEqual(Latitude, entity.Latitude);
+            Assert.AreEqual(Longitude, entity.Longitude);
         }
 
         [TestMethod]
         public async Task AddAndGetAsyncTest()
         {
-            await _factory.Locations.AddAsync(AsyncEntityName);
+            await _factory.Locations.AddAsync(AsyncEntityName, "", "", "", "", "", null, null);
             Location entity = await _factory.Locations.GetAsync(a => a.Name == EntityName);
             Assert.IsNotNull(entity);
             Assert.IsTrue(entity.Id > 0);

@@ -15,7 +15,14 @@ namespace NatureRecorder.BusinessLogic.Logic
             "Category",
             "Number",
             "Date",
-            "Location"
+            "Location",
+            "Address",
+            "City",
+            "County",
+            "Postcode",
+            "Country",
+            "Latitude",
+            "Longitude"
         };
 
         public event EventHandler<SightingDataExchangeEventArgs> RecordExport;

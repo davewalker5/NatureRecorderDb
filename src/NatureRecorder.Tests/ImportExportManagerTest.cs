@@ -35,12 +35,9 @@ namespace NatureRecorder.Tests
             _factory.Import.Import(importFilePath);
 
             IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, 100);
-            Assert.AreEqual(1, sightings.Count());
-            Assert.AreEqual("Jackdaw", sightings.First().Species.Name);
-            Assert.AreEqual("Birds", sightings.First().Species.Category.Name);
-            Assert.AreEqual(0, sightings.First().Number);
-            Assert.AreEqual(new DateTime(1996, 11, 23), sightings.First().Date);
-            Assert.AreEqual("Bagley Wood", sightings.First().Location.Name);
+            Assert.AreEqual(2, sightings.Count());
+            ConfirmJackdawSighting(sightings);
+            ConfirmLapwingSighting(sightings);
         }
 
         [TestMethod]
@@ -56,17 +53,26 @@ namespace NatureRecorder.Tests
             _factory.Export.Export(sightings, exportFilePath);
 
             // Clear the database
-            Sighting sighting = _factory.Context.Sightings.First();
-            _factory.Context.Sightings.Remove(sighting);
+            foreach (Sighting sighting in sightings)
+            {
+                _factory.Context.Sightings.Remove(sighting);
+            }
 
-            Location location = _factory.Locations.Get(l => l.Id == sighting.LocationId);
-            _factory.Context.Locations.Remove(location);
+            foreach (Location location in _factory.Locations.List(null, 1, 100))
+            {
+                _factory.Context.Locations.Remove(location);
+            }
 
-            Species species = _factory.Species.Get(s => s.Id == sighting.SpeciesId);
-            _factory.Context.Species.Remove(species);
+            foreach (Species species in _factory.Species.List(null, 1, 100))
+            {
+                _factory.Context.Species.Remove(species);
+            }
 
-            Category category = _factory.Categories.Get(c => c.Id == sighting.Species.Category.Id);
-            _factory.Context.Categories.Remove(category);
+            foreach (Category category in _factory.Categories.List(null, 1, 100))
+            {
+                _factory.Context.Categories.Remove(category);
+            }
+
             _factory.Context.SaveChanges();
 
             // Confirm the removal
@@ -78,12 +84,41 @@ namespace NatureRecorder.Tests
             // Import the exported file and validte the import
             _factory.Import.Import(exportFilePath);
             sightings = _factory.Sightings.List(null, 1, 100);
-            Assert.AreEqual(1, sightings.Count());
-            Assert.AreEqual("Jackdaw", sightings.First().Species.Name);
-            Assert.AreEqual("Birds", sightings.First().Species.Category.Name);
-            Assert.AreEqual(0, sightings.First().Number);
-            Assert.AreEqual(new DateTime(1996, 11, 23), sightings.First().Date);
-            Assert.AreEqual("Bagley Wood", sightings.First().Location.Name);
+            Assert.AreEqual(2, sightings.Count());
+            ConfirmJackdawSighting(sightings);
+            ConfirmLapwingSighting(sightings);
+        }
+
+        private void ConfirmJackdawSighting(IEnumerable<Sighting> sightings)
+        {
+            Sighting sighting = sightings.First(s => s.Species.Name == "Jackdaw");
+            Assert.AreEqual("Birds", sighting.Species.Category.Name);
+            Assert.AreEqual(0, sighting.Number);
+            Assert.AreEqual(new DateTime(1996, 11, 23), sighting.Date);
+            Assert.AreEqual("Bagley Wood", sighting.Location.Name);
+            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Address));
+            Assert.AreEqual("Kennington", sighting.Location.City);
+            Assert.AreEqual("Oxfordshire", sighting.Location.County);
+            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Postcode));
+            Assert.AreEqual("United Kingdom", sighting.Location.Country);
+            Assert.AreEqual(51.781M, sighting.Location.Latitude);
+            Assert.AreEqual(1.2611M, sighting.Location.Longitude);
+        }
+
+        private void ConfirmLapwingSighting(IEnumerable<Sighting> sightings)
+        {
+            Sighting sighting = sightings.First(s => s.Species.Name == "Lapwing");
+            Assert.AreEqual("Birds", sighting.Species.Category.Name);
+            Assert.AreEqual(0, sighting.Number);
+            Assert.AreEqual(new DateTime(2000, 1, 3), sighting.Date);
+            Assert.AreEqual("College Lake", sighting.Location.Name);
+            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Address));
+            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.City));
+            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.County));
+            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Postcode));
+            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Country));
+            Assert.IsNull(sighting.Location.Latitude);
+            Assert.IsNull(sighting.Location.Longitude);
         }
     }
 }

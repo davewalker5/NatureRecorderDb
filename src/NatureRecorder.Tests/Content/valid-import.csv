@@ -1,2 +1,3 @@
-Species,Category,Number,Date,Location
-"jackdaw","Birds","0","23/11/1996","Bagley Wood"
+Species,Category,Number,Date,Location,Address,City,County,Postcode,Country,Latitude,Longitude
+"jackdaw","Birds","0","23/11/1996","Bagley Wood",,"Kennington","Oxfordshire",,"United Kingdom",51.7810,1.2611
+"lapwing","Birds","0","03/01/2000","College Lake",,,,,,,

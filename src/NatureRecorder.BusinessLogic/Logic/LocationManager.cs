@@ -103,15 +103,38 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// Add a named location, if it doesn't already exist
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="address"></param>
+        /// <param name="city"></param>
+        /// <param name="county"></param>
+        /// <param name="postcode"></param>
+        /// <param name="country"></param>
+        /// <param name="gps"></param>
         /// <returns></returns>
-        public Location Add(string name)
+        public Location Add(string name,
+                            string address,
+                            string city,
+                            string county,
+                            string postcode,
+                            string country,
+                            decimal? latitude,
+                            decimal? longitude)
         {
             name = _textInfo.ToTitleCase(name.CleanString());
             Location location = Get(a => a.Name == name);
 
             if (location == null)
             {
-                location = new Location { Name = name };
+                location = new Location
+                {
+                    Name = name,
+                    Address = address,
+                    City = city,
+                    County = county,
+                    Postcode = postcode,
+                    Country = country,
+                    Latitude = latitude,
+                    Longitude = longitude
+                };
                 _context.Locations.Add(location);
                 _context.SaveChanges();
             }
@@ -123,15 +146,39 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// Add a named location, if it doesn't already exist
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="address"></param>
+        /// <param name="city"></param>
+        /// <param name="county"></param>
+        /// <param name="postcode"></param>
+        /// <param name="country"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
         /// <returns></returns>
-        public async Task<Location> AddAsync(string name)
+        public async Task<Location> AddAsync(string name,
+                                             string address,
+                                             string city,
+                                             string county,
+                                             string postcode,
+                                             string country,
+                                             decimal? latitude,
+                                             decimal? longitude)
         {
             name = _textInfo.ToTitleCase(name.CleanString());
             Location location = await GetAsync(a => a.Name == name);
 
             if (location == null)
             {
-                location = new Location { Name = name };
+                location = new Location
+                {
+                    Name = name,
+                    Address = address,
+                    City = city,
+                    County = county,
+                    Postcode = postcode,
+                    Country = country,
+                    Latitude = latitude,
+                    Longitude = longitude
+                };
                 await _context.Locations.AddAsync(location);
                 await _context.SaveChangesAsync();
             }

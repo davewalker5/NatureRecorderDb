@@ -147,7 +147,14 @@ namespace NatureRecorder.BusinessLogic.Logic
         {
             // Retrieve/create the location, category and species. The logic to
             // create new records or return existing ones is in these methods
-            Location location = _factory.Locations.Add(template.Location.Name);
+            Location location = _factory.Locations.Add(template.Location.Name,
+                                                       template.Location.Address,
+                                                       template.Location.City,
+                                                       template.Location.County,
+                                                       template.Location.Postcode,
+                                                       template.Location.Country,
+                                                       template.Location.Latitude,
+                                                       template.Location.Longitude);
             Species species = _factory.Species.Add(template.Species.Name, template.Species.Category.Name);
 
             // Add a new sighting
