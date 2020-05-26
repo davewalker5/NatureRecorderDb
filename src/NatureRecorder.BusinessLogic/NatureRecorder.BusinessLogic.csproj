@@ -13,6 +13,7 @@
     <PackageTags>Nature Recorder Wildlife Business Logic</PackageTags>
     <Title>Nature Recorder Business Logic</Title>
     <Description>Business logic for the wildlife sightings application</Description>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

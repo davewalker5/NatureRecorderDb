@@ -14,6 +14,7 @@
     <Title>Nature Recorder Entities</Title>
     <Description>Entity definitions for the wildlife sightings recorder</Description>
     <PackOnBuild>true</PackOnBuild>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

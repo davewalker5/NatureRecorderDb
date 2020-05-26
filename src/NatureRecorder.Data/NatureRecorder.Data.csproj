@@ -13,6 +13,7 @@
     <PackageTags>Nature Recorder Wildlife Database Context</PackageTags>
     <Title>Nature Recorder Data Access</Title>
     <Description>Database context and factory for the wildlife sightings recorder</Description>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

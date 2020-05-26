@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Description>Database management tool for the wildlife sightings application</Description>
-    <ReleaseVersion>1.0.0.1</ReleaseVersion>
+    <ReleaseVersion>1.0.0.2</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
 
