@@ -8,9 +8,9 @@ namespace NatureRecorder.Entities.Interfaces
     {
         event EventHandler<SightingDataExchangeEventArgs> RecordImport;
 
-        IEnumerable<string> NewLocations { get; }
-        IEnumerable<string> NewSpecies { get; }
-        IEnumerable<string> NewCategories { get; }
+        IList<string> NewLocations { get; }
+        IList<string> NewSpecies { get; }
+        IList<string> NewCategories { get; }
 
         void Import(string file);
         void DetectNewLookups(string file);

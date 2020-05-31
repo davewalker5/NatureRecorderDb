@@ -19,7 +19,7 @@ namespace NatureRecorder.Manager
         /// <param name="e"></param>
         static void OnRecordImportExport(object sender, SightingDataExchangeEventArgs e)
         {
-            Console.WriteLine($"{e.RecordCount} : {e.Sighting.Species.Name}, {e.Sighting.Species.Category.Name}, {e.Sighting.Location.Name}, {e.Sighting.Date.ToShortDateString()}");
+            Console.WriteLine($"{e.RecordCount} : {e.Sighting.Date.ToShortDateString()} {e.Sighting.Species.Name} {e.Sighting.Location.Name}");
         }
 
         static void Main(string[] args)
@@ -56,7 +56,7 @@ namespace NatureRecorder.Manager
                         case OperationType.import:
                             factory.Import.RecordImport += OnRecordImportExport;
                             factory.Import.Import(op.FileName);
-                            Console.WriteLine($"Imported data from {op.FileName}");
+                            Console.WriteLine($"\nImported data from {op.FileName}");
                             break;
                         case OperationType.export:
                             // The third parameter is an arbitrary large number intended to capture all
@@ -64,7 +64,7 @@ namespace NatureRecorder.Manager
                             IEnumerable<Sighting> sightings = factory.Sightings.List(null, 1, 99999999);
                             factory.Export.RecordExport += OnRecordImportExport;
                             factory.Export.Export(sightings, op.FileName);
-                            Console.WriteLine($"Exported the database to {op.FileName}");
+                            Console.WriteLine($"\nExported the database to {op.FileName}");
                             break;
                         case OperationType.update:
                             context.Database.Migrate();

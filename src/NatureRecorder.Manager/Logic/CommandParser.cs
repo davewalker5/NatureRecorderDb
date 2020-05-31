@@ -7,7 +7,7 @@ namespace NatureRecorder.Manager.Logic
     {
         // The index into this array is one of the values from the OperationType
         // enumeration, mapping the operation to the required argument count
-        private readonly int[] _requiredArgumentCount = { 3, 3, 2, 2, 2, 1 };
+        private readonly int[] _requiredArgumentCount = { 3, 3, 2, 2, 2, 2, 1 };
 
         /// <summary>
         /// Parse the command line, extracting the operation to be performed
@@ -61,6 +61,9 @@ namespace NatureRecorder.Manager.Logic
                 case OperationType.setpassword:
                     op.UserName = args[1];
                     op.Password = args[2];
+                    break;
+                case OperationType.check:
+                    op.FileName = args[1];
                     break;
                 case OperationType.import:
                     op.FileName = args[1];

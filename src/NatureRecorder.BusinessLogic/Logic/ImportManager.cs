@@ -15,12 +15,13 @@ namespace NatureRecorder.BusinessLogic.Logic
     public class ImportManager : IImportManager
     {
         private NatureRecorderFactory _factory;
+        private readonly TextInfo _textInfo = CultureInfo.CurrentCulture.TextInfo;
 
         public event EventHandler<SightingDataExchangeEventArgs> RecordImport;
 
-        public IEnumerable<string> NewLocations { get; private set; }
-        public IEnumerable<string> NewSpecies { get; private set; }
-        public IEnumerable<string> NewCategories { get; private set; }
+        public IList<string> NewLocations { get; private set; }
+        public IList<string> NewSpecies { get; private set; }
+        public IList<string> NewCategories { get; private set; }
 
         public ImportManager(NatureRecorderFactory factory)
         {
@@ -34,7 +35,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <param name="context"></param>
         public void Import(string file)
         {
-            IEnumerable<CsvSighting> records = Read(file);
+            IList<CsvSighting> records = Read(file);
             Save(records);
         }
 
@@ -44,7 +45,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <param name="file"></param>
         public void DetectNewLookups(string file)
         {
-            IEnumerable<CsvSighting> records = Read(file);
+            IList<CsvSighting> records = Read(file);
             NewLocations = GetNewLocations(records);
             NewCategories = GetNewCategories(records);
             NewSpecies = GetNewSpecies(records);
@@ -65,16 +66,15 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        private IEnumerable<CsvSighting> Read(string file)
+        private IList<CsvSighting> Read(string file)
         {
-            IEnumerable<CsvSighting> records;
+            IList<CsvSighting> records;
 
             using (StreamReader reader = new StreamReader(file))
             {
                 using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    // Read the CSV file and iterate over its contents
-                     records = csv.GetRecords<CsvSighting>();
+                     records = csv.GetRecords<CsvSighting>().ToList();
                 }
             }
 
@@ -85,7 +85,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// Save the specified collection of CSV records to the database
         /// </summary>
         /// <param name="records"></param>
-        private void Save(IEnumerable<CsvSighting> records)
+        private void Save(IList<CsvSighting> records)
         {
             int count = 0;
             foreach (CsvSighting record in records)
@@ -105,11 +105,11 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="records"></param>
         /// <returns></returns>
-        private IEnumerable<string> GetNewLocations(IEnumerable<CsvSighting> records)
+        private IList<string> GetNewLocations(IList<CsvSighting> records)
         {
-            IEnumerable<string> locations = records.Select(r => r.Location.CleanString());
+            IEnumerable<string> locations = records.Select(r => _textInfo.ToTitleCase(r.Location.CleanString()));
             IEnumerable<string> existing = _factory.Locations.List(null, 1, 99999999).Select(l => l.Name);
-            return locations.Where(l => !existing.Contains(l));
+            return locations.Where(x => !existing.Contains(x)).ToList();
         }
 
         /// <summary>
@@ -117,11 +117,11 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="records"></param>
         /// <returns></returns>
-        private IEnumerable<string> GetNewSpecies(IEnumerable<CsvSighting> records)
+        private IList<string> GetNewSpecies(IList<CsvSighting> records)
         {
-            IEnumerable<string> species = records.Select(r => r.Species.CleanString());
+            IEnumerable<string> species = records.Select(r => _textInfo.ToTitleCase(r.Species.CleanString()));
             IEnumerable<string> existing = _factory.Species.List(null, 1, 99999999).Select(s => s.Name);
-            return species.Where(l => !existing.Contains(l));
+            return species.Where(x => !existing.Contains(x)).ToList();
         }
 
         /// <summary>
@@ -129,11 +129,11 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="records"></param>
         /// <returns></returns>
-        private IEnumerable<string> GetNewCategories(IEnumerable<CsvSighting> records)
+        private IList<string> GetNewCategories(IList<CsvSighting> records)
         {
-            IEnumerable<string> categories = records.Select(r => r.Category.CleanString());
+            IEnumerable<string> categories = records.Select(r => _textInfo.ToTitleCase(r.Category.CleanString()));
             IEnumerable<string> existing = _factory.Categories.List(null, 1, 99999999).Select(s => s.Name);
-            return categories.Where(l => !existing.Contains(l));
+            return categories.Where(x => !existing.Contains(x)).ToList();
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="values"></param>
         /// <param name="type"></param>
-        private void WriteNewLookupsToConsole(IEnumerable<string> values, string type)
+        private void WriteNewLookupsToConsole(IList<string> values, string type)
         {
             if (values.Any())
             {
