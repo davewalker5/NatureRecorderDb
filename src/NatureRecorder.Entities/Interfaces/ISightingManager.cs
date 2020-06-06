@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Reporting;
 
 namespace NatureRecorder.Entities.Interfaces
 {
@@ -23,5 +24,9 @@ namespace NatureRecorder.Entities.Interfaces
         IAsyncEnumerable<Sighting> ListByLocationAsync(int locationId, int pageNumber, int pageSize);
         IEnumerable<Sighting> ListBySpecies(int speciesId, int pageNumber, int pageSize);
         IAsyncEnumerable<Sighting> ListBySpeciesAsync(int speciesId, int pageNumber, int pageSize);
+        Summary Summarise(DateTime from, DateTime to);
+        Task<Summary> SummariseAsync(DateTime from, DateTime to);
+        Summary Summarise(DateTime date);
+        Task<Summary> SummariseAsync(DateTime date);
     }
 }

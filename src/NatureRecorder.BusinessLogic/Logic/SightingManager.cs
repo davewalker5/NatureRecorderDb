@@ -7,11 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Entities.Interfaces;
+using NatureRecorder.Entities.Reporting;
 
 namespace NatureRecorder.BusinessLogic.Logic
 {
     internal class SightingManager : ISightingManager
     {
+        public int AllSightings = 1000000000;
+
         private NatureRecorderFactory _factory;
 
         internal SightingManager(NatureRecorderFactory factory)
@@ -270,5 +273,47 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <returns></returns>
         public IAsyncEnumerable<Sighting> ListByDateAsync(DateTime from, DateTime to, int pageNumber, int pageSize)
                 => ListAsync(s => (s.Date >= from) && (s.Date <= to), pageNumber, pageSize);
+
+        /// <summary>
+        /// Generate a sightings summary for the specified date range
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public Summary Summarise(DateTime from, DateTime to)
+            => new Summary { Sightings = ListByDate(from, to, 1, AllSightings) };
+
+        /// <summary>
+        /// Generate a sightings summary for the specified date range
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public async Task<Summary> SummariseAsync(DateTime from, DateTime to)
+            =>  new Summary { Sightings = await ListByDateAsync(from, to, 1, AllSightings).ToListAsync() };
+
+        /// <summary>
+        /// Generate a sightings summary for the specified date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public Summary Summarise(DateTime date)
+        {
+            DateTime from = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            DateTime to = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+            return new Summary { Sightings = ListByDate(from, to, 1, AllSightings) };
+        }
+
+        /// <summary>
+        /// Generate a sightings summary for the specified date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<Summary> SummariseAsync(DateTime date)
+        {
+            DateTime from = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            DateTime to = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+            return new Summary { Sightings = await ListByDateAsync(from, to, 1, AllSightings).ToListAsync() };
+        }
     }
 }

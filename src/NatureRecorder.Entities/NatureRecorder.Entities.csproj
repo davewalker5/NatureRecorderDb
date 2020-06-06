@@ -28,5 +28,6 @@
     <Folder Include="Db\" />
     <Folder Include="Interfaces\" />
     <Folder Include="DataExchange\" />
+    <Folder Include="Reporting\" />
   </ItemGroup>
 </Project>

@@ -109,7 +109,9 @@ namespace NatureRecorder.BusinessLogic.Logic
         {
             IEnumerable<string> locations = records.Select(r => _textInfo.ToTitleCase(r.Location.CleanString()));
             IEnumerable<string> existing = _factory.Locations.List(null, 1, 99999999).Select(l => l.Name);
-            return locations.Where(x => !existing.Contains(x)).ToList();
+            return locations.Where(x => !existing.Contains(x))
+                            .Distinct()
+                            .ToList();
         }
 
         /// <summary>
@@ -121,7 +123,9 @@ namespace NatureRecorder.BusinessLogic.Logic
         {
             IEnumerable<string> species = records.Select(r => _textInfo.ToTitleCase(r.Species.CleanString()));
             IEnumerable<string> existing = _factory.Species.List(null, 1, 99999999).Select(s => s.Name);
-            return species.Where(x => !existing.Contains(x)).ToList();
+            return species.Where(x => !existing.Contains(x))
+                          .Distinct()
+                          .ToList();
         }
 
         /// <summary>
@@ -133,7 +137,9 @@ namespace NatureRecorder.BusinessLogic.Logic
         {
             IEnumerable<string> categories = records.Select(r => _textInfo.ToTitleCase(r.Category.CleanString()));
             IEnumerable<string> existing = _factory.Categories.List(null, 1, 99999999).Select(s => s.Name);
-            return categories.Where(x => !existing.Contains(x)).ToList();
+            return categories.Where(x => !existing.Contains(x))
+                             .Distinct()
+                             .ToList();
         }
 
         /// <summary>

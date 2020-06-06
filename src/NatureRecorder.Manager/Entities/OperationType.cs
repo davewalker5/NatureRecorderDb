@@ -8,6 +8,8 @@
         export = 3,
         check = 4,
         import = 5,
-        update = 6
+        summary = 6,
+        report = 7,
+        update = 8
     }
 }
