@@ -27,10 +27,7 @@
     <Folder Include="Content\" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Content\valid-import.csv" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="**/*">
+    <Content Include="Content\valid-import.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

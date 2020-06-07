@@ -8,7 +8,7 @@ namespace NatureRecorder.Manager.Logic
     {
         // The index into this array is one of the values from the OperationType
         // enumeration, mapping the operation to the required argument count
-        private readonly int[] _requiredArgumentCount = { 3, 3, 2, 2, 2, 2, 2, 3, 1 };
+        private readonly int[] _requiredArgumentCount = { 3, 3, 2, 2, 2, 2, 2, 3, 1, 1 };
 
         /// <summary>
         /// Parse the command line, extracting the operation to be performed

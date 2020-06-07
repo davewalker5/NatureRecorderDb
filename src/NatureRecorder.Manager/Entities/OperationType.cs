@@ -10,6 +10,7 @@
         import = 5,
         summary = 6,
         report = 7,
-        update = 8
+        update = 8,
+        help = 9
     }
 }

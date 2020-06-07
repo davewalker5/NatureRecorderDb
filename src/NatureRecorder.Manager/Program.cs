@@ -18,16 +18,8 @@ namespace NatureRecorder.Manager
             }
             else
             {
-                string executable = AppDomain.CurrentDomain.FriendlyName;
-                Console.WriteLine("Usage:");
-                Console.WriteLine($"[1] {executable} add username password");
-                Console.WriteLine($"[2] {executable} setpassword username password");
-                Console.WriteLine($"[3] {executable} delete username");
-                Console.WriteLine($"[4] {executable} check csv_file_path");
-                Console.WriteLine($"[5] {executable} import csv_file_path");
-                Console.WriteLine($"[6] {executable} export csv_file_path");
-                Console.WriteLine($"[7] {executable} summary yyyy-mm-dd");
-                Console.WriteLine($"[8] {executable} update");
+                op = new Operation { Type = OperationType.help };
+                new CommandRunner().Run(op);
             }
         }
     }

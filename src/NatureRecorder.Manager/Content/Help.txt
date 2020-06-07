@@ -1,0 +1,63 @@
+﻿NAME
+    NatureRecorder.Manager
+
+SYNOPSIS
+    NatureRecorder.Manager [function] [args ...]
+
+DESCRIPTION
+    Command-line tool for management of a Nature Recorder wildlife sightings
+    recording database.
+
+    The supported functions are as follows:
+
+    help
+        Show this help text
+
+    add username password
+        Add a user with the specified name and password to the database security
+        table. The security implementation is not used in the command line
+        utility but is present to support implementation of a REST API and UI.
+
+    setpassword username password
+        Update the password for the specified user in the database security
+        table.
+
+    delete username
+        Delete the user with the specified username.
+
+    check csv_file
+        Check the contents of the specified CSV file to see if importing the
+        data it contains would result in the creation of new locations, species
+        or categories.
+
+    import csv_file
+        Import the specified CSV file. The CSV file must have the following
+        columns:
+
+        Species     The species name
+        Category    The species category name
+        Number      The number of individuals (or 0)
+        Date        The date, in dd/mm/yyyy format
+        Location    The location name
+        Address     First line of the location address, or blank
+        City        Location city, or blank
+        County      Location county, or blank
+        Postcode    Location postcode, or blank
+        Country     Location country, or blank
+        Latitude    Latitude for the location, or blank
+        Longitude   Longitude for the location, or blank
+
+    export csv_file
+        Export the database to the specified CSV  file
+
+    summary date
+        Show a summary report for the specified date. The date must be in
+        yyyy-mm-dd format e.g. 2020-06-07
+
+    report from to
+        Show a summary report for the specified date range. The "from" and "to"
+        dates must be in yyyy-mm-dd format e.g. 2020-06-07
+
+    update
+        Apply the latest database migrations to the database to ensure all
+        table definitions are up-to-date.

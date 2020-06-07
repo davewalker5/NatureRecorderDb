@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
@@ -58,6 +60,9 @@ namespace NatureRecorder.Manager.Logic
                         break;
                     case OperationType.update:
                         UpdateDatabase();
+                        break;
+                    case OperationType.help:
+                        ShowHelp();
                         break;
                     default:
                         break;
@@ -194,6 +199,22 @@ namespace NatureRecorder.Manager.Logic
         {
             _context.Database.Migrate();
             Console.WriteLine($"Applied the latest database migrations");
+        }
+
+        private void ShowHelp()
+        {
+            string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(CommandRunner)).Location);
+            string helpFile = Path.Combine(path, "Content", "Help.txt");
+
+            using (StreamReader reader = new StreamReader(helpFile))
+            {
+                Console.WriteLine();
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    Console.WriteLine(line);
+                }
+            }
         }
 
         /// <summary>
