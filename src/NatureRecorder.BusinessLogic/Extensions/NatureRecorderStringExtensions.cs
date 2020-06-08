@@ -2,7 +2,7 @@
 
 namespace NatureRecorder.BusinessLogic.Extensions
 {
-    public static class FlightRecorderStringExtensions
+    public static class NatureRecorderStringExtensions
     {
         public static string CleanString(this string input)
         {

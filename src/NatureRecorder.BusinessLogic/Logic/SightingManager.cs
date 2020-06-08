@@ -13,8 +13,6 @@ namespace NatureRecorder.BusinessLogic.Logic
 {
     internal class SightingManager : ISightingManager
     {
-        public int AllSightings = 1000000000;
-
         private NatureRecorderFactory _factory;
 
         internal SightingManager(NatureRecorderFactory factory)
@@ -281,7 +279,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <param name="to"></param>
         /// <returns></returns>
         public Summary Summarise(DateTime from, DateTime to)
-            => new Summary { Sightings = ListByDate(from, to, 1, AllSightings) };
+            => new Summary { Sightings = ListByDate(from, to, 1, int.MaxValue) };
 
         /// <summary>
         /// Generate a sightings summary for the specified date range
@@ -290,7 +288,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <param name="to"></param>
         /// <returns></returns>
         public async Task<Summary> SummariseAsync(DateTime from, DateTime to)
-            =>  new Summary { Sightings = await ListByDateAsync(from, to, 1, AllSightings).ToListAsync() };
+            =>  new Summary { Sightings = await ListByDateAsync(from, to, 1, int.MaxValue).ToListAsync() };
 
         /// <summary>
         /// Generate a sightings summary for the specified date
@@ -301,7 +299,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         {
             DateTime from = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
             DateTime to = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
-            return new Summary { Sightings = ListByDate(from, to, 1, AllSightings) };
+            return new Summary { Sightings = ListByDate(from, to, 1, int.MaxValue) };
         }
 
         /// <summary>
@@ -313,7 +311,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         {
             DateTime from = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
             DateTime to = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
-            return new Summary { Sightings = await ListByDateAsync(from, to, 1, AllSightings).ToListAsync() };
+            return new Summary { Sightings = await ListByDateAsync(from, to, 1, int.MaxValue).ToListAsync() };
         }
     }
 }

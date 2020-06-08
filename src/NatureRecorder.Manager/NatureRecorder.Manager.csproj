@@ -26,9 +26,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.3" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\" />
     <Folder Include="Logic\" />
     <Folder Include="Content\" />
+    <Folder Include="Commands\" />
+    <Folder Include="Commands\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json">

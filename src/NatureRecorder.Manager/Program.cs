@@ -1,5 +1,5 @@
 ﻿using System;
-using NatureRecorder.Manager.Entities;
+using NatureRecorder.Manager.Commands.Commands;
 using NatureRecorder.Manager.Logic;
 
 namespace NatureRecorder.Manager
@@ -11,15 +11,25 @@ namespace NatureRecorder.Manager
             string version = typeof(Program).Assembly.GetName().Version.ToString();
             Console.WriteLine($"Nature Recorder Database Management {version}");
 
-            Operation op = new CommandParser().ParseCommandLine(args);
-            if (op.Valid)
+            CommandRunner runner = new CommandRunner();
+            CommandParser parser = new CommandParser();
+
+            try
             {
-                new CommandRunner().Run(op);
+                parser.ParseCommandLine(args);
+
+                if (parser.Command != null)
+                {
+                    runner.Run(parser.Command, parser.Arguments);
+                }
+                else
+                {
+                    runner.Run(new HelpCommand(), null);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                op = new Operation { Type = OperationType.help };
-                new CommandRunner().Run(op);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

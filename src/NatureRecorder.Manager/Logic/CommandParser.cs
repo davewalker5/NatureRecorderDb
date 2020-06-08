@@ -1,14 +1,32 @@
 ﻿using System;
-using System.Globalization;
-using NatureRecorder.Manager.Entities;
+using System.Linq;
+using NatureRecorder.Manager.Commands;
+using NatureRecorder.Manager.Commands.Base;
+using NatureRecorder.Manager.Commands.Commands;
 
 namespace NatureRecorder.Manager.Logic
 {
     public class CommandParser
     {
-        // The index into this array is one of the values from the OperationType
-        // enumeration, mapping the operation to the required argument count
-        private readonly int[] _requiredArgumentCount = { 3, 3, 2, 2, 2, 2, 2, 3, 1, 1 };
+        private CommandBase[] _commands = new CommandBase[]
+        {
+            new AddUserCommand(),
+            new SetPasswordCommand(),
+            new DeleteUserCommand(),
+            new ExportCommand(),
+            new CheckImportCommand(),
+            new ImportCommand(),
+            new SummaryCommand(),
+            new ReportCommand(),
+            new UpdateDatabaseCommand(),
+            new HelpCommand(),
+            new ListLocationsCommand(),
+            new ListCategoriesCommand(),
+            new ListSpeciesCommand()
+        };
+
+        public CommandBase Command { get; set; }
+        public string[] Arguments { get; set; }
 
         /// <summary>
         /// Parse the command line, extracting the operation to be performed
@@ -16,90 +34,21 @@ namespace NatureRecorder.Manager.Logic
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public Operation ParseCommandLine(string[] args)
+        public void ParseCommandLine(string[] args)
         {
-            Operation op = new Operation();
-
             if (args.Length > 0)
             {
                 // Attempt to parse out the operation type from the first argument
-                if (Enum.TryParse<OperationType>(args[0], out OperationType type))
+                if (Enum.TryParse<CommandType>(args[0], out CommandType type))
                 {
-                    // Check there are sufficient arguments for this operation
-                    op.Type = type;
-                    int requiredArgumentCount = _requiredArgumentCount[(int)type];
-
-                    // All is OK at this point if the argument count is correct
-                    op.Valid = (args.Length == requiredArgumentCount);
-                    if (op.Valid)
+                    // Find the first instance of a command of that type
+                    Command = _commands.FirstOrDefault(c => c.Type == type);
+                    if (Command != null)
                     {
-                        // Extract the arguments
-                        AssignOperationParameters(op, args);
+                        // Extract the arguments, excluding the first which is the command name
+                        Arguments = args.Skip(1).ToArray();
                     }
                 }
-            }
-
-            return op;
-        }
-
-        /// <summary>
-        /// For those operations that require it, assign the operation parameters
-        /// from the command line, based on the operation type
-        /// </summary>
-        /// <param name="op"></param>
-        /// <param name="args"></param>
-        private void AssignOperationParameters(Operation op, string[] args)
-        {
-            switch (op.Type)
-            {
-                case OperationType.add:
-                    op.UserName = args[1];
-                    op.Password = args[2];
-                    break;
-                case OperationType.delete:
-                    op.UserName = args[1];
-                    break;
-                case OperationType.setpassword:
-                    op.UserName = args[1];
-                    op.Password = args[2];
-                    break;
-                case OperationType.check:
-                    op.FileName = args[1];
-                    break;
-                case OperationType.import:
-                    op.FileName = args[1];
-                    break;
-                case OperationType.export:
-                    op.FileName = args[1];
-                    break;
-                case OperationType.summary:
-                    DateTime date;
-                    if (DateTime.TryParseExact(args[1], Operation.DateFormat, null, DateTimeStyles.None, out date))
-                    {
-                        op.From = date;
-                        op.To = date;
-                    }
-                    else
-                    {
-                        op.Valid = false;
-                    }
-                    break;
-                case OperationType.report:
-                    DateTime from;
-                    DateTime to;
-                    if (DateTime.TryParseExact(args[1], Operation.DateFormat, null, DateTimeStyles.None, out from) &&
-                        DateTime.TryParseExact(args[2], Operation.DateFormat, null, DateTimeStyles.None, out to))
-                    {
-                        op.From = from;
-                        op.To = to;
-                    }
-                    else
-                    {
-                        op.Valid = false;
-                    }
-                    break;
-                default:
-                    break;
             }
         }
     }
