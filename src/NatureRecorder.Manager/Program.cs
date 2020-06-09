@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using NatureRecorder.Manager.Logic;
 
 namespace NatureRecorder.Manager
@@ -7,7 +8,7 @@ namespace NatureRecorder.Manager
     {
         public static void Main(string[] args)
         {
-            string version = typeof(Program).Assembly.GetName().Version.ToString();
+            Version version = typeof(Program).Assembly.GetName().Version;
             Console.WriteLine($"Nature Recorder Database Management {version}");
             Interpreter.Instance().RunCommandLine(args);
         }

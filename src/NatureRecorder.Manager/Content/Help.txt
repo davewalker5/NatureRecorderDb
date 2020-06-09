@@ -13,22 +13,30 @@ DESCRIPTION
     help
         Show this help text
 
-    add [username] [password]
+    adduser [username] [password]
         Add a user with the specified name and password to the database security
         table. The security implementation is not used in the command line
-        utility but is present to support implementation of a REST API and UI.
+        utility but is present to support implementation of a REST API and UI
 
-    setpassword [username] [password]
-        Update the password for the specified user in the database security
-        table.
-
-    delete [username]
-        Delete the user with the specified username.
+    categories
+        List all the species categories in the database
 
     check [file]
         Check the contents of the specified CSV file to see if importing the
         data it contains would result in the creation of new locations, species
-        or categories.
+        or categories
+
+    connection
+        Show the database connection details
+
+    deleteuser [username]
+        Delete the user with the specified username
+
+    exit
+        Exit interactive mode
+
+    export [file]
+        Export the database to the specified CSV  file
 
     import [file]
         Import the specified CSV file. The CSV file must have the following
@@ -47,25 +55,27 @@ DESCRIPTION
         Latitude    Latitude for the location, or blank
         Longitude   Longitude for the location, or blank
 
-    export [file]
-        Export the database to the specified CSV  file
+    interactive
+        Enter interactive mode. The application will continue to prompt for and
+        run commands until the "exit" command is used to exit
 
-    summary [date]
-        Show a summary report for the specified date. The date must be in
-        yyyy-mm-dd format e.g. 2020-06-07
+    locations
+        List all the locations in the database
 
     report [from] [to]
         Show a summary report for the specified date range. The "from" and "to"
         dates must be in yyyy-mm-dd format e.g. 2020-06-07
 
-    locations
-        List all the locations in the database
-
-    categories
-        List all the species categories in the database
+    setpassword [username] [password]
+        Update the password for the specified user in the database security
+        table
 
     species [category]
         List all the species in the database for the specified category
+
+    summary [date]
+        Show a summary report for the specified date. The date must be in
+        yyyy-mm-dd format e.g. 2020-06-07
 
     update
         Apply the latest database migrations to the database to ensure all

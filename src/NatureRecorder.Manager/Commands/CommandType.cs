@@ -2,20 +2,21 @@
 {
     public enum CommandType
     {
-        adduser,
-        setpassword,
-        deleteuser,
-        export,
-        check,
-        import,
-        summary,
-        report,
-        update,
         help,
-        locations,
+        adduser,
         categories,
-        species,
+        check,
+        connection,
+        deleteuser,
+        exit,
+        export,
+        import,
         interactive,
-        exit
+        locations,
+        report,
+        setpassword,
+        species,
+        summary,
+        update
     }
 }

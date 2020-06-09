@@ -4,9 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Description>Database management tool for the wildlife sightings application</Description>
-    <ReleaseVersion>1.0.0.3</ReleaseVersion>
-    <SynchReleaseVersion>false</SynchReleaseVersion>
-    <PackageVersion>1.0.0.3</PackageVersion>
+    <Version>1.0.0.4</Version>
+    <ReleaseVersion>1.0.0.4</ReleaseVersion>
+    <PackageVersion>1.0.0.4</PackageVersion>
     <Authors>Dave Walker</Authors>
     <Copyright>Copyright (c) 2020 Dave Walker</Copyright>
     <Owners>Dave Walker</Owners>
@@ -14,6 +14,7 @@
     <Summary>Database management tool for the wildlife sightings application</Summary>
     <Title>Nature Recorder Manager</Title>
     <PackageTags>Nature Recorder Wildlife</PackageTags>
+    <SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

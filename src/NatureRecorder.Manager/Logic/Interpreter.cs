@@ -24,7 +24,8 @@ namespace NatureRecorder.Manager.Logic
             new ListCategoriesCommand(),
             new ListSpeciesCommand(),
             new InteractiveShellCommand(),
-            new ExitCommand()
+            new ExitCommand(),
+            new ConnectionCommand()
         };
 
         private static Interpreter _instance = null;
