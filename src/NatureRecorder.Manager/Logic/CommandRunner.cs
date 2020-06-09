@@ -8,11 +8,13 @@ namespace NatureRecorder.Manager.Logic
     public class CommandRunner
     {
         private readonly NatureRecorderFactory _factory;
+        private readonly CommandContext _context;
 
-        public CommandRunner()
+        public CommandRunner(CommandContext commandContext)
         {
             NatureRecorderDbContext context = new NatureRecorderDbContextFactory().CreateDbContext(null);
             _factory = new NatureRecorderFactory(context);
+            _context = commandContext;
         }
 
         /// <summary>
@@ -22,7 +24,7 @@ namespace NatureRecorder.Manager.Logic
         /// <param name="arguments"></param>
         public void Run(CommandBase command, string[] arguments)
         {
-            command.Run(_factory, CommandContext.CommandLine, arguments);
+            command.Run(_factory, _context, arguments);
         }
     }
 }

@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
-    <StartArguments>check wombats.csv</StartArguments>
+    <StartArguments>interactive</StartArguments>
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
 </Project>

@@ -14,6 +14,8 @@
         help,
         locations,
         categories,
-        species
+        species,
+        interactive,
+        exit
     }
 }
