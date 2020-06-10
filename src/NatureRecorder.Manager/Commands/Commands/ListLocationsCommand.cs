@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Reporting;
 using NatureRecorder.Manager.Commands.Base;
 
 namespace NatureRecorder.Manager.Commands.Commands
@@ -25,11 +26,8 @@ namespace NatureRecorder.Manager.Commands.Commands
                 if (locations.Any())
                 {
                     Console.WriteLine($"There are {locations.Count()} locations in the database:\n");
-                    // TODO : Tabulate with full details
-                    foreach (Location location in locations.OrderBy(l => l.Name))
-                    {
-                        Console.WriteLine($"\t{location.Name}");
-                    }
+                    LocationsTable table = new LocationsTable(locations);
+                    table.PrintTable();
                 }
                 else
                 {
