@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NatureRecorder.Entities.Db;
 
@@ -56,22 +57,26 @@ namespace NatureRecorder.Entities.Reporting
         /// <summary>
         /// Tabulate the locations associated with this instance
         /// </summary>
-        public void PrintTable()
+        /// <param name="output"></param>
+        public void PrintTable(StreamWriter output)
         {
-            PrintRow(LocationHeader, AddressHeader, LatitudeHeader, LongitudeHeader, false);
-            PrintRow(RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), true);
+            PrintRow(LocationHeader, AddressHeader, LatitudeHeader, LongitudeHeader, false, output);
+            PrintRow(RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), true, output);
 
             foreach (Location location in _locations)
             {
-                PrintRow(location);
+                PrintRow(location, output);
             }
+
+            output.Flush();
         }
 
         /// <summary>
         /// Print an individual table row using the specified sighting
         /// </summary>
         /// <param name="sighting"></param>
-        private void PrintRow(Location location)
+        /// <param name="output"></param>
+        private void PrintRow(Location location, StreamWriter output)
         {
             IList<string> lines = BuildAddressLines(location);
             for (int line = 0; line < lines.Count; line++)
@@ -80,17 +85,17 @@ namespace NatureRecorder.Entities.Reporting
                 {
                     // The first line for this location includes all the location details
                     // and the first line of the address
-                    PrintRow(location.Name, lines[line], location.Latitude.ToString(), location.Longitude.ToString(), false);
+                    PrintRow(location.Name, lines[line], location.Latitude.ToString(), location.Longitude.ToString(), false, output);
                 }
                 else
                 {
                     // Subsequent lines only contain the corresponding line of the address
-                    PrintRow(" ", lines[line], " ", " ", false);
+                    PrintRow(" ", lines[line], " ", " ", false, output);
                 }
             }
 
             // End each location with a blank row
-            PrintRow(" ", " ", " ", " ", false);
+            PrintRow(" ", " ", " ", " ", false, output);
         }
 
         /// <summary>
@@ -101,17 +106,18 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <param name="isSeparatorRow"></param>
-        private void PrintRow(string location, string address, string latitude, string longitude, bool isSeparatorRow)
+        /// <param name="output"></param>
+        private void PrintRow(string location, string address, string latitude, string longitude, bool isSeparatorRow, StreamWriter output)
         {
-            Console.Write(ColumnSeparator);
-            PrintCell(_locationColumnWidth, location, isSeparatorRow);
-            Console.Write(ColumnSeparator);
-            PrintCell(_addressColumnWidth, address, isSeparatorRow);
-            Console.Write(ColumnSeparator);
-            PrintCell(_latitudeColumnWidth, latitude, isSeparatorRow);
-            Console.Write(ColumnSeparator);
-            PrintCell(_longitudeColumnWidth, longitude, isSeparatorRow);
-            Console.WriteLine(ColumnSeparator);
+            output.Write(ColumnSeparator);
+            PrintCell(_locationColumnWidth, location, isSeparatorRow, output);
+            output.Write(ColumnSeparator);
+            PrintCell(_addressColumnWidth, address, isSeparatorRow, output);
+            output.Write(ColumnSeparator);
+            PrintCell(_latitudeColumnWidth, latitude, isSeparatorRow, output);
+            output.Write(ColumnSeparator);
+            PrintCell(_longitudeColumnWidth, longitude, isSeparatorRow, output);
+            output.WriteLine(ColumnSeparator);
         }
 
         /// <summary>
@@ -120,10 +126,11 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="columnWidth"></param>
         /// <param name="value"></param>
         /// <param name="isSeparatorRow"></param>
-        private void PrintCell(int columnWidth, string value, bool isSeparatorRow)
+        /// <param name="output"></param>
+        private void PrintCell(int columnWidth, string value, bool isSeparatorRow, StreamWriter output)
         {
             char paddingCharacter = (isSeparatorRow) ? RowSeparator : ' ';
-            Console.Write($"{_padding}{value.PadRight(columnWidth, paddingCharacter)}{_padding}");
+            output.Write($"{_padding}{value.PadRight(columnWidth, paddingCharacter)}{_padding}");
         }
 
         /// <summary>

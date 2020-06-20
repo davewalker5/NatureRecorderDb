@@ -13,6 +13,12 @@ DESCRIPTION
     help
         Show this help text
 
+    addcategory
+        Prompt for category details and add a new category to the database
+
+    addlocation
+        Prompt for location details and add a new location to the database
+
     adduser [username] [password]
         Add a user with the specified name and password to the database security
         table. The security implementation is not used in the command line

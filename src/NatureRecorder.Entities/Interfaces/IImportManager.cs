@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using NatureRecorder.Entities.DataExchange;
 
 namespace NatureRecorder.Entities.Interfaces
@@ -14,6 +15,6 @@ namespace NatureRecorder.Entities.Interfaces
 
         void Import(string file);
         void DetectNewLookups(string file);
-        void WriteNewLookupsToConsole();
+        void WriteNewLookupsToStream(StreamWriter output);
     }
 }

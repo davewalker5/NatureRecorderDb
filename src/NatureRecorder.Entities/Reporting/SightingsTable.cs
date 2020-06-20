@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NatureRecorder.Entities.Db;
 
@@ -48,28 +49,33 @@ namespace NatureRecorder.Entities.Reporting
         /// <summary>
         /// Tabulate the sightings associated with this instance
         /// </summary>
-        public void PrintTable()
+        /// <param name="output"></param>
+        public void PrintTable(StreamWriter output)
         {
-            PrintRow(DateHeader, LocationHeader, SpeciesHeader, CategoryHeader, false);
-            PrintRow(RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), true);
+            PrintRow(DateHeader, LocationHeader, SpeciesHeader, CategoryHeader, false, output);
+            PrintRow(RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), true, output);
 
             foreach (Sighting sighting in _sightings)
             {
-                PrintRow(sighting);
+                PrintRow(sighting, output);
             }
+
+            output.Flush();
         }
 
         /// <summary>
         /// Print an individual table row using the specified sighting
         /// </summary>
         /// <param name="sighting"></param>
-        private void PrintRow(Sighting sighting)
+        /// <param name="output"></param>
+        private void PrintRow(Sighting sighting, StreamWriter output)
         {
             PrintRow(sighting.Date.ToString(DateFormat),
                      sighting.Location.Name,
                      sighting.Species.Name,
                      sighting.Species.Category.Name,
-                     false);
+                     false,
+                     output);
         }
 
         /// <summary>
@@ -80,17 +86,18 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="species"></param>
         /// <param name="category"></param>
         /// <param name="isSeparatorRow"></param>
-        private void PrintRow(string date, string location, string species, string category, bool  isSeparatorRow)
+        /// <param name="output"></param>
+        private void PrintRow(string date, string location, string species, string category, bool  isSeparatorRow, StreamWriter output)
         {
-            Console.Write(ColumnSeparator);
-            PrintCell(_dateColumnWidth, date, isSeparatorRow);
-            Console.Write(ColumnSeparator);
-            PrintCell(_locationColumnWidth, location, isSeparatorRow);
-            Console.Write(ColumnSeparator);
-            PrintCell(_speciesColumnWidth, species, isSeparatorRow);
-            Console.Write(ColumnSeparator);
-            PrintCell(_categoryColumnWidth, category, isSeparatorRow);
-            Console.WriteLine(ColumnSeparator);
+            output.Write(ColumnSeparator);
+            PrintCell(_dateColumnWidth, date, isSeparatorRow, output);
+            output.Write(ColumnSeparator);
+            PrintCell(_locationColumnWidth, location, isSeparatorRow, output);
+            output.Write(ColumnSeparator);
+            PrintCell(_speciesColumnWidth, species, isSeparatorRow, output);
+            output.Write(ColumnSeparator);
+            PrintCell(_categoryColumnWidth, category, isSeparatorRow, output);
+            output.WriteLine(ColumnSeparator);
         }
 
         /// <summary>
@@ -99,10 +106,11 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="columnWidth"></param>
         /// <param name="value"></param>
         /// <param name="isSeparatorRow"></param>
-        private void PrintCell(int columnWidth, string value, bool isSeparatorRow)
+        /// <param name="output"></param>
+        private void PrintCell(int columnWidth, string value, bool isSeparatorRow, StreamWriter output)
         {
             char paddingCharacter = (isSeparatorRow) ? RowSeparator : ' ';
-            Console.Write($"{_padding}{value.PadRight(columnWidth, paddingCharacter)}{_padding}");
+            output.Write($"{_padding}{value.PadRight(columnWidth, paddingCharacter)}{_padding}");
         }
     }
 }

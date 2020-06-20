@@ -22,6 +22,7 @@
     <ProjectReference Include="..\NatureRecorder.BusinessLogic\NatureRecorder.BusinessLogic.csproj" />
     <ProjectReference Include="..\NatureRecorder.Data\NatureRecorder.Data.csproj" />
     <ProjectReference Include="..\NatureRecorder.Entities\NatureRecorder.Entities.csproj" />
+    <ProjectReference Include="..\NatureRecorder.Interpreter\NatureRecorder.Interpreter.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />

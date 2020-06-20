@@ -54,11 +54,12 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <summary>
         /// Write the details of lookup values to the console
         /// </summary>
-        public void WriteNewLookupsToConsole()
+        /// <param name="output"></param>
+        public void WriteNewLookupsToStream(StreamWriter output)
         {
-            WriteNewLookupsToConsole(NewLocations, "Locations");
-            WriteNewLookupsToConsole(NewCategories, "Categories");
-            WriteNewLookupsToConsole(NewSpecies, "Species");
+            WriteNewLookupsToStream(NewLocations, "Locations", output);
+            WriteNewLookupsToStream(NewCategories, "Categories", output);
+            WriteNewLookupsToStream(NewSpecies, "Species", output);
         }
 
         /// <summary>
@@ -147,19 +148,20 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="values"></param>
         /// <param name="type"></param>
-        private void WriteNewLookupsToConsole(IList<string> values, string type)
+        /// <param name="output"></param>
+        private void WriteNewLookupsToStream(IList<string> values, string type, StreamWriter output)
         {
             if (values.Any())
             {
-                Console.WriteLine($"\nDetected the following new {type}:");
+                output.WriteLine($"\nDetected the following new {type}:");
                 foreach (string value in values)
                 {
-                    Console.WriteLine($"\t{value}");
+                    output.WriteLine($"\t{value}");
                 }
             }
             else
             {
-                Console.WriteLine($"Detected no new {type}");
+                output.WriteLine($"Detected no new {type}");
             }
         }
     }
