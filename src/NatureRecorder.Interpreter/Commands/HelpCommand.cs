@@ -17,7 +17,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(HelpCommand)).Location);
                 string helpFile = Path.Combine(path, "Content", "Help.txt");

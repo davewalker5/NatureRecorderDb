@@ -1,8 +1,10 @@
-﻿using NatureRecorder.Interpreter.Base;
+﻿using System.Diagnostics.CodeAnalysis;
+using NatureRecorder.Interpreter.Base;
 using NatureRecorder.Interpreter.Entities;
 
 namespace NatureRecorder.Interpreter.Commands
 {
+    [ExcludeFromCodeCoverage]
     public class ExitCommand : CommandBase
     {
         public ExitCommand()
@@ -15,7 +17,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 // Nothing to do
             }

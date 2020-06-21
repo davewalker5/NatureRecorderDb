@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using NatureRecorder.Interpreter.Interfaces;
 
 namespace NatureRecorder.Interpreter.Logic
 {
+    [ExcludeFromCodeCoverage]
     public class ConsoleCommandReader : IInputReader
     {
         public bool Cancelled { get; private set; }

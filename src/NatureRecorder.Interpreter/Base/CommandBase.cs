@@ -23,10 +23,10 @@ namespace NatureRecorder.Interpreter.Base
         public abstract void Run(CommandContext context);
 
         /// <summary>
-        /// Return true if the context is valid
+        /// Return true if the current command mode is valid
         /// </summary>
         /// <param name="context"></param>
-        protected bool ValidForContext(CommandContext context)
+        protected bool ValidForCommandMode(CommandContext context)
         {
             bool valid = (RequiredMode == CommandMode.All) || (context.Mode == RequiredMode);
             if (!valid)

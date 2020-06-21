@@ -16,12 +16,12 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 // The date-time parser returns NULL (and displays an error message) if it
                 // can't get a date from the specified string
                 DateTime? from = GetDateFromArgument(context.Arguments[0], context.Output);
-                DateTime? to = GetDateFromArgument(context.Arguments[0], context.Output);
+                DateTime? to = GetDateFromArgument(context.Arguments[1], context.Output);
                 if ((from != null) && (to != null))
                 {
                     DateTime reportFrom = from ?? DateTime.Now;

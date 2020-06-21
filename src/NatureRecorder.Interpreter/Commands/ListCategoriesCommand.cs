@@ -18,7 +18,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 IEnumerable<Category> categories = context.Factory.Categories.List(null, 1, int.MaxValue);
                 if (categories.Any())

@@ -16,7 +16,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 context.Factory.Users.SetPassword(context.Arguments[0], context.Arguments[1]);
                 context.Output.WriteLine($"Set password for user {context.Arguments[0]}");

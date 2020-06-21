@@ -15,7 +15,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 context.Factory.Import.DetectNewLookups(context.Arguments[0]);
                 context.Factory.Import.WriteNewLookupsToStream(context.Output);

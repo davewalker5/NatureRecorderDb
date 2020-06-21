@@ -1,10 +1,11 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using NatureRecorder.Interpreter.Base;
 using NatureRecorder.Interpreter.Entities;
 
 namespace NatureRecorder.Interpreter.Commands
 {
+    [ExcludeFromCodeCoverage]
     public class UpdateDatabaseCommand : CommandBase
     {
         public UpdateDatabaseCommand()
@@ -17,7 +18,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 context.Factory.Context.Database.Migrate();
                 context.Output.WriteLine($"Applied the latest database migrations");

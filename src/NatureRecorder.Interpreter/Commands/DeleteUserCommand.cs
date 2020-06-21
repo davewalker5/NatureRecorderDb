@@ -15,7 +15,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 context.Factory.Users.DeleteUser(context.Arguments[0]);
                 context.Output.WriteLine($"Deleted user {context.Arguments[0]}");

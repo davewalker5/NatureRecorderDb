@@ -1,0 +1,4 @@
+﻿There are 1 species categories in the database:
+
+	Birds
+

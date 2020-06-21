@@ -17,7 +17,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 Category category = ReadCategory(context);
                 if (category != null)
@@ -49,7 +49,7 @@ namespace NatureRecorder.Interpreter.Commands
                 if (!context.Reader.Cancelled)
                 {
                     // Clean the string for comparison with existing locations
-                    name = name.CleanString();
+                    name = ToTitleCase(name);
 
                     // See if the location already exists. If so, print a warning
                     // and try again
@@ -85,7 +85,7 @@ namespace NatureRecorder.Interpreter.Commands
                 if (!context.Reader.Cancelled)
                 {
                     // Clean the string for comparison with existing locations
-                    name = name.CleanString();
+                    name = ToTitleCase(name);
 
                     // See if the location already exists. If so, print a warning
                     // and try again

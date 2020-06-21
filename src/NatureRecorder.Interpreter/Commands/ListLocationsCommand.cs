@@ -19,7 +19,7 @@ namespace NatureRecorder.Interpreter.Commands
 
         public override void Run(CommandContext context)
         {
-            if (ValidForContext(context) && ArgumentCountCorrect(context))
+            if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 IEnumerable<Location> locations = context.Factory.Locations.List(null, 1, int.MaxValue);
                 if (locations.Any())

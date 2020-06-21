@@ -1,0 +1,10 @@
+﻿There are 1 locations in the database:
+
+| Location     | Address        | Latitude   | Longitude  |
+| ------------ | -------------- | ---------- | ---------- |
+| Radley Lakes | Abingdon       | 51.6741263 | -1.2496157 |
+|              | Oxfordshire    |            |            |
+|              | OX14 3NE       |            |            |
+|              | United Kingdom |            |            |
+|              |                |            |            |
+
