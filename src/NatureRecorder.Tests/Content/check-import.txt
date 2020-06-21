@@ -1,0 +1,13 @@
+﻿Detected the following new Locations:
+
+    Bagley Wood
+    College Lake
+
+Detected the following new Categories:
+
+    Birds
+
+Detected the following new Species:
+
+    Jackdaw
+    Lapwing

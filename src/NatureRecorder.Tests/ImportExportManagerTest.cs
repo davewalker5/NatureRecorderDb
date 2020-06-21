@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Tests.Helpers;
 
 namespace NatureRecorder.Tests
 {
@@ -36,8 +36,8 @@ namespace NatureRecorder.Tests
 
             IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, 100);
             Assert.AreEqual(2, sightings.Count());
-            ConfirmJackdawSighting(sightings);
-            ConfirmLapwingSighting(sightings);
+            TestHelpers.ConfirmJackdawSighting(sightings);
+            TestHelpers.ConfirmLapwingSighting(sightings);
         }
 
         [TestMethod]
@@ -81,44 +81,12 @@ namespace NatureRecorder.Tests
             Assert.AreEqual(0, _factory.Context.Species.Count());
             Assert.AreEqual(0, _factory.Context.Sightings.Count());
 
-            // Import the exported file and validte the import
+            // Import the exported file and validate the import
             _factory.Import.Import(exportFilePath);
             sightings = _factory.Sightings.List(null, 1, 100);
             Assert.AreEqual(2, sightings.Count());
-            ConfirmJackdawSighting(sightings);
-            ConfirmLapwingSighting(sightings);
-        }
-
-        private void ConfirmJackdawSighting(IEnumerable<Sighting> sightings)
-        {
-            Sighting sighting = sightings.First(s => s.Species.Name == "Jackdaw");
-            Assert.AreEqual("Birds", sighting.Species.Category.Name);
-            Assert.AreEqual(0, sighting.Number);
-            Assert.AreEqual(new DateTime(1996, 11, 23), sighting.Date);
-            Assert.AreEqual("Bagley Wood", sighting.Location.Name);
-            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Address));
-            Assert.AreEqual("Kennington", sighting.Location.City);
-            Assert.AreEqual("Oxfordshire", sighting.Location.County);
-            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Postcode));
-            Assert.AreEqual("United Kingdom", sighting.Location.Country);
-            Assert.AreEqual(51.781M, sighting.Location.Latitude);
-            Assert.AreEqual(1.2611M, sighting.Location.Longitude);
-        }
-
-        private void ConfirmLapwingSighting(IEnumerable<Sighting> sightings)
-        {
-            Sighting sighting = sightings.First(s => s.Species.Name == "Lapwing");
-            Assert.AreEqual("Birds", sighting.Species.Category.Name);
-            Assert.AreEqual(0, sighting.Number);
-            Assert.AreEqual(new DateTime(2000, 1, 3), sighting.Date);
-            Assert.AreEqual("College Lake", sighting.Location.Name);
-            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Address));
-            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.City));
-            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.County));
-            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Postcode));
-            Assert.IsTrue(string.IsNullOrEmpty(sighting.Location.Country));
-            Assert.IsNull(sighting.Location.Latitude);
-            Assert.IsNull(sighting.Location.Longitude);
+            TestHelpers.ConfirmJackdawSighting(sightings);
+            TestHelpers.ConfirmLapwingSighting(sightings);
         }
     }
 }

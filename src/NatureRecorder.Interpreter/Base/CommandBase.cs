@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using NatureRecorder.BusinessLogic.Extensions;
 using NatureRecorder.Interpreter.Entities;
 
@@ -31,7 +30,8 @@ namespace NatureRecorder.Interpreter.Base
             bool valid = (RequiredMode == CommandMode.All) || (context.Mode == RequiredMode);
             if (!valid)
             {
-                Console.WriteLine($"Command \"{Type}\" is not valid for context \"{context}\"");
+                context.Output.WriteLine($"Command \"{Type}\" is not valid for command mode \"{context.Mode}\"");
+                context.Output.Flush();
             }
 
             return valid;
@@ -47,7 +47,8 @@ namespace NatureRecorder.Interpreter.Base
             bool correct = (context.Arguments.Length >= MinimumArguments) && (context.Arguments.Length <= MaximiumArguments);
             if (!correct)
             {
-                Console.WriteLine($"Command \"{Type}\" expects between {MinimumArguments} and {MaximiumArguments} arguments : Received {context.Arguments.Length}");
+                context.Output.WriteLine($"Command \"{Type}\" expects between {MinimumArguments} and {MaximiumArguments} arguments : Received {context.Arguments.Length}");
+                context.Output.Flush();
             }
 
             return correct;
