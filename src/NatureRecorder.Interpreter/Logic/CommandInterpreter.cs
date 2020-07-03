@@ -29,11 +29,14 @@ namespace NatureRecorder.Interpreter.Logic
             new ExitCommand(),
             new ConnectionCommand(),
             new AddLocationCommand(),
-            new AddCategoryCommand()
+            new AddCategoryCommand(),
+            new AddSpeciesCommand(),
+            new AddSightingCommand()
         };
 
         private static CommandInterpreter _instance = null;
         private static readonly object _lock = new object();
+        private static readonly CommandRunner _runner = new CommandRunner(CommandMode.All);
 
         private CommandInterpreter()
         {
@@ -71,8 +74,8 @@ namespace NatureRecorder.Interpreter.Logic
                 try
                 {
                     // Run the command
-                    CommandRunner runner = new CommandRunner(CommandMode.CommandLine);
-                    runner.Run(command, arguments);
+                    _runner.Mode = CommandMode.CommandLine;
+                    _runner.Run(command, arguments);
                 }
                 catch (Exception ex)
                 {
@@ -90,8 +93,8 @@ namespace NatureRecorder.Interpreter.Logic
         /// </summary>
         public void RunInteractive()
         {
-            // Create a command runner 
-            CommandRunner runner = new CommandRunner(CommandMode.Interactive);
+            // Set up the command runner
+            _runner.Mode = CommandMode.Interactive;
             bool exit = false;
 
             do
@@ -110,7 +113,7 @@ namespace NatureRecorder.Interpreter.Logic
                         {
                             // Run the command and end if this was the exit command
                             exit = command.Type == CommandType.exit;
-                            runner.Run(command, arguments);
+                            _runner.Run(command, arguments);
                         }
                         catch (Exception ex)
                         {

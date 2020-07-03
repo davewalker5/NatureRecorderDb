@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
+using NatureRecorder.Entities.Db;
 using NatureRecorder.Interpreter.Base;
 using NatureRecorder.Interpreter.Entities;
 
@@ -12,13 +13,16 @@ namespace NatureRecorder.Interpreter.Logic
     public class CommandRunner
     {
         private readonly NatureRecorderFactory _factory;
-        private readonly CommandMode _mode;
+        private Location _currentLocation = null;
+        private DateTime? _currentDate = null;
+
+        public CommandMode Mode { get; set; }
 
         public CommandRunner(CommandMode mode)
         {
             NatureRecorderDbContext context = new NatureRecorderDbContextFactory().CreateDbContext(null);
             _factory = new NatureRecorderFactory(context);
-            _mode = mode;
+            Mode = mode;
         }
 
         /// <summary>
@@ -28,14 +32,26 @@ namespace NatureRecorder.Interpreter.Logic
         /// <param name="arguments"></param>
         public void Run(CommandBase command, string[] arguments)
         {
-            command.Run(new CommandContext
+            // Create a context for running the command. The current date and
+            // location are used to provide defaults during data entry, so the
+            // user doesn't have to repeatedly enter them when entering a batch
+            // of sightings
+            CommandContext context = new CommandContext
             {
                 Reader = new ConsoleCommandReader(),
                 Output = new StreamWriter(Console.OpenStandardOutput()),
                 Factory = _factory,
-                Mode = _mode,
-                Arguments = arguments
-            });
+                Mode = Mode,
+                Arguments = arguments,
+                CurrentLocation = _currentLocation,
+                CurrentDate = _currentDate
+            };
+
+            // Run the command and capture the current date and location, that
+            // may have been updated
+            command.Run(context);
+            _currentDate = context.CurrentDate;
+            _currentLocation = context.CurrentLocation;
         }
     }
 }

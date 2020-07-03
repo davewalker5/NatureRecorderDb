@@ -1,11 +1,10 @@
-﻿using NatureRecorder.BusinessLogic.Extensions;
-using NatureRecorder.Entities.Db;
+﻿using NatureRecorder.Entities.Db;
 using NatureRecorder.Interpreter.Base;
 using NatureRecorder.Interpreter.Entities;
 
 namespace NatureRecorder.Interpreter.Commands
 {
-    public class AddLocationCommand : CommandBase
+    public class AddLocationCommand : AddCommandBase
     {
         public AddLocationCommand()
         {
@@ -43,10 +42,8 @@ namespace NatureRecorder.Interpreter.Commands
         /// <returns></returns>
         private Location ReadDetails(CommandContext context)
         {
-            Location location = new Location();
-
             // Prompt for the location details
-            location.Name = ReadName(context);
+            Location location = PromptForLocation(context, null, false);
             if (context.Reader.Cancelled) return null;
 
             location.Address = context.Reader.ReadLine("Address", true);
@@ -71,42 +68,6 @@ namespace NatureRecorder.Interpreter.Commands
             if (context.Reader.Cancelled) return null;
 
             return location;
-        }
-
-        /// <summary>
-        /// Prompt for a new location name
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        private string ReadName(CommandContext context)
-        {
-            Location existing;
-            string name;
-
-            do
-            {
-                // Reset
-                existing = null;
-
-                // Read the location name
-                name = context.Reader.ReadLine("Location name", false);
-                if (!context.Reader.Cancelled)
-                {
-                    // Clean the string for comparison with existing locations
-                    name = ToTitleCase(name);
-
-                    // See if the location already exists. If so, print a warning
-                    // and try again
-                    existing = context.Factory.Locations.Get(l => l.Name == name);
-                    if (existing != null)
-                    {
-                        context.Output.WriteLine($"Location {name} already exists");
-                    }
-                }
-            }
-            while (existing != null);
-
-            return name;
         }
     }
 }

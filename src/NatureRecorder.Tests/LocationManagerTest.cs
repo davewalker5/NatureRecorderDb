@@ -35,7 +35,7 @@ namespace NatureRecorder.Tests
         public void AddDuplicateTest()
         {
             _factory.Locations.Add(EntityName, "", "", "", "", "", null, null);
-            Assert.AreEqual(1, _factory.Locations.List(null, 1, 100).Count());
+            Assert.AreEqual(1, _factory.Locations.List(null, 1, int.MaxValue).Count());
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace NatureRecorder.Tests
         [TestMethod]
         public void ListAllTest()
         {
-            IEnumerable<Location> entities = _factory.Locations.List(null, 1, 100);
+            IEnumerable<Location> entities = _factory.Locations.List(null, 1, int.MaxValue);
             Assert.AreEqual(1, entities.Count());
             Assert.AreEqual(EntityName, entities.First().Name);
         }
@@ -83,7 +83,7 @@ namespace NatureRecorder.Tests
         public async Task ListAllAsyncTest()
         {
             List<Location> entities = await _factory.Locations
-                                                    .ListAsync(null, 1, 100)
+                                                    .ListAsync(null, 1, int.MaxValue)
                                                     .ToListAsync();
             Assert.AreEqual(1, entities.Count());
             Assert.AreEqual(EntityName, entities.First().Name);
@@ -92,7 +92,7 @@ namespace NatureRecorder.Tests
         [TestMethod]
         public void FilteredListTest()
         {
-            IEnumerable<Location> entities = _factory.Locations.List(e => e.Name == EntityName, 1, 100);
+            IEnumerable<Location> entities = _factory.Locations.List(e => e.Name == EntityName, 1, int.MaxValue);
             Assert.AreEqual(1, entities.Count());
             Assert.AreEqual(EntityName, entities.First().Name);
         }
@@ -101,7 +101,7 @@ namespace NatureRecorder.Tests
         public async Task FilteredListAsyncTest()
         {
             List<Location> entities = await _factory.Locations
-                                                    .ListAsync(e => e.Name == EntityName, 1, 100)
+                                                    .ListAsync(e => e.Name == EntityName, 1, int.MaxValue)
                                                     .ToListAsync();
             Assert.AreEqual(1, entities.Count());
             Assert.AreEqual(EntityName, entities.First().Name);
@@ -110,7 +110,7 @@ namespace NatureRecorder.Tests
         [TestMethod]
         public void ListMissingTest()
         {
-            IEnumerable<Location> entities = _factory.Locations.List(e => e.Name == "Missing", 1, 100);
+            IEnumerable<Location> entities = _factory.Locations.List(e => e.Name == "Missing", 1, int.MaxValue);
             Assert.AreEqual(0, entities.Count());
         }
     }

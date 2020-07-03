@@ -19,6 +19,12 @@ DESCRIPTION
     addlocation
         Prompt for location details and add a new location to the database
 
+    addsighting
+        Prompt for sighting details and add a new sighting to the database
+
+    addspecies
+        Prompt for species details and add a new species to the database
+
     adduser [username] [password]
         Add a user with the specified name and password to the database security
         table. The security implementation is not used in the command line

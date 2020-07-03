@@ -28,13 +28,13 @@ namespace NatureRecorder.Tests
         [TestMethod]
         public void ImportTest()
         {
-            int initialCount = _factory.Sightings.List(null, 1, 100).Count();
+            int initialCount = _factory.Sightings.List(null, 1, int.MaxValue).Count();
             Assert.AreEqual(0, initialCount);
 
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
             _factory.Import.Import(importFilePath);
 
-            IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, 100);
+            IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, int.MaxValue);
             Assert.AreEqual(2, sightings.Count());
             TestHelpers.ConfirmJackdawSighting(sightings);
             TestHelpers.ConfirmLapwingSighting(sightings);
@@ -49,7 +49,7 @@ namespace NatureRecorder.Tests
 
             // Export it
             string exportFilePath = Path.GetTempFileName();
-            IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, 100);
+            IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, int.MaxValue);
             _factory.Export.Export(sightings, exportFilePath);
 
             // Clear the database
@@ -58,17 +58,17 @@ namespace NatureRecorder.Tests
                 _factory.Context.Sightings.Remove(sighting);
             }
 
-            foreach (Location location in _factory.Locations.List(null, 1, 100))
+            foreach (Location location in _factory.Locations.List(null, 1, int.MaxValue))
             {
                 _factory.Context.Locations.Remove(location);
             }
 
-            foreach (Species species in _factory.Species.List(null, 1, 100))
+            foreach (Species species in _factory.Species.List(null, 1, int.MaxValue))
             {
                 _factory.Context.Species.Remove(species);
             }
 
-            foreach (Category category in _factory.Categories.List(null, 1, 100))
+            foreach (Category category in _factory.Categories.List(null, 1, int.MaxValue))
             {
                 _factory.Context.Categories.Remove(category);
             }
@@ -83,7 +83,7 @@ namespace NatureRecorder.Tests
 
             // Import the exported file and validate the import
             _factory.Import.Import(exportFilePath);
-            sightings = _factory.Sightings.List(null, 1, 100);
+            sightings = _factory.Sightings.List(null, 1, int.MaxValue);
             Assert.AreEqual(2, sightings.Count());
             TestHelpers.ConfirmJackdawSighting(sightings);
             TestHelpers.ConfirmLapwingSighting(sightings);

@@ -29,8 +29,8 @@ namespace NatureRecorder.Tests
         public void AddDuplicateTest()
         {
             _factory.Species.Add(SpeciesName, CategoryName);
-            Assert.AreEqual(1, _factory.Species.List(null, 1, 100).Count());
-            Assert.AreEqual(1, _factory.Categories.List(null, 1, 100).Count());
+            Assert.AreEqual(1, _factory.Species.List(null, 1, int.MaxValue).Count());
+            Assert.AreEqual(1, _factory.Categories.List(null, 1, int.MaxValue).Count());
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace NatureRecorder.Tests
         [TestMethod]
         public void ListAllTest()
         {
-            IEnumerable<Species> species = _factory.Species.List(null, 1, 100);
+            IEnumerable<Species> species = _factory.Species.List(null, 1, int.MaxValue);
             Assert.AreEqual(1, species.Count());
             Assert.AreEqual(SpeciesName, species.First().Name);
             Assert.AreEqual(CategoryName, species.First().Category.Name);
@@ -82,7 +82,7 @@ namespace NatureRecorder.Tests
         public async Task ListAllAsyncTest()
         {
             List<Species> species = await _factory.Species
-                                                  .ListAsync(null, 1, 100)
+                                                  .ListAsync(null, 1, int.MaxValue)
                                                   .ToListAsync();
             Assert.AreEqual(1, species.Count());
             Assert.AreEqual(SpeciesName, species.First().Name);
@@ -93,7 +93,7 @@ namespace NatureRecorder.Tests
         public void FilteredListTest()
         {
             IEnumerable<Species> species = _factory.Species
-                                                   .List(e => e.Name == SpeciesName, 1, 100);
+                                                   .List(e => e.Name == SpeciesName, 1, int.MaxValue);
             Assert.AreEqual(1, species.Count());
             Assert.AreEqual(SpeciesName, species.First().Name);
             Assert.AreEqual(CategoryName, species.First().Category.Name);
@@ -103,7 +103,7 @@ namespace NatureRecorder.Tests
         public async Task FilteredListAsyncTest()
         {
             List<Species> models = await _factory.Species
-                                                 .ListAsync(e => e.Name == SpeciesName, 1, 100)
+                                                 .ListAsync(e => e.Name == SpeciesName, 1, int.MaxValue)
                                                  .ToListAsync();
             Assert.AreEqual(1, models.Count());
             Assert.AreEqual(SpeciesName, models.First().Name);
@@ -113,14 +113,14 @@ namespace NatureRecorder.Tests
         [TestMethod]
         public void ListMissingTest()
         {
-            IEnumerable<Species> models = _factory.Species.List(e => e.Name == "Missing", 1, 100);
+            IEnumerable<Species> models = _factory.Species.List(e => e.Name == "Missing", 1, int.MaxValue);
             Assert.AreEqual(0, models.Count());
         }
 
         [TestMethod]
         public void ListByCategoryTest()
         {
-            IEnumerable<Species> species = _factory.Species.ListByCategory(CategoryName, 1, 100);
+            IEnumerable<Species> species = _factory.Species.ListByCategory(CategoryName, 1, int.MaxValue);
             Assert.AreEqual(1, species.Count());
             Assert.AreEqual(SpeciesName, species.First().Name);
             Assert.AreEqual(CategoryName, species.First().Category.Name);
@@ -130,7 +130,7 @@ namespace NatureRecorder.Tests
         public async Task ListByCateoryAsyncTest()
         {
             List<Species> species = await _factory.Species
-                                                 .ListByCategoryAsync(CategoryName, 1, 100)
+                                                 .ListByCategoryAsync(CategoryName, 1, int.MaxValue)
                                                  .ToListAsync();
             Assert.AreEqual(1, species.Count());
             Assert.AreEqual(SpeciesName, species.First().Name);
@@ -140,7 +140,7 @@ namespace NatureRecorder.Tests
         [TestMethod]
         public void ListByMissingCategoryTest()
         {
-            IEnumerable<Species> species = _factory.Species.ListByCategory("Missing", 1, 100);
+            IEnumerable<Species> species = _factory.Species.ListByCategory("Missing", 1, int.MaxValue);
             Assert.IsFalse(species.Any());
         }
     }

@@ -5,6 +5,7 @@
         help,
         addcategory,
         addlocation,
+        addsighting,
         addspecies,
         adduser,
         categories,
