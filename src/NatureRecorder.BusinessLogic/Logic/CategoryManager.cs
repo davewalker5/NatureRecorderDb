@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using NatureRecorder.BusinessLogic.Extensions;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Entities.Interfaces;
 
 namespace NatureRecorder.BusinessLogic.Logic
@@ -137,6 +138,74 @@ namespace NatureRecorder.BusinessLogic.Logic
             }
 
             return category;
+        }
+
+        /// <summary>
+        /// Rename a category
+        /// </summary>
+        /// <param name="oldName"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public Category Rename(string oldName, string newName)
+        {
+            oldName = _textInfo.ToTitleCase(oldName.CleanString());
+            newName = _textInfo.ToTitleCase(newName.CleanString());
+
+            // There must be a category with the original name
+            Category original = Get(s => s.Name == oldName);
+            if (original == null)
+            {
+                string message = $"Category '{newName}' does not exist";
+                throw new CategoryDoesNotExistException();
+            }
+
+            // There can't be an existing category with the specified name
+            Category newCategory = Get(s => s.Name == newName);
+            if (newCategory != null)
+            {
+                string message = $"Category '{newName}' already exists";
+                throw new CategoryAlreadyExistsException();
+            }
+
+            // Update the name on the original
+            original.Name = newName;
+            _context.SaveChanges();
+
+            return original;
+        }
+
+        /// <summary>
+        /// Rename a category
+        /// </summary>
+        /// <param name="oldName"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public async Task<Category> RenameAsync(string oldName, string newName)
+        {
+            oldName = _textInfo.ToTitleCase(oldName.CleanString());
+            newName = _textInfo.ToTitleCase(newName.CleanString());
+
+            // There must be a category with the original name
+            Category original = await GetAsync(s => s.Name == oldName);
+            if (original == null)
+            {
+                string message = $"Category '{newName}' does not exist";
+                throw new CategoryDoesNotExistException();
+            }
+
+            // There can't be an existing category with the specified name
+            Category newCategory = await GetAsync(s => s.Name == newName);
+            if (newCategory != null)
+            {
+                string message = $"Category '{newName}' already exists";
+                throw new CategoryAlreadyExistsException();
+            }
+
+            // Update the name on the original
+            original.Name = newName;
+            await _context.SaveChangesAsync();
+
+            return original;
         }
     }
 }

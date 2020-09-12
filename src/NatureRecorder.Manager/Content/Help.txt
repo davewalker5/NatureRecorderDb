@@ -74,6 +74,10 @@ DESCRIPTION
     locations
         List all the locations in the database
 
+    rename [species|category] [from] [to]
+        Renames the species or category with the specified "from" name to the
+        "to" name. Names are converted to title case.
+
     report [from] [to]
         Show a summary report for the specified date range. The "from" and "to"
         dates must be in yyyy-mm-dd format e.g. 2020-06-07

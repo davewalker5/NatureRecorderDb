@@ -5,6 +5,7 @@ using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NatureRecorder.Entities.Exceptions;
 
 namespace NatureRecorder.Tests
 {
@@ -13,6 +14,7 @@ namespace NatureRecorder.Tests
     {
         private const string SpeciesName = "Red Kite";
         private const string AsyncSpeciesName = "Blackbird";
+        private const string RenameSpeciesName = "Robin";
         private const string CategoryName = "Birds";
 
         private NatureRecorderFactory _factory;
@@ -142,6 +144,54 @@ namespace NatureRecorder.Tests
         {
             IEnumerable<Species> species = _factory.Species.ListByCategory("Missing", 1, int.MaxValue);
             Assert.IsFalse(species.Any());
+        }
+
+        [TestMethod]
+        public void RenameTest()
+        {
+            Species species = _factory.Species.Rename(SpeciesName, RenameSpeciesName);
+            Assert.AreEqual(species.Name, RenameSpeciesName);
+
+            Species original = _factory.Species.Get(s => s.Name == SpeciesName);
+            Assert.IsNull(original);
+        }
+
+        [TestMethod]
+        public async Task RenameAsyncTest()
+        {
+            Species species = await _factory.Species.RenameAsync(SpeciesName, RenameSpeciesName);
+            Assert.AreEqual(species.Name, RenameSpeciesName);
+
+            Species original = await _factory.Species.GetAsync(s => s.Name == SpeciesName);
+            Assert.IsNull(original);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public void RenameMissingTest()
+        {
+            _factory.Species.Rename("", RenameSpeciesName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public async Task RenameMissingAsyncTest()
+        {
+            await _factory.Species.RenameAsync("", RenameSpeciesName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesAlreadyExistsException))]
+        public void RenameToExistingTest()
+        {
+            _factory.Species.Rename(SpeciesName, SpeciesName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesAlreadyExistsException))]
+        public async Task RenameToExistingAsyncTest()
+        {
+            await _factory.Species.RenameAsync(SpeciesName, SpeciesName);
         }
     }
 }

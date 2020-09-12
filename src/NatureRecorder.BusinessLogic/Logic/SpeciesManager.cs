@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using NatureRecorder.BusinessLogic.Extensions;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Entities.Interfaces;
 
 namespace NatureRecorder.BusinessLogic.Logic
@@ -197,6 +198,74 @@ namespace NatureRecorder.BusinessLogic.Logic
             }
 
             return species;
+        }
+
+        /// <summary>
+        /// Rename a species
+        /// </summary>
+        /// <param name="oldName"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public Species Rename(string oldName, string newName)
+        {
+            oldName = _textInfo.ToTitleCase(oldName.CleanString());
+            newName = _textInfo.ToTitleCase(newName.CleanString());
+
+            // There must be a species with the original name
+            Species original = Get(s => s.Name == oldName);
+            if (original == null)
+            {
+                string message = $"Species '{newName}' does not exist";
+                throw new SpeciesDoesNotExistException();
+            }
+
+            // There can't be an  existing species with the specified name
+            Species newSpecies = Get(s => s.Name == newName);
+            if (newSpecies != null)
+            {
+                string message = $"Species '{newName}' already exists";
+                throw new SpeciesAlreadyExistsException();
+            }
+
+            // Update the name on the original
+            original.Name = newName;
+            _factory.Context.SaveChanges();
+
+            return original;
+        }
+
+        /// <summary>
+        /// Rename a species
+        /// </summary>
+        /// <param name="oldName"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public async Task<Species> RenameAsync(string oldName, string newName)
+        {
+            oldName = _textInfo.ToTitleCase(oldName.CleanString());
+            newName = _textInfo.ToTitleCase(newName.CleanString());
+
+            // There must be a species with the original name
+            Species original = await GetAsync(s => s.Name == oldName);
+            if (original == null)
+            {
+                string message = $"Species '{newName}' does not exist";
+                throw new SpeciesDoesNotExistException();
+            }
+
+            // There can't be an  existing species with the specified name
+            Species newSpecies = await GetAsync(s => s.Name == newName);
+            if (newSpecies != null)
+            {
+                string message = $"Species '{newName}' already exists";
+                throw new SpeciesAlreadyExistsException();
+            }
+
+            // Update the name on the original
+            original.Name = newName;
+            await _factory.Context.SaveChangesAsync();
+
+            return original;
         }
     }
 }

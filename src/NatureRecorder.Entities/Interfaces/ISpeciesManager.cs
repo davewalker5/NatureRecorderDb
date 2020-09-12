@@ -16,5 +16,7 @@ namespace NatureRecorder.Entities.Interfaces
         IAsyncEnumerable<Species> ListAsync(Expression<Func<Species, bool>> predicate, int pageNumber, int pageSize);
         IEnumerable<Species> ListByCategory(string categoryName, int pageNumber, int pageSize);
         IAsyncEnumerable<Species> ListByCategoryAsync(string categoryName, int pageNumber, int pageSize);
+        Species Rename(string oldName, string newName);
+        Task<Species> RenameAsync(string oldName, string newName);
     }
 }

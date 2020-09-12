@@ -5,6 +5,7 @@ using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NatureRecorder.Entities.Exceptions;
 
 namespace NatureRecorder.Tests
 {
@@ -13,6 +14,7 @@ namespace NatureRecorder.Tests
     {
         private const string EntityName = "Birds";
         private const string AsyncEntityName = "Mammals";
+        private const string RenamedEntityName = "Marsupials";
 
         private NatureRecorderFactory _factory;
 
@@ -98,6 +100,54 @@ namespace NatureRecorder.Tests
         {
             IEnumerable<Category> entities = _factory.Categories.List(e => e.Name == "Missing", 1, int.MaxValue);
             Assert.AreEqual(0, entities.Count());
+        }
+
+        [TestMethod]
+        public void RenameTest()
+        {
+            Category category = _factory.Categories.Rename(EntityName, RenamedEntityName);
+            Assert.AreEqual(category.Name, RenamedEntityName);
+
+            Category original = _factory.Categories.Get(s => s.Name == EntityName);
+            Assert.IsNull(original);
+        }
+
+        [TestMethod]
+        public async Task RenameAsyncTest()
+        {
+            Category category = await _factory.Categories.RenameAsync(EntityName, RenamedEntityName);
+            Assert.AreEqual(category.Name, RenamedEntityName);
+
+            Category original = await _factory.Categories.GetAsync(s => s.Name == EntityName);
+            Assert.IsNull(original);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryDoesNotExistException))]
+        public void RenameMissingTest()
+        {
+            _factory.Categories.Rename("", RenamedEntityName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryDoesNotExistException))]
+        public async Task RenameMissingAsyncTest()
+        {
+            await _factory.Categories.RenameAsync("", RenamedEntityName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryAlreadyExistsException))]
+        public void RenameToExistingTest()
+        {
+            _factory.Categories.Rename(EntityName, EntityName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryAlreadyExistsException))]
+        public async Task RenameToExistingAsyncTest()
+        {
+            await _factory.Categories.RenameAsync(EntityName, EntityName);
         }
     }
 }

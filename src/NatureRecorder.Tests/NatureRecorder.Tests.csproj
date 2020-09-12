@@ -68,6 +68,9 @@
     <Content Include="Content\import.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\rename-species.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\add-location.txt" />
@@ -82,5 +85,6 @@
     <None Remove="Content\report.txt" />
     <None Remove="Content\check-import.txt" />
     <None Remove="Content\import.txt" />
+    <None Remove="Content\rename-species.txt" />
   </ItemGroup>
 </Project>

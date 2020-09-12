@@ -17,6 +17,7 @@
         import,
         interactive,
         locations,
+        rename,
         report,
         setpassword,
         species,

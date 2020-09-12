@@ -14,5 +14,7 @@ namespace NatureRecorder.Entities.Interfaces
         Task<Category> GetAsync(Expression<Func<Category, bool>> predicate);
         IEnumerable<Category> List(Expression<Func<Category, bool>> predicate, int pageNumber, int pageSize);
         IAsyncEnumerable<Category> ListAsync(Expression<Func<Category, bool>> predicate, int pageNumber, int pageSize);
+        Category Rename(string oldName, string newName);
+        Task<Category> RenameAsync(string oldName, string newName);
     }
 }
