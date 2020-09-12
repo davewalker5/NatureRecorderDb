@@ -115,15 +115,17 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// Add a new sighting
         /// </summary>
         /// <param name="number"></param>
+        /// <param name="withYoung"></param>
         /// <param name="date"></param>
         /// <param name="locationId"></param>
         /// <param name="speciesId"></param>
         /// <returns></returns>
-        public Sighting Add(int number, DateTime date, int locationId, int speciesId)
+        public Sighting Add(int number, bool withYoung, DateTime date, int locationId, int speciesId)
         {
             Sighting sighting = new Sighting
             {
                 Number = number,
+                WithYoung = withYoung,
                 Date = date,
                 LocationId = locationId,
                 SpeciesId = speciesId
@@ -159,22 +161,24 @@ namespace NatureRecorder.BusinessLogic.Logic
             Species species = _factory.Species.Add(template.Species.Name, template.Species.Category.Name);
 
             // Add a new sighting
-            return Add(template.Number, template.Date, location.Id, species.Id);
+            return Add(template.Number, template.WithYoung, template.Date, location.Id, species.Id);
         }
 
         /// <summary>
         /// Add a new sighting
         /// </summary>
         /// <param name="number"></param>
+        /// <param name="withYoung"></param>
         /// <param name="date"></param>
         /// <param name="locationId"></param>
         /// <param name="speciesId"></param>
         /// <returns></returns>
-        public async Task<Sighting> AddAsync(int number, DateTime date, int locationId, int speciesId)
+        public async Task<Sighting> AddAsync(int number, bool withYoung, DateTime date, int locationId, int speciesId)
         {
             Sighting sighting = new Sighting
             {
                 Number = number,
+                WithYoung = withYoung,
                 Date = date,
                 LocationId = locationId,
                 SpeciesId = speciesId

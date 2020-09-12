@@ -9,9 +9,9 @@ namespace NatureRecorder.Entities.Interfaces
 {
     public interface ISightingManager
     {
-        Sighting Add(int number, DateTime date, int locationId, int speciesId);
+        Sighting Add(int number, bool withYoung, DateTime date, int locationId, int speciesId);
         Sighting Add(Sighting template);
-        Task<Sighting> AddAsync(int number, DateTime date, int locationId, int speciesId);
+        Task<Sighting> AddAsync(int number, bool withYoung, DateTime date, int locationId, int speciesId);
         Sighting Get(Expression<Func<Sighting, bool>> predicate);
         Task<Sighting> GetAsync(Expression<Func<Sighting, bool>> predicate);
         IEnumerable<Sighting> List(Expression<Func<Sighting, bool>> predicate, int pageNumber, int pageSize);

@@ -18,6 +18,7 @@ namespace NatureRecorder.Entities.Db
         public int SpeciesId { get; set; }
         public DateTime Date { get; set; }
         public int Number { get; set; }
+        public bool WithYoung { get; set; }
 
         public Location Location { get; set; }
         public Species Species { get; set; }
@@ -32,7 +33,8 @@ namespace NatureRecorder.Entities.Db
             builder.Append(MakeCsvField(Species.Name));
             builder.Append(MakeCsvField(Species.Category.Name));
             builder.Append(MakeCsvField(Number));
-            builder.Append(MakeCsvField(Date.ToString(DateTimeFormat)));
+            builder.Append(MakeCsvField(WithYoung));
+            builder.Append(MakeCsvField(Date));
             builder.Append(MakeCsvField(Location.Name));
             builder.Append(MakeCsvField(Location.Address));
             builder.Append(MakeCsvField(Location.City));
@@ -62,6 +64,7 @@ namespace NatureRecorder.Entities.Db
                     }
                 },
                 Number = record.Number,
+                WithYoung = record.WithYoung,
                 Date = DateTime.ParseExact(record.Date, DateTimeFormat, CultureInfo.CurrentCulture),
                 Location = new Location
                 {
@@ -84,7 +87,22 @@ namespace NatureRecorder.Entities.Db
         /// <param name="isLastColumn"></param>
         public string MakeCsvField(object value, bool isLastColumn = false)
         {
-            string csvValue = (value == null) ? "" : value.ToString();
+            string csvValue = "";
+
+            if (value != null)
+            {
+                string type = value.GetType().Name;
+                switch (type)
+                {
+                    case "DateTime":
+                        csvValue = ((DateTime)value).ToString(DateTimeFormat);
+                        break;
+                    default:
+                        csvValue = value.ToString();
+                        break;
+                }
+            }
+
             string separator = (isLastColumn) ? "" : ",";
             return $"\"{csvValue}\"{separator}";
         }

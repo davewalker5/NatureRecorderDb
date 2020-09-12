@@ -19,8 +19,7 @@ namespace NatureRecorder.Interpreter.Base
         protected DateTime? PromptForDate(CommandContext context, string defaultValue)
         {
             DateTime? date;
-            DateTime parsedDate;
-            bool done = false;
+            bool done;
             string dateString;
             string prompt;
 
@@ -52,7 +51,7 @@ namespace NatureRecorder.Interpreter.Base
                     }
 
                     // Attempt to parse the input as a date/time value
-                    done = DateTime.TryParseExact(dateString, DateFormat, null, DateTimeStyles.None, out parsedDate);
+                    done = DateTime.TryParseExact(dateString, DateFormat, null, DateTimeStyles.None, out DateTime parsedDate);
                     if (done)
                     {
                         // Worked, so assign the return value
@@ -68,6 +67,64 @@ namespace NatureRecorder.Interpreter.Base
             while (!done);
 
             return date;
+        }
+
+        /// <summary>
+        /// Prompt for the number of individuals seen
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        protected int? PromptForNumber(CommandContext context, string defaultValue)
+        {
+            int? number;
+            bool done;
+            string numberString;
+            string prompt;
+
+            // Construct the prompt
+            bool allowBlank = !string.IsNullOrEmpty(defaultValue);
+            if (string.IsNullOrEmpty(defaultValue))
+            {
+                prompt = "Number";
+            }
+            else
+            {
+                prompt = $"Number [{defaultValue}]";
+            }
+
+            do
+            {
+                // Reset
+                number = null;
+
+                // Read the number
+                numberString = context.Reader.ReadLine(prompt, allowBlank);
+                done = context.Reader.Cancelled;
+                if (!done)
+                {
+                    // If the value's blank, use the supplied default
+                    if (string.IsNullOrEmpty(numberString))
+                    {
+                        numberString = defaultValue;
+                    }
+
+                    // Attempt to parse the input as an integer
+                    done = int.TryParse(numberString, out int nonNullNumber);
+                    if (done && (nonNullNumber >= 0))
+                    {
+                        number = nonNullNumber;
+                    }
+                    else
+                    {
+                        context.Output.WriteLine($"{numberString} is not a valid number of individuals");
+                        context.Output.Flush();
+                    }
+                }
+            }
+            while (!done);
+
+            return number;
         }
 
         /// <summary>

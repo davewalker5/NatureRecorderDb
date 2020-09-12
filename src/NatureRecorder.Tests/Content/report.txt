@@ -5,7 +5,7 @@
 	1 category
 	2 locations
 
-| Date        | Location     | Species | Category |
-| ----------- | ------------ | ------- | -------- |
-| 23-Nov-1996 | Bagley Wood  | Jackdaw | Birds    |
-| 03-Jan-2000 | College Lake | Lapwing | Birds    |
+| Date        | Location     | Species | Category | Count | With Young |
+| ----------- | ------------ | ------- | -------- | ----- | ---------- |
+| 23-Nov-1996 | Bagley Wood  | Jackdaw | Birds    |       | No         |
+| 03-Jan-2000 | College Lake | Lapwing | Birds    |       | Yes        |
