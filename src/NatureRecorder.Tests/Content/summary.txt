@@ -5,6 +5,6 @@
 	1 category
 	1 location
 
-| Date        | Location    | Species | Category | Count | With Young |
-| ----------- | ----------- | ------- | -------- | ----- | ---------- |
-| 23-Nov-1996 | Bagley Wood | Jackdaw | Birds    |       | No         |
+| Id | Date        | Location    | Species | Category | Count | With Young |
+| -- | ----------- | ----------- | ------- | -------- | ----- | ---------- |
+| 01 | 23-Nov-1996 | Bagley Wood | Jackdaw | Birds    |       | No         |

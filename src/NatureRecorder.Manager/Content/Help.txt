@@ -30,9 +30,6 @@ DESCRIPTION
         table. The security implementation is not used in the command line
         utility but is present to support implementation of a REST API and UI
 
-    categories
-        List all the species categories in the database
-
     check [file]
         Check the contents of the specified CSV file to see if importing the
         data it contains would result in the creation of new locations, species
@@ -71,8 +68,12 @@ DESCRIPTION
         Enter interactive mode. The application will continue to prompt for and
         run commands until the "exit" command is used to exit
 
-    locations
-        List all the locations in the database
+    list [locations|categories]
+        List all the locations or species categories in the database
+
+    list species [category]
+        List all the species in the database that belong to the specified
+        category
 
     move species [name] [to-category]
         Change the category for a species to the specified "to-category". Names
@@ -89,9 +90,6 @@ DESCRIPTION
     setpassword [username] [password]
         Update the password for the specified user in the database security
         table
-
-    species [category]
-        List all the species in the database for the specified category
 
     summary [date]
         Show a summary report for the specified date. The date must be in

@@ -12,7 +12,7 @@ namespace NatureRecorder.Interpreter.Commands
             Type = CommandType.rename;
             MinimumArguments = 3;
             MaximiumArguments = 3;
-            RequiredMode = CommandMode.Interactive;
+            RequiredMode = CommandMode.All;
         }
 
         public override void Run(CommandContext context)
@@ -36,7 +36,7 @@ namespace NatureRecorder.Interpreter.Commands
                                .Rename(context.Arguments[1], context.Arguments[2]);
                         break;
                     default:
-                        throw new EntityTypeNotValidForRenameException();
+                        throw new UnknownEntityType();
                 }
 
                 // Report the rename

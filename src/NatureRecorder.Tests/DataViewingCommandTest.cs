@@ -38,12 +38,12 @@ namespace NatureRecorder.Tests
             {
                 using (StreamWriter output = new StreamWriter(stream))
                 {
-                    new ListLocationsCommand().Run(new CommandContext
+                    new ListCommand().Run(new CommandContext
                     {
                         Output = output,
                         Factory = _factory,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { }
+                        Arguments = new string[] { "locations" }
                     });
 
                     data = TestHelpers.ReadStream(stream);
@@ -64,12 +64,12 @@ namespace NatureRecorder.Tests
             {
                 using (StreamWriter output = new StreamWriter(stream))
                 {
-                    new ListCategoriesCommand().Run(new CommandContext
+                    new ListCommand().Run(new CommandContext
                     {
                         Output = output,
                         Factory = _factory,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { }
+                        Arguments = new string[] { "categories" }
                     });
 
                     data = TestHelpers.ReadStream(stream);
@@ -91,12 +91,12 @@ namespace NatureRecorder.Tests
             {
                 using (StreamWriter output = new StreamWriter(stream))
                 {
-                    new ListSpeciesCommand().Run(new CommandContext
+                    new ListCommand().Run(new CommandContext
                     {
                         Output = output,
                         Factory = _factory,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "birds" }
+                        Arguments = new string[] { "species", "birds" }
                     });
 
                     data = TestHelpers.ReadStream(stream);

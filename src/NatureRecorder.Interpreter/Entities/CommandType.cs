@@ -16,6 +16,7 @@
         export,
         import,
         interactive,
+        list,
         locations,
         move,
         rename,

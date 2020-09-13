@@ -12,28 +12,26 @@ namespace NatureRecorder.Interpreter.Logic
     {
         private CommandBase[] _commands = new CommandBase[]
         {
+            new AddCategoryCommand(),
+            new AddLocationCommand(),
+            new AddSightingCommand(),
+            new AddSpeciesCommand(),
             new AddUserCommand(),
-            new SetPasswordCommand(),
-            new DeleteUserCommand(),
-            new ExportCommand(),
             new CheckImportCommand(),
+            new ConnectionCommand(),
+            new DeleteUserCommand(),
+            new ExitCommand(),
+            new ExportCommand(),
+            new HelpCommand(),
             new ImportCommand(),
-            new SummaryCommand(),
+            new InteractiveShellCommand(),
+            new ListCommand(),
             new MoveCommand(),
             new RenameCommand(),
             new ReportCommand(),
-            new UpdateDatabaseCommand(),
-            new HelpCommand(),
-            new ListLocationsCommand(),
-            new ListCategoriesCommand(),
-            new ListSpeciesCommand(),
-            new InteractiveShellCommand(),
-            new ExitCommand(),
-            new ConnectionCommand(),
-            new AddLocationCommand(),
-            new AddCategoryCommand(),
-            new AddSpeciesCommand(),
-            new AddSightingCommand()
+            new SetPasswordCommand(),
+            new SummaryCommand(),
+            new UpdateDatabaseCommand()
         };
 
         private static CommandInterpreter _instance = null;

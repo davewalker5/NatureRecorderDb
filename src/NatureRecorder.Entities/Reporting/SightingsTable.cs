@@ -10,6 +10,7 @@ namespace NatureRecorder.Entities.Reporting
     {
         private IEnumerable<Sighting> _sightings = null;
 
+        private const string IdHeader = "Id";
         private const string DateHeader = "Date";
         private const string LocationHeader = "Location";
         private const string SpeciesHeader = "Species";
@@ -22,6 +23,7 @@ namespace NatureRecorder.Entities.Reporting
         private const char RowSeparator = '-';
         private const char ColumnSeparator = '|';
 
+        private int _idColumnWidth;
         private int _dateColumnWidth;
         private int _locationColumnWidth;
         private int _speciesColumnWidth;
@@ -44,6 +46,7 @@ namespace NatureRecorder.Entities.Reporting
             _padding = new string(' ', CellPadding);
 
             // Set the column properties
+            _idColumnWidth = Math.Max(IdHeader.Length, sightings.Max(s => s.Id.ToString().Length));
             _dateColumnWidth = DateTime.Now.ToString(DateFormat, null).Length;
             _locationColumnWidth = Math.Max(LocationHeader.Length, sightings.Max(s => s.Location.Name.Length));
             _speciesColumnWidth = Math.Max(SpeciesHeader.Length, sightings.Max(s => s.Species.Name.Length));
@@ -58,8 +61,8 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="output"></param>
         public void PrintTable(StreamWriter output)
         {
-            PrintRow(DateHeader, LocationHeader, SpeciesHeader, CategoryHeader, NumberHeader, WithYoungHeader, false, output);
-            PrintRow(RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), true, output);
+            PrintRow(IdHeader, DateHeader, LocationHeader, SpeciesHeader, CategoryHeader, NumberHeader, WithYoungHeader, false, output);
+            PrintRow(RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), true, output);
 
             foreach (Sighting sighting in _sightings)
             {
@@ -76,7 +79,8 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="output"></param>
         private void PrintRow(Sighting sighting, StreamWriter output)
         {
-            PrintRow(sighting.Date.ToString(DateFormat),
+            PrintRow(sighting.Id.ToString($"D{_idColumnWidth}"),
+                     sighting.Date.ToString(DateFormat),
                      sighting.Location.Name,
                      sighting.Species.Name,
                      sighting.Species.Category.Name,
@@ -97,8 +101,10 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="withYoung"></param>
         /// <param name="isSeparatorRow"></param>
         /// <param name="output"></param>
-        private void PrintRow(string date, string location, string species, string category, string number, string withYoung, bool isSeparatorRow, StreamWriter output)
+        private void PrintRow(string id, string date, string location, string species, string category, string number, string withYoung, bool isSeparatorRow, StreamWriter output)
         {
+            output.Write(ColumnSeparator);
+            PrintCell(_idColumnWidth, id, isSeparatorRow, output);
             output.Write(ColumnSeparator);
             PrintCell(_dateColumnWidth, date, isSeparatorRow, output);
             output.Write(ColumnSeparator);
