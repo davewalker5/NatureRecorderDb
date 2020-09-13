@@ -119,5 +119,77 @@ namespace NatureRecorder.Tests
             Assert.AreEqual("Canada Goose", species.Name);
             Assert.AreEqual("Birds", species.Category.Name);
         }
+
+        [TestMethod]
+        public void RenameCategoryCommandTest()
+        {
+            _factory.Categories.Add("birds");
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new RenameCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.Interactive,
+                        Arguments = new string[] { "category", "birds", "things with wings" }
+                    });
+                }
+            }
+
+            Category category = _factory.Categories.Get(s => s.Name == "Things With Wings");
+            Assert.IsNotNull(category);
+        }
+
+        [TestMethod]
+        public void RenameSpeciesCommandTest()
+        {
+            _factory.Categories.Add("birds");
+            _factory.Species.Add("blackbird", "birds");
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new RenameCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.Interactive,
+                        Arguments = new string[] { "species", "blackbird", "robin" }
+                    });
+                }
+            }
+
+            Species species = _factory.Species.Get(s => s.Name == "Robin");
+            Assert.IsNotNull(species);
+        }
+
+        [TestMethod]
+        public void MoveSpeciesCommandTest()
+        {
+            _factory.Categories.Add("birds");
+            _factory.Categories.Add("things with wings");
+            _factory.Species.Add("blackbird", "birds");
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new MoveCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.Interactive,
+                        Arguments = new string[] { "species", "blackbird", "things with wings" }
+                    });
+                }
+            }
+
+            Species species = _factory.Species.Get(s => s.Name == "Blackbird");
+            Assert.AreEqual(species.Category.Name, "Things With Wings");
+        }
     }
 }

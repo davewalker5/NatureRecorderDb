@@ -9,7 +9,7 @@ namespace NatureRecorder.Interpreter.Commands
         public SummaryCommand()
         {
             Type = CommandType.summary;
-            MinimumArguments = 1;
+            MinimumArguments = 0;
             MaximiumArguments = 1;
             RequiredMode = CommandMode.All;
         }
@@ -18,9 +18,15 @@ namespace NatureRecorder.Interpreter.Commands
         {
             if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
-                // The date-time parser returns NULL (and displays an error message) if it
-                // can't get a date from the specified string
-                DateTime? date = GetDateFromArgument(context.Arguments[0], context.Output);
+                // If the date isn't specified, use today's date
+                DateTime? date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                if (context.Arguments.Length > 0)
+                {
+                    // The date-time parser returns NULL (and displays an error message) if it
+                    // can't get a date from the specified string
+                    date = GetDateFromArgument(context.Arguments[0], context.Output);
+                }
+
                 if (date != null)
                 {
                     DateTime reportDate = date ?? DateTime.Now;
