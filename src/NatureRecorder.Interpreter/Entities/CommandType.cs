@@ -17,6 +17,7 @@
         import,
         interactive,
         locations,
+        move,
         rename,
         report,
         setpassword,

@@ -19,6 +19,7 @@ namespace NatureRecorder.Interpreter.Logic
             new CheckImportCommand(),
             new ImportCommand(),
             new SummaryCommand(),
+            new MoveCommand(),
             new RenameCommand(),
             new ReportCommand(),
             new UpdateDatabaseCommand(),

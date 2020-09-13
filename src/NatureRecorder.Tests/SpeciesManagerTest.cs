@@ -16,6 +16,7 @@ namespace NatureRecorder.Tests
         private const string AsyncSpeciesName = "Blackbird";
         private const string RenameSpeciesName = "Robin";
         private const string CategoryName = "Birds";
+        private const string MoveCategoryName = "Things With Wings";
 
         private NatureRecorderFactory _factory;
 
@@ -192,6 +193,64 @@ namespace NatureRecorder.Tests
         public async Task RenameToExistingAsyncTest()
         {
             await _factory.Species.RenameAsync(SpeciesName, SpeciesName);
+        }
+
+        [TestMethod]
+        public void MoveSpeciesTest()
+        {
+            _factory.Categories.Add(MoveCategoryName);
+            Species species = _factory.Species.Move(SpeciesName, MoveCategoryName);
+            Assert.AreEqual(MoveCategoryName, species.Category.Name);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesIsAlreadyInCategoryException))]
+        public void MoveToCurrentCategoryTest()
+        {
+            _factory.Species.Move(SpeciesName, CategoryName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public void MoveMissingSpeciesTest()
+        {
+            _factory.Species.Move("", MoveCategoryName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryDoesNotExistException))]
+        public void MoveToMissingCategoryTest()
+        {
+            _factory.Species.Move(SpeciesName, "");
+        }
+
+        [TestMethod]
+        public async Task MoveSpeciesAsyncTest()
+        {
+            await _factory.Categories.AddAsync(MoveCategoryName);
+            Species species = await _factory.Species.MoveAsync(SpeciesName, MoveCategoryName);
+            Assert.AreEqual(MoveCategoryName, species.Category.Name);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesIsAlreadyInCategoryException))]
+        public async Task MoveToCurrentCategoryAsyncTest()
+        {
+            await _factory.Species.MoveAsync(SpeciesName, CategoryName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public async Task MoveMissingSpeciesAsyncTest()
+        {
+            await _factory.Species.MoveAsync("", MoveCategoryName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryDoesNotExistException))]
+        public async Task MoveToMissingCategoryAsyncTest()
+        {
+            await _factory.Species.MoveAsync(SpeciesName, "");
         }
     }
 }

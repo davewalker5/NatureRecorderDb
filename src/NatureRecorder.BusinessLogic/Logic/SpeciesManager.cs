@@ -216,7 +216,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             if (original == null)
             {
                 string message = $"Species '{newName}' does not exist";
-                throw new SpeciesDoesNotExistException();
+                throw new SpeciesDoesNotExistException(message);
             }
 
             // There can't be an  existing species with the specified name
@@ -224,7 +224,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             if (newSpecies != null)
             {
                 string message = $"Species '{newName}' already exists";
-                throw new SpeciesAlreadyExistsException();
+                throw new SpeciesAlreadyExistsException(message);
             }
 
             // Update the name on the original
@@ -250,7 +250,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             if (original == null)
             {
                 string message = $"Species '{newName}' does not exist";
-                throw new SpeciesDoesNotExistException();
+                throw new SpeciesDoesNotExistException(message);
             }
 
             // There can't be an  existing species with the specified name
@@ -258,7 +258,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             if (newSpecies != null)
             {
                 string message = $"Species '{newName}' already exists";
-                throw new SpeciesAlreadyExistsException();
+                throw new SpeciesAlreadyExistsException(message);
             }
 
             // Update the name on the original
@@ -266,6 +266,90 @@ namespace NatureRecorder.BusinessLogic.Logic
             await _factory.Context.SaveChangesAsync();
 
             return original;
+        }
+
+        /// <summary>
+        /// Move a species from one category to another
+        /// </summary>
+        /// <param name="speciesName"></param>
+        /// <param name="categoryName"></param>
+        /// <returns></returns>
+        public Species Move(string speciesName, string categoryName)
+        {
+            speciesName = _textInfo.ToTitleCase(speciesName.CleanString());
+            categoryName = _textInfo.ToTitleCase(categoryName.CleanString());
+
+            // Find the species record
+            Species species = Get(s => s.Name == speciesName);
+            if (species == null)
+            {
+                string message = $"Species '{speciesName}' does not exist";
+                throw new SpeciesDoesNotExistException(message);
+            }
+
+            // Find the  new category
+            Category category = _factory.Categories.Get(s => s.Name == categoryName);
+            if (category == null)
+            {
+                string message = $"Category '{categoryName}' does not exist";
+                throw new CategoryDoesNotExistException(message);
+            }
+
+            // Check the species isn't already in that category
+            if (species.CategoryId == category.Id)
+            {
+                string message = $"Species '{species.Name}' is already in category '{category.Name}'";
+                throw new SpeciesIsAlreadyInCategoryException(message);
+            }
+
+            // Update the species record
+            species.CategoryId = category.Id;
+            _factory.Context.SaveChanges();
+
+            // Re-get to ensure related entities are updated
+            return Get(s => s.Id == species.Id);
+        }
+
+        /// <summary>
+        /// Move a species from one category to another
+        /// </summary>
+        /// <param name="speciesName"></param>
+        /// <param name="categoryName"></param>
+        /// <returns></returns>
+        public async Task<Species> MoveAsync(string speciesName, string categoryName)
+        {
+            speciesName = _textInfo.ToTitleCase(speciesName.CleanString());
+            categoryName = _textInfo.ToTitleCase(categoryName.CleanString());
+
+            // Find the species record
+            Species species = await GetAsync(s => s.Name == speciesName);
+            if (species == null)
+            {
+                string message = $"Species '{speciesName}' does not exist";
+                throw new SpeciesDoesNotExistException(message);
+            }
+
+            // Find the  new category
+            Category category = await _factory.Categories.GetAsync(s => s.Name == categoryName);
+            if (category == null)
+            {
+                string message = $"Category '{categoryName}' does not exist";
+                throw new CategoryDoesNotExistException(message);
+            }
+
+            // Check the species isn't already in that category
+            if (species.CategoryId == category.Id)
+            {
+                string message = $"Species '{species.Name}' is already in category '{category.Name}'";
+                throw new SpeciesIsAlreadyInCategoryException(message);
+            }
+
+            // Update the species record
+            species.CategoryId = category.Id;
+            await _factory.Context.SaveChangesAsync();
+
+            // Re-get to ensure related entities are updated
+            return await GetAsync(s => s.Id == species.Id);
         }
     }
 }

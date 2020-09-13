@@ -74,6 +74,10 @@ DESCRIPTION
     locations
         List all the locations in the database
 
+    move species [name] [to-category]
+        Change the category for a species to the specified "to-category". Names
+        are converted to title case and the target category must already exist.
+
     rename [species|category] [from] [to]
         Renames the species or category with the specified "from" name to the
         "to" name. Names are converted to title case.
