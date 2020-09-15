@@ -19,7 +19,7 @@ namespace NatureRecorder.Interpreter.Logic
             new AddUserCommand(),
             new CheckImportCommand(),
             new ConnectionCommand(),
-            new DeleteUserCommand(),
+            new DeleteCommand(),
             new ExitCommand(),
             new ExportCommand(),
             new HelpCommand(),
@@ -30,7 +30,6 @@ namespace NatureRecorder.Interpreter.Logic
             new RenameCommand(),
             new ReportCommand(),
             new SetPasswordCommand(),
-            new SummaryCommand(),
             new UpdateDatabaseCommand()
         };
 

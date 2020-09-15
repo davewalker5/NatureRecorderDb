@@ -28,7 +28,14 @@ namespace NatureRecorder.Interpreter.Entities
         /// <returns></returns>
         public string CleanArgument(int index)
         {
-            return _textInfo.ToTitleCase(Arguments[index].CleanString());
+            string cleaned = null;
+
+            if ((index >= 0) && (index < Arguments.Length))
+            {
+                cleaned = _textInfo.ToTitleCase(Arguments[index].CleanString());
+            }
+
+            return cleaned;
         }
     }
 }

@@ -7,7 +7,7 @@ using NatureRecorder.Entities.Db;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 
-namespace NatureRecorder.Tests
+namespace NatureRecorder.Tests.CommandTests
 {
     [TestClass]
     public class UserCommandTest
@@ -93,12 +93,12 @@ namespace NatureRecorder.Tests
 
                 Assert.IsTrue(_factory.Users.Authenticate(UserName, Password));
 
-                new DeleteUserCommand().Run(new CommandContext
+                new DeleteCommand().Run(new CommandContext
                 {
                     Output = output,
                     Factory = _factory,
                     Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { UserName, }
+                    Arguments = new string[] { "user", UserName }
                 });
 
                 Assert.IsFalse(_factory.Context.Users.Any());

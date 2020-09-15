@@ -12,6 +12,8 @@ namespace NatureRecorder.Entities.Interfaces
         Sighting Add(int number, bool withYoung, DateTime date, int locationId, int speciesId);
         Sighting Add(Sighting template);
         Task<Sighting> AddAsync(int number, bool withYoung, DateTime date, int locationId, int speciesId);
+        void Delete(int id);
+        Task DeleteAsync(int id);
         Sighting Get(Expression<Func<Sighting, bool>> predicate);
         Task<Sighting> GetAsync(Expression<Func<Sighting, bool>> predicate);
         IEnumerable<Sighting> List(Expression<Func<Sighting, bool>> predicate, int pageNumber, int pageSize);
@@ -24,9 +26,7 @@ namespace NatureRecorder.Entities.Interfaces
         IAsyncEnumerable<Sighting> ListByLocationAsync(int locationId, int pageNumber, int pageSize);
         IEnumerable<Sighting> ListBySpecies(int speciesId, int pageNumber, int pageSize);
         IAsyncEnumerable<Sighting> ListBySpeciesAsync(int speciesId, int pageNumber, int pageSize);
-        Summary Summarise(DateTime from, DateTime to);
-        Task<Summary> SummariseAsync(DateTime from, DateTime to);
-        Summary Summarise(DateTime date);
-        Task<Summary> SummariseAsync(DateTime date);
+        Summary Summarise(DateTime from, DateTime to, int? locationId, int? categoryId, int? speciesId);
+        Task<Summary> SummariseAsync(DateTime from, DateTime to, int? locationId, int? categoryId, int? speciesId);
     }
 }

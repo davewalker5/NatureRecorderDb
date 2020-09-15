@@ -8,7 +8,7 @@ using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Tests.Helpers;
 
-namespace NatureRecorder.Tests
+namespace NatureRecorder.Tests.UnitTests
 {
     [TestClass]
     public class ImportExportManagerTest

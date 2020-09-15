@@ -7,7 +7,7 @@ using NatureRecorder.Entities.Db;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.Entities.Exceptions;
 
-namespace NatureRecorder.Tests
+namespace NatureRecorder.Tests.UnitTests
 {
     [TestClass]
     public class CategoryManagerTest
@@ -148,6 +148,54 @@ namespace NatureRecorder.Tests
         public async Task RenameToExistingAsyncTest()
         {
             await _factory.Categories.RenameAsync(EntityName, EntityName);
+        }
+
+        [TestMethod]
+        public void DeleteTest()
+        {
+            _factory.Categories.Delete(EntityName);
+            IEnumerable<Category> entities = _factory.Categories.List(null, 1, int.MaxValue);
+            Assert.IsFalse(entities.Any());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryDoesNotExistException))]
+        public void DeleteMissingTest()
+        {
+            _factory.Categories.Delete("");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryIsInUseException))]
+        public void DeleteInUseTest()
+        {
+            Category entity = _factory.Categories.Get(a => a.Name == EntityName);
+            Species species = _factory.Species.Add("", EntityName);
+            _factory.Categories.Delete(EntityName);
+        }
+
+        [TestMethod]
+        public async Task DeleteAsyncTest()
+        {
+            await _factory.Categories.DeleteAsync(EntityName);
+            IEnumerable<Category> entities = await _factory.Categories.ListAsync(null, 1, int.MaxValue).ToListAsync();
+            Assert.IsFalse(entities.Any());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryDoesNotExistException))]
+        public async Task DeleteMissingAsyncTest()
+        {
+            await _factory.Categories.DeleteAsync("");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CategoryIsInUseException))]
+        public async Task DeleteInUseAsyncTest()
+        {
+            Category entity = await _factory.Categories.GetAsync(a => a.Name == EntityName);
+            Species species = await _factory.Species.AddAsync("", EntityName);
+            await _factory.Categories.DeleteAsync(EntityName);
         }
     }
 }

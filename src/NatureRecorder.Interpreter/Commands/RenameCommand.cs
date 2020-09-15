@@ -36,7 +36,8 @@ namespace NatureRecorder.Interpreter.Commands
                                .Rename(context.Arguments[1], context.Arguments[2]);
                         break;
                     default:
-                        throw new UnknownEntityType();
+                        string message = $"Cannot rename unknown entity type";
+                        throw new UnknownEntityType(message);
                 }
 
                 // Report the rename

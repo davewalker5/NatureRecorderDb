@@ -1,11 +1,18 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using NatureRecorder.BusinessLogic.Extensions;
+using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Interpreter.Entities;
 
 namespace NatureRecorder.Interpreter.Base
 {
     public abstract class CommandBase
     {
+        private const string DateFormat = "yyyy-MM-dd";
+        protected const string Wildcard = "*";
+
         private readonly TextInfo _textInfo = CultureInfo.CurrentCulture.TextInfo;
 
         public CommandType Type { get; set; }
@@ -62,6 +69,136 @@ namespace NatureRecorder.Interpreter.Base
         protected string ToTitleCase(string value)
         {
             return _textInfo.ToTitleCase(value.CleanString());
+        }
+
+        /// <summary>
+        /// Identify the species from the name given in the arguments at the
+        /// specified index. A "wildcard" name causes a null return
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        protected int? GetSpecies(CommandContext context, int index)
+        {
+            int? speciesId = null;
+
+            string speciesName = context.CleanArgument(index);
+            if ((speciesName != null) && (speciesName != Wildcard))
+            {
+                Species species = context.Factory
+                                         .Species
+                                         .Get(s => s.Name == speciesName);
+                if (species == null)
+                {
+                    string message = $"Species '{speciesName}' does not exist";
+                    throw new SpeciesDoesNotExistException(message);
+                }
+
+                speciesId = species.Id;
+            }
+
+            return speciesId;
+        }
+
+        /// <summary>
+        /// Identify the category from the name given in the arguments at the
+        /// specified index. A "wildcard" name causes a null return
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        protected int? GetCategory(CommandContext context, int index)
+        {
+            int? categoryId = null;
+
+            string categoryName = context.CleanArgument(index);
+            if ((categoryName != null) && (categoryName != Wildcard))
+            {
+                Category category = context.Factory
+                                           .Categories
+                                           .Get(c => c.Name == categoryName);
+                if (category == null)
+                {
+                    string message = $"Category '{categoryName}' does not exist";
+                    throw new CategoryDoesNotExistException(message);
+                }
+
+                categoryId = category.Id;
+            }
+
+            return categoryId;
+        }
+
+        /// <summary>
+        /// Identify the location from the name given in the arguments at the
+        /// specified index
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        protected int? GetLocation(CommandContext context, int index)
+        {
+            int? locationId = null;
+
+            string locationName = context.CleanArgument(index);
+            if ((locationName != null) && (locationName != Wildcard))
+            {
+                Location location = context.Factory
+                                            .Locations
+                                            .Get(l => l.Name == locationName);
+                if (location == null)
+                {
+                    string message = $"Location '{locationName}' does not exist";
+                    throw new LocationDoesNotExistException(message);
+                }
+
+                locationId = location.Id;
+            }
+
+            return locationId;
+        }
+
+        /// <summary>
+        /// Return the date/time represented by the input string or NULL if the format
+        /// isn't as expected
+        /// </summary>
+        /// <param name="argument"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        protected DateTime? GetDateFromArgument(string argument, StreamWriter output)
+        {
+            DateTime? result = null;
+            DateTime parsed;
+
+            if (DateTime.TryParseExact(argument, DateFormat, null, DateTimeStyles.None, out parsed))
+            {
+                result = parsed;
+            }
+            else
+            {
+                output.WriteLine($"\"{argument}\" is not in the expected format ({DateFormat})");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get a date from the argument at the specified index, defaulting to
+        /// the specified default value if the index is out of range
+        /// </summary>
+        /// <param name="arguments"></param>
+        /// <param name="index"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        protected DateTime? GetDateFromArgument(string[] arguments, int index, DateTime? defaultDate, StreamWriter output)
+        {
+            DateTime? date = defaultDate;
+            if ((index >= 0) && (index < arguments.Length))
+            {
+                date = GetDateFromArgument(arguments[index], output);
+            }
+
+            return date;
         }
     }
 }

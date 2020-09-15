@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Tests.UnitTests;
 
 namespace NatureRecorder.Tests.Helpers
 {

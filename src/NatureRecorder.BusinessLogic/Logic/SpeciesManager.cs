@@ -351,5 +351,70 @@ namespace NatureRecorder.BusinessLogic.Logic
             // Re-get to ensure related entities are updated
             return await GetAsync(s => s.Id == species.Id);
         }
+
+        /// <summary>
+        /// Delete the species with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        public void Delete(string name)
+        {
+            // Get the species and make sure it exists
+            name = _textInfo.ToTitleCase(name.CleanString());
+            Species species = Get(l => l.Name == name);
+
+            if (species == null)
+            {
+                string message = $"Species '{name}' does not exist";
+                throw new SpeciesDoesNotExistException(message);
+            }
+
+            // Check the species isn't used in any sightings
+            Sighting sighting = _factory.Context
+                                        .Sightings
+                                        .FirstOrDefault(s => s.SpeciesId == species.Id);
+
+            if (sighting != null)
+            {
+                string message = $"Cannot delete species '{name}' while it is referenced in sightings";
+                throw new SpeciesIsInUseException(message);
+            }
+
+            // Delete the location
+            _factory.Context.Species.Remove(species);
+            _factory.Context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Delete the species with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        public async Task DeleteAsync(string name)
+        {
+            // Get the species and make sure it exists
+            name = _textInfo.ToTitleCase(name.CleanString());
+            Species species = await GetAsync(l => l.Name == name);
+
+            if (species == null)
+            {
+                string message = $"Species '{name}' does not exist";
+                throw new SpeciesDoesNotExistException(message);
+            }
+
+            // Check the species isn't used in any sightings
+            Sighting sighting = await _factory.Context
+                                              .Sightings
+                                              .AsAsyncEnumerable()
+                                              .FirstOrDefaultAsync(s => s.SpeciesId == species.Id);
+
+            if (sighting != null)
+            {
+                string message = $"Cannot delete speceis '{name}' while it is referenced in sightings";
+                throw new SpeciesIsInUseException(message);
+            }
+
+            // Delete the species
+            _factory.Context.Species.Remove(species);
+            await _factory.Context.SaveChangesAsync();
+        }
     }
 }

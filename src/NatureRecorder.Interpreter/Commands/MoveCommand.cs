@@ -31,7 +31,8 @@ namespace NatureRecorder.Interpreter.Commands
                                .Move(context.Arguments[1], context.Arguments[2]);
                         break;
                     default:
-                        throw new UnknownEntityType();
+                        string message = $"Cannot move unknown entity type";
+                        throw new UnknownEntityType(message);
                 }
 
                 // Report the rename

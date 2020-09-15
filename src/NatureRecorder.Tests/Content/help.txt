@@ -19,13 +19,16 @@ DESCRIPTION
     addlocation
         Prompt for location details and add a new location to the database
 
+    addsighting
+        Prompt for sighting details and add a new sighting to the database
+
+    addspecies
+        Prompt for species details and add a new species to the database
+
     adduser [username] [password]
         Add a user with the specified name and password to the database security
         table. The security implementation is not used in the command line
         utility but is present to support implementation of a REST API and UI
-
-    categories
-        List all the species categories in the database
 
     check [file]
         Check the contents of the specified CSV file to see if importing the
@@ -35,14 +38,36 @@ DESCRIPTION
     connection
         Show the database connection details
 
-    deleteuser [username]
-        Delete the user with the specified username
+    delete location|category|species|sighting|user [id]
+        Delete the record of the specified type with the specified identifier.
+        For locations, categories and species, "id" is the name. For users, the
+        "id" is the username. For sightings, "id" is the integer record ID
+        listed in the "report" command output.
 
     exit
         Exit interactive mode
 
-    export [file]
-        Export the database to the specified CSV  file
+    export all [file] [from] [to]
+        Export all sightings in the specified date range to CSV. The dates are
+        optional but if specified must be in yyyy-mm-dd format e.g. 2020-06-07
+
+    export location [name] [file] [from] [to]
+        Export all sightings at the named location in the specified date range
+        to CSV. The dates are optional but if specified must be in yyyy-mm-dd
+        format e.g. 2020-06-07. Location names containing spaces must be
+        enclosed in double quotes.
+
+    export category [name] [location] [file] [from] [to]
+        Export all sightings for the named category at the named location in
+        the specified date range to CSV. The dates are optional but if specified
+        must be in yyyy-mm-dd format e.g. 2020-06-07. Location and category
+        names containing spaces must be enclosed in double quotes.
+
+    export species [name] [location] [file] [from] [to]
+        Export all sightings for the named species at the named location in
+        the specified date range to CSV. The dates are optional but if specified
+        must be in yyyy-mm-dd format e.g. 2020-06-07. Location and species
+        names containing spaces must be enclosed in double quotes.
 
     import [file]
         Import the specified CSV file. The CSV file must have the following
@@ -65,23 +90,50 @@ DESCRIPTION
         Enter interactive mode. The application will continue to prompt for and
         run commands until the "exit" command is used to exit
 
-    locations
-        List all the locations in the database
+    list [locations|categories]
+        List all the locations or species categories in the database
 
-    report [from] [to]
+    list species [category]
+        List all the species in the database that belong to the specified
+        category
+
+    move species [name] [to-category]
+        Change the category for a species to the specified "to-category". Names
+        are converted to title case and the target category must already exist.
+
+    rename [species|category] [from] [to]
+        Renames the species or category with the specified "from" name to the
+        "to" name. Names are converted to title case.
+
+    report summary [from] [to]
         Show a summary report for the specified date range. The "from" and "to"
-        dates must be in yyyy-mm-dd format e.g. 2020-06-07
+        dates must be in yyyy-mm-dd format e.g. 2020-06-07. If either date isn't
+        specified, today's date is used.
+
+    report location [name] [from] [to]
+        Show a summary report for sightings at the named location in the
+        specified date range. The "from" and "to" dates must be in yyyy-mm-dd
+        format e.g. 2020-06-07. If either date isn't specified, today's date is
+        used. Location names containing spaces must be enclosed in
+        double-quotes.
+
+    report category [name] [location] [from] [to]
+        Show a summary report for sightings of the specified category at the
+        named location in the specified date range. The "from" and "to"
+        dates must be in yyyy-mm-dd format e.g. 2020-06-07. If either date
+        isn't specified, today's date is used. Location and category names
+        containing spaces must be enclosed in double-quotes.
+
+    report species [name] [location] [from] [to]
+        Show a summary report for sightings of the specified species at the
+        named location in the specified date range. The "from" and "to"
+        dates must be in yyyy-mm-dd format e.g. 2020-06-07. If either date
+        isn't specified, today's date is used. Location and category names
+        containing spaces must be enclosed in double-quotes.
 
     setpassword [username] [password]
         Update the password for the specified user in the database security
         table
-
-    species [category]
-        List all the species in the database for the specified category
-
-    summary [date]
-        Show a summary report for the specified date. The date must be in
-        yyyy-mm-dd format e.g. 2020-06-07
 
     update
         Apply the latest database migrations to the database to ensure all

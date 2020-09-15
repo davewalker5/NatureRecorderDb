@@ -41,7 +41,8 @@ namespace NatureRecorder.Interpreter.Commands
                             ListSpecies(context);
                             break;
                         default:
-                            throw new UnknownEntityType();
+                            string message = $"Cannot list unknown entity type";
+                            throw new UnknownEntityType(message);
                     }
                 }
             }
@@ -89,7 +90,8 @@ namespace NatureRecorder.Interpreter.Commands
                     count = 2;
                     break;
                 default:
-                    throw new UnknownEntityType();
+                    string message = $"Cannot list unknown entity type";
+                    throw new UnknownEntityType(message);
             }
 
             return count;
@@ -124,7 +126,8 @@ namespace NatureRecorder.Interpreter.Commands
                     type = EntityType.Species;
                     break;
                 default:
-                    throw new UnknownEntityType();
+                    string message = $"Cannot list unknown entity type";
+                    throw new UnknownEntityType(message);
             }
 
             return type;

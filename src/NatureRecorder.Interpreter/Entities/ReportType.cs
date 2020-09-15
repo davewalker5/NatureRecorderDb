@@ -1,11 +1,10 @@
 ﻿namespace NatureRecorder.Interpreter.Entities
 {
-    public enum EntityType
+    public enum ReportType
     {
+        Summary,
         Location,
         Category,
-        Species,
-        Sighting,
-        User
+        Species
     }
 }

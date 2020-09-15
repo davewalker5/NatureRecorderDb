@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NatureRecorder.BusinessLogic.Extensions;
+using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Entities.Exceptions;
@@ -15,12 +16,12 @@ namespace NatureRecorder.BusinessLogic.Logic
 {
     internal class CategoryManager : ICategoryManager
     {
-        private readonly NatureRecorderDbContext _context;
         private readonly TextInfo _textInfo = CultureInfo.CurrentCulture.TextInfo;
+        private NatureRecorderFactory _factory;
 
-        internal CategoryManager(NatureRecorderDbContext context)
+        internal CategoryManager(NatureRecorderFactory factory)
         {
-            _context = context;
+            _factory = factory;
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <returns></returns>
         public async Task<Category> GetAsync(Expression<Func<Category, bool>> predicate)
         {
-            List<Category> categories = await _context.Categories
+            List<Category> categories = await _factory.Context.Categories
                                                      .Where(predicate)
                                                      .ToListAsync();
             return categories.FirstOrDefault();
@@ -56,13 +57,13 @@ namespace NatureRecorder.BusinessLogic.Logic
             IEnumerable<Category> results;
             if (predicate == null)
             {
-                results = _context.Categories;
+                results = _factory.Context.Categories;
                 results = results.Skip((pageNumber - 1) * pageSize)
                                  .Take(pageSize);
             }
             else
             {
-                results = _context.Categories
+                results = _factory.Context.Categories
                                   .Where(predicate)
                                   .Skip((pageNumber - 1) * pageSize)
                                   .Take(pageSize);
@@ -83,14 +84,14 @@ namespace NatureRecorder.BusinessLogic.Logic
             IAsyncEnumerable<Category> results;
             if (predicate == null)
             {
-                results = _context.Categories;
+                results = _factory.Context.Categories;
                 results = results.Skip((pageNumber - 1) * pageSize)
                                  .Take(pageSize)
                                  .AsAsyncEnumerable();
             }
             else
             {
-                results = _context.Categories
+                results = _factory.Context.Categories
                                   .Where(predicate)
                                   .Skip((pageNumber - 1) * pageSize)
                                   .Take(pageSize)
@@ -113,8 +114,8 @@ namespace NatureRecorder.BusinessLogic.Logic
             if (category == null)
             {
                 category = new Category { Name = name };
-                _context.Categories.Add(category);
-                _context.SaveChanges();
+                _factory.Context.Categories.Add(category);
+                _factory.Context.SaveChanges();
             }
 
             return category;
@@ -133,8 +134,8 @@ namespace NatureRecorder.BusinessLogic.Logic
             if (category == null)
             {
                 category = new Category { Name = name };
-                await _context.Categories.AddAsync(category);
-                await _context.SaveChangesAsync();
+                await _factory.Context.Categories.AddAsync(category);
+                await _factory.Context.SaveChangesAsync();
             }
 
             return category;
@@ -169,7 +170,7 @@ namespace NatureRecorder.BusinessLogic.Logic
 
             // Update the name on the original
             original.Name = newName;
-            _context.SaveChanges();
+            _factory.Context.SaveChanges();
 
             return original;
         }
@@ -203,9 +204,74 @@ namespace NatureRecorder.BusinessLogic.Logic
 
             // Update the name on the original
             original.Name = newName;
-            await _context.SaveChangesAsync();
+            await _factory.Context.SaveChangesAsync();
 
             return original;
+        }
+
+        /// <summary>
+        /// Delete the category with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        public void Delete(string name)
+        {
+            // Get the location and make sure it exists
+            name = _textInfo.ToTitleCase(name.CleanString());
+            Category category = Get(c => c.Name == name);
+
+            if (category == null)
+            {
+                string message = $"Category '{name}' does not exist";
+                throw new CategoryDoesNotExistException(message);
+            }
+
+            // Check the category isn't associated with any species
+            Species species = _factory.Context
+                                      .Species
+                                      .FirstOrDefault(s => s.CategoryId == category.Id);
+
+            if (species != null)
+            {
+                string message = $"Cannot delete category '{name}' while it contains species";
+                throw new CategoryIsInUseException(message);
+            }
+
+            // Delete the category
+            _factory.Context.Categories.Remove(category);
+            _factory.Context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Delete the category with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        public async Task DeleteAsync(string name)
+        {
+            // Get the location and make sure it exists
+            name = _textInfo.ToTitleCase(name.CleanString());
+            Category category = await GetAsync(c => c.Name == name);
+
+            if (category == null)
+            {
+                string message = $"Category '{name}' does not exist";
+                throw new CategoryDoesNotExistException(message);
+            }
+
+            // Check the category isn't associated with any species
+            Species species = await _factory.Context
+                                            .Species
+                                            .AsAsyncEnumerable()
+                                            .FirstOrDefaultAsync(s => s.CategoryId == category.Id);
+
+            if (species != null)
+            {
+                string message = $"Cannot delete category '{name}' while it contains species";
+                throw new CategoryIsInUseException(message);
+            }
+
+            // Delete the category
+            _factory.Context.Categories.Remove(category);
+            await _factory.Context.SaveChangesAsync();
         }
     }
 }

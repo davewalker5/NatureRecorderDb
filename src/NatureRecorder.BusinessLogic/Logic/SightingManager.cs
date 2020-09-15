@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Entities.Interfaces;
 using NatureRecorder.Entities.Reporting;
 
@@ -277,45 +278,110 @@ namespace NatureRecorder.BusinessLogic.Logic
                 => ListAsync(s => (s.Date >= from) && (s.Date <= to), pageNumber, pageSize);
 
         /// <summary>
-        /// Generate a sightings summary for the specified date range
+        /// Generate a sightings summary for the specified report filters
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="locationId"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="speciesId"></param>
         /// <returns></returns>
-        public Summary Summarise(DateTime from, DateTime to)
-            => new Summary { Sightings = ListByDate(from, to, 1, int.MaxValue) };
-
-        /// <summary>
-        /// Generate a sightings summary for the specified date range
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        public async Task<Summary> SummariseAsync(DateTime from, DateTime to)
-            =>  new Summary { Sightings = await ListByDateAsync(from, to, 1, int.MaxValue).ToListAsync() };
-
-        /// <summary>
-        /// Generate a sightings summary for the specified date
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public Summary Summarise(DateTime date)
+        public Summary Summarise(DateTime from, DateTime to, int? locationId, int? categoryId, int? speciesId)
         {
-            DateTime from = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-            DateTime to = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
-            return new Summary { Sightings = ListByDate(from, to, 1, int.MaxValue) };
+            IEnumerable<Sighting> sightings = ListByDate(from, to, 1, int.MaxValue);
+
+            if (locationId != null)
+            {
+                sightings = sightings.Where(s => s.LocationId == locationId);
+            }
+
+            if (categoryId != null)
+            {
+                sightings = sightings.Where(s => s.Species.CategoryId == categoryId);
+            }
+
+            if (speciesId != null)
+            {
+                sightings = sightings.Where(s => s.SpeciesId == speciesId);
+            }
+
+            return new Summary { Sightings = sightings };
         }
 
         /// <summary>
-        /// Generate a sightings summary for the specified date
+        /// Generate a sightings summary for the specified report filters
         /// </summary>
-        /// <param name="date"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="locationId"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="speciesId"></param>
         /// <returns></returns>
-        public async Task<Summary> SummariseAsync(DateTime date)
+        public async Task<Summary> SummariseAsync(DateTime from, DateTime to, int? locationId, int? categoryId, int? speciesId)
         {
-            DateTime from = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-            DateTime to = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
-            return new Summary { Sightings = await ListByDateAsync(from, to, 1, int.MaxValue).ToListAsync() };
+            IEnumerable<Sighting> sightings = await ListByDateAsync(from, to, 1, int.MaxValue).ToListAsync();
+
+            if (locationId != null)
+            {
+                sightings = sightings.Where(s => s.LocationId == locationId);
+            }
+
+            if (categoryId != null)
+            {
+                sightings = sightings.Where(s => s.Species.CategoryId == categoryId);
+            }
+
+            if (speciesId != null)
+            {
+                sightings = sightings.Where(s => s.SpeciesId == speciesId);
+            }
+
+            return new Summary { Sightings = sightings };
+        }
+
+        /// <summary>
+        /// Delete the sighting with the specified Id
+        /// </summary>
+        /// <param name="id"></param>
+        public void Delete(int id)
+        {
+            // Get the sighting and make sure it exists
+            Sighting sighting = _factory.Context
+                                        .Sightings
+                                        .First(s => s.Id == id);
+
+            if (sighting == null)
+            {
+                string message = $"Sighting '{id}' does not exist";
+                throw new SightingDoesNotExistException(message);
+            }
+
+            // Delete the sighting
+            _factory.Context.Sightings.Remove(sighting);
+            _factory.Context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Delete the sighting with the specified Id
+        /// </summary>
+        /// <param name="id"></param>
+        public async Task DeleteAsync(int id)
+        {
+            // Get the sighting and make sure it exists
+            Sighting sighting = await _factory.Context
+                                              .Sightings
+                                              .AsAsyncEnumerable()
+                                              .FirstAsync(s => s.Id == id);
+
+            if (sighting == null)
+            {
+                string message = $"Sighting '{id}' does not exist";
+                throw new SightingDoesNotExistException(message);
+            }
+
+            // Delete the sighting
+            _factory.Context.Sightings.Remove(sighting);
+            await _factory.Context.SaveChangesAsync();
         }
     }
 }

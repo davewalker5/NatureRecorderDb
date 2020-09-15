@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using NatureRecorder.BusinessLogic.Factory;
@@ -9,12 +8,19 @@ namespace NatureRecorder.Interpreter.Base
 {
     public abstract class ReportCommandBase : CommandBase
     {
-        private const string DateFormat = "yyyy-MM-dd";
-
-        public void Summarise(NatureRecorderFactory factory, DateTime from, DateTime to, StreamWriter output)
+        /// <summary>
+        /// Create a summary report for the specified report filters
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="locationId"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="speciesId"></param>
+        /// <param name="output"></param>
+        public void Summarise(NatureRecorderFactory factory, DateTime from, DateTime to, int? locationId, int? categoryId, int? speciesId, StreamWriter output)
         {
-            // Retrieve the summary for the specified date
-            Summary summary = factory.Sightings.Summarise(from, to);
+            Summary summary = factory.Sightings.Summarise(from, to, locationId, categoryId, speciesId);
             if (summary.Sightings.Any())
             {
                 output.WriteLine($"Summary of sightings from {from:dd-MMM-yyyy} to {to:dd-MMM-yyyy}:\n");
@@ -37,30 +43,6 @@ namespace NatureRecorder.Interpreter.Base
                 output.WriteLine($"There were no sightings on {from.ToShortDateString()}");
                 output.Flush();
             }
-        }
-
-        /// <summary>
-        /// Return the date/time represented by the input string or NULL if the format
-        /// isn't as expected
-        /// </summary>
-        /// <param name="argument"></param>
-        /// <param name="output"></param>
-        /// <returns></returns>
-        protected DateTime? GetDateFromArgument(string argument, StreamWriter output)
-        {
-            DateTime? result = null;
-            DateTime parsed;
-
-            if (DateTime.TryParseExact(argument, DateFormat, null, DateTimeStyles.None, out parsed))
-            {
-                result = parsed;
-            }
-            else
-            {
-                output.WriteLine($"\"{argument}\" is not in the expected format ({DateFormat})");
-            }
-
-            return result;
         }
     }
 }

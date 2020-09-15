@@ -6,20 +6,21 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NatureRecorder.BusinessLogic.Extensions;
-using NatureRecorder.Data;
+using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Entities.Interfaces;
 
 namespace NatureRecorder.BusinessLogic.Logic
 {
     internal class LocationManager : ILocationManager
     {
-        private readonly NatureRecorderDbContext _context;
         private readonly TextInfo _textInfo = CultureInfo.CurrentCulture.TextInfo;
+        private NatureRecorderFactory _factory;
 
-        internal LocationManager(NatureRecorderDbContext context)
+        internal LocationManager(NatureRecorderFactory factory)
         {
-            _context = context;
+            _factory = factory;
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <returns></returns>
         public async Task<Location> GetAsync(Expression<Func<Location, bool>> predicate)
         {
-            List<Location> locations = await _context.Locations
+            List<Location> locations = await _factory.Context.Locations
                                                      .Where(predicate)
                                                      .ToListAsync();
             return locations.FirstOrDefault();
@@ -55,13 +56,13 @@ namespace NatureRecorder.BusinessLogic.Logic
             IEnumerable<Location> results;
             if (predicate == null)
             {
-                results = _context.Locations;
+                results = _factory.Context.Locations;
                 results = results.Skip((pageNumber - 1) * pageSize)
                                  .Take(pageSize);
             }
             else
             {
-                results = _context.Locations
+                results = _factory.Context.Locations
                                   .Where(predicate)
                                   .Skip((pageNumber - 1) * pageSize)
                                   .Take(pageSize);
@@ -82,14 +83,14 @@ namespace NatureRecorder.BusinessLogic.Logic
             IAsyncEnumerable<Location> results;
             if (predicate == null)
             {
-                results = _context.Locations;
+                results = _factory.Context.Locations;
                 results = results.Skip((pageNumber - 1) * pageSize)
                                  .Take(pageSize)
                                  .AsAsyncEnumerable();
             }
             else
             {
-                results = _context.Locations
+                results = _factory.Context.Locations
                                   .Where(predicate)
                                   .Skip((pageNumber - 1) * pageSize)
                                   .Take(pageSize)
@@ -135,8 +136,8 @@ namespace NatureRecorder.BusinessLogic.Logic
                     Latitude = latitude,
                     Longitude = longitude
                 };
-                _context.Locations.Add(location);
-                _context.SaveChanges();
+                _factory.Context.Locations.Add(location);
+                _factory.Context.SaveChanges();
             }
 
             return location;
@@ -179,11 +180,76 @@ namespace NatureRecorder.BusinessLogic.Logic
                     Latitude = latitude,
                     Longitude = longitude
                 };
-                await _context.Locations.AddAsync(location);
-                await _context.SaveChangesAsync();
+                await _factory.Context.Locations.AddAsync(location);
+                await _factory.Context.SaveChangesAsync();
             }
 
             return location;
+        }
+
+        /// <summary>
+        /// Delete the location with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        public void Delete(string name)
+        {
+            // Get the location and make sure it exists
+            name = _textInfo.ToTitleCase(name.CleanString());
+            Location location = Get(l => l.Name == name);
+
+            if (location == null)
+            {
+                string message = $"Location '{name}' does not exist";
+                throw new LocationDoesNotExistException(message);
+            }
+
+            // Check the location isn't used in any sightings
+            Sighting sighting = _factory.Context
+                                        .Sightings
+                                        .FirstOrDefault(s => s.LocationId == location.Id);
+
+            if (sighting != null)
+            {
+                string message = $"Cannot delete location '{name}' while it is referenced in sightings";
+                throw new LocationIsInUseException(message);
+            }
+
+            // Delete the location
+            _factory.Context.Locations.Remove(location);
+            _factory.Context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Delete the location with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        public async Task DeleteAsync(string name)
+        {
+            // Get the location and make sure it exists
+            name = _textInfo.ToTitleCase(name.CleanString());
+            Location location = await GetAsync(l => l.Name == name);
+
+            if (location == null)
+            {
+                string message = $"Location '{name}' does not exist";
+                throw new LocationDoesNotExistException(message);
+            }
+
+            // Check the location isn't used in any sightings
+            Sighting sighting = await _factory.Context
+                                              .Sightings
+                                              .AsAsyncEnumerable()
+                                              .FirstOrDefaultAsync(s => s.LocationId == location.Id);
+
+            if (sighting != null)
+            {
+                string message = $"Cannot delete location '{name}' while it is referenced in sightings";
+                throw new LocationIsInUseException(message);
+            }
+
+            // Delete the location
+            _factory.Context.Locations.Remove(location);
+            await _factory.Context.SaveChangesAsync();
         }
     }
 }

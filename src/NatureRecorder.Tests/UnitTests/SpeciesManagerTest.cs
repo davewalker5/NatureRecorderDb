@@ -6,8 +6,9 @@ using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.Entities.Exceptions;
+using System;
 
-namespace NatureRecorder.Tests
+namespace NatureRecorder.Tests.UnitTests
 {
     [TestClass]
     public class SpeciesManagerTest
@@ -251,6 +252,56 @@ namespace NatureRecorder.Tests
         public async Task MoveToMissingCategoryAsyncTest()
         {
             await _factory.Species.MoveAsync(SpeciesName, "");
+        }
+
+        [TestMethod]
+        public void DeleteTest()
+        {
+            _factory.Species.Delete(SpeciesName);
+            IEnumerable<Species> entities = _factory.Species.List(null, 1, int.MaxValue);
+            Assert.IsFalse(entities.Any());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public void DeleteMissingTest()
+        {
+            _factory.Species.Delete("");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesIsInUseException))]
+        public void DeleteInUseTest()
+        {
+            Species species = _factory.Species.Get(s => s.Name == SpeciesName);
+            Location location = _factory.Locations.Add("", "", "", "", "", "", null, null);
+            _factory.Sightings.Add(0, false, DateTime.Now, location.Id, species.Id);
+            _factory.Species.Delete(SpeciesName);
+        }
+
+        [TestMethod]
+        public async Task DeleteAsyncTest()
+        {
+            await _factory.Species.DeleteAsync(SpeciesName);
+            IEnumerable<Species> entities = await _factory.Species.ListAsync(null, 1, int.MaxValue).ToListAsync();
+            Assert.IsFalse(entities.Any());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public async Task DeleteMissingAsyncTest()
+        {
+            await _factory.Species.DeleteAsync("");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesIsInUseException))]
+        public async Task DeleteInUseAsyncTest()
+        {
+            Species species = await _factory.Species.GetAsync(s => s.Name == SpeciesName);
+            Location location = await _factory.Locations.AddAsync("", "", "", "", "", "", null, null);
+            await _factory.Sightings.AddAsync(0, false, DateTime.Now, location.Id, species.Id);
+            await _factory.Species.DeleteAsync(SpeciesName);
         }
     }
 }

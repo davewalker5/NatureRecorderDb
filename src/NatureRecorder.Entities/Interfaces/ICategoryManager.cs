@@ -10,6 +10,8 @@ namespace NatureRecorder.Entities.Interfaces
     {
         Category Add(string name);
         Task<Category> AddAsync(string name);
+        void Delete(string name);
+        Task DeleteAsync(string name);
         Category Get(Expression<Func<Category, bool>> predicate);
         Task<Category> GetAsync(Expression<Func<Category, bool>> predicate);
         IEnumerable<Category> List(Expression<Func<Category, bool>> predicate, int pageNumber, int pageSize);

@@ -4,7 +4,7 @@ using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Tests.Helpers;
 
-namespace NatureRecorder.Tests
+namespace NatureRecorder.Tests.CommandTests
 {
     [TestClass]
     public class ConnectionCommandTest

@@ -10,8 +10,9 @@ using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Interpreter.Logic;
 using NatureRecorder.Tests.Helpers;
+using NatureRecorder.Tests.UnitTests;
 
-namespace NatureRecorder.Tests
+namespace NatureRecorder.Tests.CommandTests
 {
     [TestClass]
     public class DataExchangeCommandTest

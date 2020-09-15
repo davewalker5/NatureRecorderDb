@@ -27,8 +27,8 @@ namespace NatureRecorder.BusinessLogic.Factory
         public NatureRecorderFactory(NatureRecorderDbContext context)
         {
             Context = context;
-            _locations = new Lazy<ILocationManager>(() => new LocationManager(context));
-            _categories = new Lazy<ICategoryManager>(() => new CategoryManager(context));
+            _locations = new Lazy<ILocationManager>(() => new LocationManager(this));
+            _categories = new Lazy<ICategoryManager>(() => new CategoryManager(this));
             _species = new Lazy<ISpeciesManager>(() => new SpeciesManager(this));
             _sightings = new Lazy<ISightingManager>(() => new SightingManager(this));
             _users = new Lazy<IUserManager>(() => new UserManager(context));

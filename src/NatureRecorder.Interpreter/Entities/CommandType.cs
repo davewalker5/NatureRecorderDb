@@ -11,6 +11,7 @@
         categories,
         check,
         connection,
+        delete,
         deleteuser,
         exit,
         export,
