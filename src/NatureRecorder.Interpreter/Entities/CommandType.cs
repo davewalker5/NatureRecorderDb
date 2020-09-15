@@ -3,6 +3,7 @@
     public enum CommandType
     {
         help,
+        add,
         addcategory,
         addlocation,
         addsighting,

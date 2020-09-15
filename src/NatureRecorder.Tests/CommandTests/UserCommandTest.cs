@@ -32,12 +32,12 @@ namespace NatureRecorder.Tests.CommandTests
 
             using (StreamWriter output = new StreamWriter(new MemoryStream()))
             {
-                new AddUserCommand().Run(new CommandContext
+                new AddCommand().Run(new CommandContext
                 {
                     Output = output,
                     Factory = _factory,
                     Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { UserName, Password }
+                    Arguments = new string[] { "user", UserName, Password }
                 });
             }
 
@@ -54,12 +54,12 @@ namespace NatureRecorder.Tests.CommandTests
         {
             using (StreamWriter output = new StreamWriter(new MemoryStream()))
             {
-                new AddUserCommand().Run(new CommandContext
+                new AddCommand().Run(new CommandContext
                 {
                     Output = output,
                     Factory = _factory,
                     Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { UserName, Password }
+                    Arguments = new string[] { "user", UserName, Password }
                 });
 
                 Assert.IsTrue(_factory.Users.Authenticate(UserName, Password));
@@ -83,12 +83,12 @@ namespace NatureRecorder.Tests.CommandTests
         {
             using (StreamWriter output = new StreamWriter(new MemoryStream()))
             {
-                new AddUserCommand().Run(new CommandContext
+                new AddCommand().Run(new CommandContext
                 {
                     Output = output,
                     Factory = _factory,
                     Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { UserName, Password }
+                    Arguments = new string[] { "user", UserName, Password }
                 });
 
                 Assert.IsTrue(_factory.Users.Authenticate(UserName, Password));

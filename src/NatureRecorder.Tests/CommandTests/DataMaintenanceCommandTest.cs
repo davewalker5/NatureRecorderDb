@@ -37,13 +37,13 @@ namespace NatureRecorder.Tests.CommandTests
             {
                 using (StreamWriter output = new StreamWriter(new MemoryStream()))
                 {
-                    new AddLocationCommand().Run(new CommandContext
+                    new AddCommand().Run(new CommandContext
                     {
                         Reader = new StreamCommandReader(input),
                         Output = output,
                         Factory = _factory,
                         Mode = CommandMode.Interactive,
-                        Arguments = new string[] { }
+                        Arguments = new string[] { "location" }
                     });
                 }
             }
@@ -72,13 +72,13 @@ namespace NatureRecorder.Tests.CommandTests
             {
                 using (StreamWriter output = new StreamWriter(new MemoryStream()))
                 {
-                    new AddCategoryCommand().Run(new CommandContext
+                    new AddCommand().Run(new CommandContext
                     {
                         Reader = new StreamCommandReader(input),
                         Output = output,
                         Factory = _factory,
                         Mode = CommandMode.Interactive,
-                        Arguments = new string[] { }
+                        Arguments = new string[] { "category" }
                     });
                 }
             }
@@ -102,13 +102,13 @@ namespace NatureRecorder.Tests.CommandTests
             {
                 using (StreamWriter output = new StreamWriter(new MemoryStream()))
                 {
-                    new AddSpeciesCommand().Run(new CommandContext
+                    new AddCommand().Run(new CommandContext
                     {
                         Reader = new StreamCommandReader(input),
                         Output = output,
                         Factory = _factory,
                         Mode = CommandMode.Interactive,
-                        Arguments = new string[] { }
+                        Arguments = new string[] { "species" }
                     });
                 }
             }

@@ -17,11 +17,11 @@ namespace NatureRecorder.Tests.CommandTests
             {
                 using (StreamWriter output = new StreamWriter(stream))
                 {
-                    new AddCategoryCommand().Run(new CommandContext
+                    new AddCommand().Run(new CommandContext
                     {
                         Output = output,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { }
+                        Arguments = new string[] { "category" }
                     });
 
                     data = TestHelpers.ReadStream(stream);
@@ -39,18 +39,18 @@ namespace NatureRecorder.Tests.CommandTests
             {
                 using (StreamWriter output = new StreamWriter(stream))
                 {
-                    new AddUserCommand().Run(new CommandContext
+                    new AddCommand().Run(new CommandContext
                     {
                         Output = output,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { }
+                        Arguments = new string[] { "user" }
                     });
 
                     data = TestHelpers.ReadStream(stream);
                 }
             }
 
-            Assert.IsTrue(data.Contains("expects between"));
+            Assert.IsTrue(data.Contains("Incorrect argument count"));
         }
     }
 }
