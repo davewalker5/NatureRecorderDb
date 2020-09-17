@@ -20,15 +20,16 @@ namespace NatureRecorder.Interpreter.Logic
         {
             StringBuilder builder = new StringBuilder();
             bool invalid = false;
-            bool completed = false;
+            bool completed;
             string input;
 
             do
             {
                 Console.Write($"{prompt} [ESC to cancel]: ");
 
-                // Clear the builder for the first or previous (invalid) attempt
+                // Reset for the first or previous (invalid) attempt
                 builder.Clear();
+                completed = false;
 
                 do
                 {

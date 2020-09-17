@@ -40,9 +40,9 @@ namespace NatureRecorder.Interpreter.Commands
                         case EntityType.Species:
                             ListSpecies(context);
                             break;
-                        default:
-                            string message = $"Cannot list unknown entity type";
-                            throw new UnknownEntityType(message);
+                        case EntityType.User:
+                            ListUsers(context);
+                            break;
                     }
                 }
             }
@@ -89,9 +89,12 @@ namespace NatureRecorder.Interpreter.Commands
                 case EntityType.Species:
                     count = 2;
                     break;
+                case EntityType.User:
+                    count = 1;
+                    break;
                 default:
                     string message = $"Cannot list unknown entity type";
-                    throw new UnknownEntityType(message);
+                    throw new UnknownEntityTypeException(message);
             }
 
             return count;
@@ -125,9 +128,12 @@ namespace NatureRecorder.Interpreter.Commands
                 case "Species":
                     type = EntityType.Species;
                     break;
+                case "Users":
+                    type = EntityType.User;
+                    break;
                 default:
                     string message = $"Cannot list unknown entity type";
-                    throw new UnknownEntityType(message);
+                    throw new UnknownEntityTypeException(message);
             }
 
             return type;
@@ -212,6 +218,30 @@ namespace NatureRecorder.Interpreter.Commands
             else
             {
                 context.Output.WriteLine($"Species category \"{categoryName}\" does not exist");
+            }
+
+            context.Output.Flush();
+        }
+
+        /// <summary>
+        /// List the current database users
+        /// </summary>
+        /// <param name="context"></param>
+        [ExcludeFromCodeCoverage]
+        private void ListUsers(CommandContext context)
+        {
+            IEnumerable<User> users = context.Factory.Context.Users;
+            if (users.Any())
+            {
+                context.Output.WriteLine($"There are {users.Count()} users in the database:\n");
+                foreach (User user in users.OrderBy(u => u.UserName))
+                {
+                    context.Output.WriteLine($"\t{user.UserName}");
+                }
+            }
+            else
+            {
+                context.Output.WriteLine("There are no users in the database");
             }
 
             context.Output.Flush();

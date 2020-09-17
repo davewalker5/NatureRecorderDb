@@ -14,6 +14,7 @@
         connection,
         delete,
         deleteuser,
+        edit,
         exit,
         export,
         import,

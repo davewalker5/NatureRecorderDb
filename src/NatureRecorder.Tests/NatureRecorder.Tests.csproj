@@ -79,6 +79,9 @@
     <Content Include="Content\report-category.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\list-users.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\add-location.txt" />
@@ -97,5 +100,6 @@
     <None Remove="Content\report-summary-both-dates.txt" />
     <None Remove="Content\report-summary %28copy%29.txt" />
     <None Remove="Content\report-category.txt" />
+    <None Remove="Content\list-users.txt" />
   </ItemGroup>
 </Project>

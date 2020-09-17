@@ -348,7 +348,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             // Get the sighting and make sure it exists
             Sighting sighting = _factory.Context
                                         .Sightings
-                                        .First(s => s.Id == id);
+                                        .FirstOrDefault(s => s.Id == id);
 
             if (sighting == null)
             {
@@ -371,7 +371,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             Sighting sighting = await _factory.Context
                                               .Sightings
                                               .AsAsyncEnumerable()
-                                              .FirstAsync(s => s.Id == id);
+                                              .FirstOrDefaultAsync(s => s.Id == id);
 
             if (sighting == null)
             {

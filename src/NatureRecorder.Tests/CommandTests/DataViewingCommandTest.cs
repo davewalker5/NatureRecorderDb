@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Tests.Helpers;
@@ -18,6 +19,25 @@ namespace NatureRecorder.Tests.CommandTests
         {
             NatureRecorderDbContext context = new NatureRecorderDbContextFactory().CreateInMemoryDbContext();
             _factory = new NatureRecorderFactory(context);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnknownEntityTypeException))]
+        public void ListInvalidEntityTypeCommandTest()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new ListCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.CommandLine,
+                        Arguments = new string[] { "something" }
+                    });
+                }
+            }
         }
 
         [TestMethod]
@@ -104,6 +124,32 @@ namespace NatureRecorder.Tests.CommandTests
             }
 
             TestHelpers.CompareOutput(data, "list-species.txt");
+        }
+
+        [TestMethod]
+        public void ListUsersCommandTest()
+        {
+            _factory.Users.AddUser("someone", "somepassword");
+
+            string data;
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new ListCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.CommandLine,
+                        Arguments = new string[] { "users" }
+                    });
+
+                    data = TestHelpers.ReadStream(stream);
+                }
+            }
+
+            TestHelpers.CompareOutput(data, "list-users.txt");
         }
     }
 }

@@ -30,11 +30,16 @@ DESCRIPTION
     connection
         Show the database connection details
 
-    delete location|category|species|sighting|user [id]
+    delete [location|category|species|sighting|user] [id]
         Delete the record of the specified type with the specified identifier.
         For locations, categories and species, "id" is the name. For users, the
         "id" is the username. For sightings, "id" is the integer record ID
         listed in the "report" command output.
+
+    edit [location|sighting] [id]
+        Edit the details for the specified location or sighting. For a location,
+        the "id" is the location name and for a sighting it's the integer
+        record ID listed in the "report" command output.
 
     exit
         Exit interactive mode
@@ -82,8 +87,8 @@ DESCRIPTION
         Enter interactive mode. The application will continue to prompt for and
         run commands until the "exit" command is used to exit
 
-    list [locations|categories]
-        List all the locations or species categories in the database
+    list [locations|categories|users]
+        List all the records of the specified type in the database
 
     list species [category]
         List all the species in the database that belong to the specified

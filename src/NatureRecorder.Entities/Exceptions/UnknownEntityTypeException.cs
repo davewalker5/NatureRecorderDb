@@ -5,17 +5,17 @@ namespace NatureRecorder.Entities.Exceptions
 {
     [Serializable]
     [ExcludeFromCodeCoverage]
-    public class UnknownEntityType : Exception
+    public class UnknownEntityTypeException : Exception
     {
-        public UnknownEntityType()
+        public UnknownEntityTypeException()
         {
         }
 
-        public UnknownEntityType(string message) : base(message)
+        public UnknownEntityTypeException(string message) : base(message)
         {
         }
 
-        public UnknownEntityType(string message, Exception inner) : base(message, inner)
+        public UnknownEntityTypeException(string message, Exception inner) : base(message, inner)
         {
         }
     }

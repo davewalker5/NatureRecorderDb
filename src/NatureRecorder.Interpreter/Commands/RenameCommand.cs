@@ -21,28 +21,34 @@ namespace NatureRecorder.Interpreter.Commands
             {
                 // The first argument indicates the kind of entity being renamed
                 string entityTypeName = context.CleanArgument(0);
-                EntityType entityType = Enum.Parse<EntityType>(entityTypeName);
-
-                switch (entityType)
+                if (Enum.TryParse<EntityType>(entityTypeName, out EntityType entityType))
                 {
-                    case EntityType.Category:
-                        context.Factory
-                               .Categories
-                               .Rename(context.Arguments[1], context.Arguments[2]);
-                        break;
-                    case EntityType.Species:
-                        context.Factory
-                               .Species
-                               .Rename(context.Arguments[1], context.Arguments[2]);
-                        break;
-                    default:
-                        string message = $"Cannot rename unknown entity type";
-                        throw new UnknownEntityType(message);
-                }
+                    switch (entityType)
+                    {
+                        case EntityType.Category:
+                            context.Factory
+                                   .Categories
+                                   .Rename(context.Arguments[1], context.Arguments[2]);
+                            break;
+                        case EntityType.Species:
+                            context.Factory
+                                   .Species
+                                   .Rename(context.Arguments[1], context.Arguments[2]);
+                            break;
+                        default:
+                            string message = $"Cannot rename unknown entity type";
+                            throw new UnknownEntityTypeException(message);
+                    }
 
-                // Report the rename
-                context.Output.WriteLine($"{context.Arguments[0]} '{context.Arguments[1]}' renamed to '{context.Arguments[2]}'");
-                context.Output.Flush();
+                    // Report the rename
+                    context.Output.WriteLine($"{context.Arguments[0]} '{context.Arguments[1]}' renamed to '{context.Arguments[2]}'");
+                    context.Output.Flush();
+                }
+                else
+                {
+                    string message = $"Cannot rename unknown entity type";
+                    throw new UnknownEntityTypeException(message);
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Tests.Helpers;
@@ -23,6 +24,25 @@ namespace NatureRecorder.Tests.CommandTests
             _factory = new NatureRecorderFactory(context);
 
             _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ImportExportManagerTest)).Location);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnknownReportTypeException))]
+        public void InvalidReportTypeTest()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new ReportCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.Interactive,
+                        Arguments = new string[] { "invalid" }
+                    });
+                }
+            }
         }
 
         [TestMethod]
