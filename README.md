@@ -11,7 +11,7 @@
 
 ## About NatureRecorderDb
 
-NatureRecorderDb implements the entities, business logic and a command-line application for recording wildife sighting. The application maintains details of:
+NatureRecorderDb implements the entities, business logic and a command-line application for recording wildife sightings. The application maintains details of:
 
 - Locations, with the following details:
   - Unique name
@@ -53,4 +53,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Trello
 
-*  [Nature Recorder on Trello](https://trello.com/b/BZILZCFi)
+*  [Nature Recorder on Trello](https://trello.com/b/dwPS64rZ)
