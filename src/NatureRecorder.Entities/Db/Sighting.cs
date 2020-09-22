@@ -18,6 +18,7 @@ namespace NatureRecorder.Entities.Db
         public int SpeciesId { get; set; }
         public DateTime Date { get; set; }
         public int Number { get; set; }
+        public Gender Gender { get; set; }
         public bool WithYoung { get; set; }
 
         public Location Location { get; set; }
@@ -33,6 +34,7 @@ namespace NatureRecorder.Entities.Db
             builder.Append(MakeCsvField(Species.Name));
             builder.Append(MakeCsvField(Species.Category.Name));
             builder.Append(MakeCsvField(Number));
+            builder.Append(MakeCsvField(Gender));
             builder.Append(MakeCsvField(WithYoung));
             builder.Append(MakeCsvField(Date));
             builder.Append(MakeCsvField(Location.Name));
@@ -64,6 +66,7 @@ namespace NatureRecorder.Entities.Db
                     }
                 },
                 Number = record.Number,
+                Gender = record.Gender,
                 WithYoung = record.WithYoung,
                 Date = DateTime.ParseExact(record.Date, DateTimeFormat, CultureInfo.CurrentCulture),
                 Location = new Location

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NatureRecorder.Data;
 
 namespace NatureRecorder.Data.Migrations
 {
     [DbContext(typeof(NatureRecorderDbContext))]
-    partial class NatureRecorderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200921154722_record_gender")]
+    partial class record_gender
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

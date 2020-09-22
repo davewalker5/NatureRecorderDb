@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using NatureRecorder.Interpreter.Interfaces;
 
@@ -146,35 +148,47 @@ namespace NatureRecorder.Interpreter.Logic
         }
 
         /// <summary>
+        /// Prompt for one of a set of single character options
+        /// </summary>
+        /// <param name="prompt"></param>
+        /// <param name="options"></param>
+        /// <param name="caseSensitive"></param>
+        /// <returns></returns>
+        public char? PromptForOption(string prompt, IEnumerable<char> options)
+        {
+            char? selected = null;
+
+            // Convert the options to uppercase and make sure they're distinct
+            IEnumerable<char> distinctOptions = options.Select(o => Char.ToUpper(o)).Distinct();
+            string optionList = string.Join(",", distinctOptions);
+
+            do
+            {
+                string input = ReadLine($"{prompt} ({optionList})", false)
+                                    .Trim()
+                                    .ToUpper();
+                if (!Cancelled && (input.Length == 1) && distinctOptions.Contains(input[0]))
+                {
+                    selected = input[0];
+                }
+                else
+                {
+                    Console.WriteLine($"'{input}' is not a valid input");
+                }
+            }
+            while (!Cancelled && (selected == null));
+
+            return selected;
+        }
+
+        /// <summary>
         /// Prompt for a y/Y or n/N keypress
         /// </summary>
         /// <returns></returns>
         public bool PromptForYesNo(string prompt)
         {
-            bool? yesNo = null;
-
-            Console.Write($"{prompt} [y/n] : ");
-
-            do
-            {
-                ConsoleKeyInfo info = Console.ReadKey(true);
-                switch (info.KeyChar.ToString().ToUpper())
-                {
-                    case "Y":
-                        Console.WriteLine("y");
-                        yesNo = true;
-                        break;
-                    case "N":
-                        Console.WriteLine("n");
-                        yesNo = false;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            while (yesNo == null);
-
-            return yesNo ?? false;
+            char? selected = PromptForOption(prompt, new char[] { 'Y', 'N' });
+            return (selected == 'Y');
         }
     }
 }

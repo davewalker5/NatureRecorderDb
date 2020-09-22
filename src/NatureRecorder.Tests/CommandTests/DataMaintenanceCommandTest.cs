@@ -320,7 +320,7 @@ namespace NatureRecorder.Tests.CommandTests
             Location location = _factory.Locations.Add("somewhere", "", "", "", "", "", null, null);
             _factory.Categories.Add("birds");
             Species species = _factory.Species.Add("robin", "birds");
-            _factory.Sightings.Add(0, false, DateTime.Now, location.Id, species.Id);
+            _factory.Sightings.Add(0, Gender.Unknown, false, DateTime.Now, location.Id, species.Id);
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -451,7 +451,7 @@ namespace NatureRecorder.Tests.CommandTests
             Location location = _factory.Locations.Add("somewhere", "", "", "", "", "", null, null);
             _factory.Categories.Add("birds");
             Species species = _factory.Species.Add("robin", "birds");
-            _factory.Sightings.Add(0, false, DateTime.Now, location.Id, species.Id);
+            _factory.Sightings.Add(0, Gender.Unknown, false, DateTime.Now, location.Id, species.Id);
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -474,7 +474,7 @@ namespace NatureRecorder.Tests.CommandTests
             Location location = _factory.Locations.Add("somewhere", "", "", "", "", "", null, null);
             _factory.Categories.Add("birds");
             Species species = _factory.Species.Add("robin", "birds");
-            Sighting sighting = _factory.Sightings.Add(0, false, DateTime.Now, location.Id, species.Id);
+            Sighting sighting = _factory.Sightings.Add(0, Gender.Unknown, false, DateTime.Now, location.Id, species.Id);
 
             using (MemoryStream stream = new MemoryStream())
             {
