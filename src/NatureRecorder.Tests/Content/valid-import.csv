@@ -1,3 +1,3 @@
-Species,Category,Number,WithYoung,Date,Location,Address,City,County,Postcode,Country,Latitude,Longitude
-"jackdaw","Birds","0","false","23/11/1996","Bagley Wood",,"Kennington","Oxfordshire",,"United Kingdom",51.7810,1.2611
-"lapwing","Birds","0","true","03/01/2000","College Lake",,,,,,,
+Species,Category,Number,Gender,WithYoung,Date,Location,Address,City,County,Postcode,Country,Latitude,Longitude
+"jackdaw","Birds","0","Unknown","false","23/11/1996","Bagley Wood",,"Kennington","Oxfordshire",,"United Kingdom",51.7810,1.2611
+"lapwing","Birds","0","Unknown","true","03/01/2000","College Lake",,,,,,,

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using NatureRecorder.Entities.Db;
 
 namespace NatureRecorder.Entities.DataExchange
 {
@@ -7,6 +7,7 @@ namespace NatureRecorder.Entities.DataExchange
         public string Species { get; set; }
         public string Category { get; set; }
         public int Number { get; set; }
+        public Gender Gender { get; set; }
         public bool WithYoung { get; set; }
         public string Date { get; set; }
         public string Location { get; set; }

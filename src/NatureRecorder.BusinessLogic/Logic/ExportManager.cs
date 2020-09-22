@@ -14,6 +14,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             "Species",
             "Category",
             "Number",
+            "Gender",
             "WithYoung",
             "Date",
             "Location",

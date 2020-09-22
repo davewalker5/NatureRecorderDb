@@ -93,6 +93,9 @@ namespace NatureRecorder.Interpreter.Logic
             _runner.Mode = CommandMode.Interactive;
             bool exit = false;
 
+            // Show the current database connection
+            _runner.Run(_commands.First(c => c.Type == CommandType.connection), new string[] { });
+
             do
             {
                 // Read the next command

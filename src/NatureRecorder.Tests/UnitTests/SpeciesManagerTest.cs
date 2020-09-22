@@ -275,7 +275,7 @@ namespace NatureRecorder.Tests.UnitTests
         {
             Species species = _factory.Species.Get(s => s.Name == SpeciesName);
             Location location = _factory.Locations.Add("", "", "", "", "", "", null, null);
-            _factory.Sightings.Add(0, false, DateTime.Now, location.Id, species.Id);
+            _factory.Sightings.Add(0, Gender.Unknown, false, DateTime.Now, location.Id, species.Id);
             _factory.Species.Delete(SpeciesName);
         }
 
@@ -300,7 +300,7 @@ namespace NatureRecorder.Tests.UnitTests
         {
             Species species = await _factory.Species.GetAsync(s => s.Name == SpeciesName);
             Location location = await _factory.Locations.AddAsync("", "", "", "", "", "", null, null);
-            await _factory.Sightings.AddAsync(0, false, DateTime.Now, location.Id, species.Id);
+            await _factory.Sightings.AddAsync(0, Gender.Unknown, false, DateTime.Now, location.Id, species.Id);
             await _factory.Species.DeleteAsync(SpeciesName);
         }
     }

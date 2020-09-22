@@ -15,6 +15,7 @@ namespace NatureRecorder.Entities.Reporting
         private const string LocationHeader = "Location";
         private const string SpeciesHeader = "Species";
         private const string CategoryHeader = "Category";
+        private const string GenderHeader = "Gender";
         private const string NumberHeader = "Count";
         private const string WithYoungHeader = "With Young";
 
@@ -28,6 +29,7 @@ namespace NatureRecorder.Entities.Reporting
         private int _locationColumnWidth;
         private int _speciesColumnWidth;
         private int _categoryColumnWidth;
+        private int _genderColumnWidth;
         private int _numberColumnWidth;
         private int _withYoungColumnWidth;
         private string _padding;
@@ -51,6 +53,7 @@ namespace NatureRecorder.Entities.Reporting
             _locationColumnWidth = Math.Max(LocationHeader.Length, sightings.Max(s => s.Location.Name.Length));
             _speciesColumnWidth = Math.Max(SpeciesHeader.Length, sightings.Max(s => s.Species.Name.Length));
             _categoryColumnWidth = Math.Max(CategoryHeader.Length, sightings.Max(s => s.Species.Category.Name.Length));
+            _genderColumnWidth = Math.Max(GenderHeader.Length, Gender.Unknown.ToString().Length);
             _numberColumnWidth = Math.Max(NumberHeader.Length, sightings.Max(s => s.Number.ToString().Length));
             _withYoungColumnWidth = Math.Max(WithYoungHeader.Length, 3);
         }
@@ -61,8 +64,8 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="output"></param>
         public void PrintTable(StreamWriter output)
         {
-            PrintRow(IdHeader, DateHeader, LocationHeader, SpeciesHeader, CategoryHeader, NumberHeader, WithYoungHeader, false, output);
-            PrintRow(RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), true, output);
+            PrintRow(IdHeader, DateHeader, LocationHeader, SpeciesHeader, CategoryHeader, GenderHeader, NumberHeader, WithYoungHeader, false, output);
+            PrintRow(RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), RowSeparator.ToString(), true, output);
 
             foreach (Sighting sighting in _sightings)
             {
@@ -84,6 +87,7 @@ namespace NatureRecorder.Entities.Reporting
                      sighting.Location.Name,
                      sighting.Species.Name,
                      sighting.Species.Category.Name,
+                     sighting.Gender.ToString(),
                      (sighting.Number == 0) ? " " : sighting.Number.ToString(),
                      (sighting.WithYoung) ? "Yes" : "No",
                      false,
@@ -97,11 +101,12 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="location"></param>
         /// <param name="species"></param>
         /// <param name="category"></param>
+        /// <param name="gender"></param>
         /// <param name="number"></param>
         /// <param name="withYoung"></param>
         /// <param name="isSeparatorRow"></param>
         /// <param name="output"></param>
-        private void PrintRow(string id, string date, string location, string species, string category, string number, string withYoung, bool isSeparatorRow, StreamWriter output)
+        private void PrintRow(string id, string date, string location, string species, string category, string gender, string number, string withYoung, bool isSeparatorRow, StreamWriter output)
         {
             output.Write(ColumnSeparator);
             PrintCell(_idColumnWidth, id, isSeparatorRow, output);
@@ -113,6 +118,8 @@ namespace NatureRecorder.Entities.Reporting
             PrintCell(_speciesColumnWidth, species, isSeparatorRow, output);
             output.Write(ColumnSeparator);
             PrintCell(_categoryColumnWidth, category, isSeparatorRow, output);
+            output.Write(ColumnSeparator);
+            PrintCell(_genderColumnWidth, gender, isSeparatorRow, output);
             output.Write(ColumnSeparator);
             PrintCell(_numberColumnWidth, number, isSeparatorRow, output);
             output.Write(ColumnSeparator);

@@ -438,6 +438,44 @@ namespace NatureRecorder.Interpreter.Base
         }
 
         /// <summary>
+        /// Prompt for the gender associated with a sighting
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="isEditing"></param>
+        /// <returns></returns>
+        protected Gender? PromptForGender(CommandContext context, Gender defaultValue, bool isEditing)
+        {
+            Gender? gender = null;
+
+            // Read the gender. A null return means the entry was cancelled
+            char? selection = context.Reader.PromptForOption("Gender", new char[] { 'M', 'F', 'B', 'U' });
+            if (selection != null)
+            {
+                // Map the option to the corresponding enum value
+                switch (selection)
+                {
+                    case 'M':
+                        gender = Gender.Male;
+                        break;
+                    case 'F':
+                        gender = Gender.Female;
+                        break;
+                    case 'B':
+                        gender = Gender.Both;
+                        break;
+                    case 'U':
+                        gender = Gender.Unknown;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return gender;
+        }
+
+        /// <summary>
         /// Add a sighting
         /// </summary>
         /// <param name="context"></param>
@@ -454,7 +492,7 @@ namespace NatureRecorder.Interpreter.Base
             // values for input
             bool isOptionalInput = (editing != null);
 
-            // TODO : Prompt for the location
+            // Prompt for the location
             string defaultValue = editing?.Location.Name ?? context.CurrentLocation?.Name;
             Location location = PromptForLocationByName(context, defaultValue, true);
             if (context.Reader.Cancelled) return null;
@@ -472,6 +510,10 @@ namespace NatureRecorder.Interpreter.Base
             int? number = PromptForNumber(context, (editing?.Number ?? 0).ToString(), isOptionalInput);
             if (number == null) return null;
 
+            // Prompt for the gender of individuals seen
+            Gender? gender = PromptForGender(context, editing?.Gender ?? Gender.Unknown, isOptionalInput);
+            if (gender == null) return null;
+
             // Yes/No prompt for whether or not young were also seen
             bool withYoung = context.Reader.PromptForYesNo("Seen with young");
 
@@ -484,6 +526,7 @@ namespace NatureRecorder.Interpreter.Base
                 SpeciesId = species.Id,
                 Date = date ?? DateTime.Now,
                 Number = number ?? 0,
+                Gender = gender ?? Gender.Unknown,
                 WithYoung = withYoung
             };
         }

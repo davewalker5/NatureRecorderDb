@@ -138,7 +138,7 @@ namespace NatureRecorder.Tests.UnitTests
             Location entity = _factory.Locations.Get(a => a.Name == EntityName);
             Category category = _factory.Categories.Add("");
             Species species = _factory.Species.Add("", "");
-            _factory.Sightings.Add(0, false, DateTime.Now, entity.Id, species.Id);
+            _factory.Sightings.Add(0, Gender.Unknown, false, DateTime.Now, entity.Id, species.Id);
             _factory.Locations.Delete(EntityName);
         }
 
@@ -164,7 +164,7 @@ namespace NatureRecorder.Tests.UnitTests
             Location entity = await _factory.Locations.GetAsync(a => a.Name == EntityName);
             Category category = await _factory.Categories.AddAsync("");
             Species species = await _factory.Species.AddAsync("", "");
-            await _factory.Sightings.AddAsync(0, false, DateTime.Now, entity.Id, species.Id);
+            await _factory.Sightings.AddAsync(0, Gender.Unknown, false, DateTime.Now, entity.Id, species.Id);
             await _factory.Locations.DeleteAsync(EntityName);
         }
     }

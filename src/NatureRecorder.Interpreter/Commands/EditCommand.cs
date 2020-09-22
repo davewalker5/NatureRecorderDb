@@ -60,9 +60,8 @@ namespace NatureRecorder.Interpreter.Commands
             Sighting sighting = null;
             if (int.TryParse(context.Arguments[1], out int id))
             {
-                sighting = context.Factory.Context
-                                          .Sightings
-                                          .FirstOrDefault(s => s.Id == id);
+                sighting = context.Factory.Sightings
+                                          .Get(s => s.Id == id);
             }
 
             if (sighting == null)

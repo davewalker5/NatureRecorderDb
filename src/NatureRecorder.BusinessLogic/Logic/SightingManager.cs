@@ -68,9 +68,9 @@ namespace NatureRecorder.BusinessLogic.Logic
                                             .Include(s => s.Location)
                                             .Include(s => s.Species)
                                             .ThenInclude(sp => sp.Category)
+                                            .Where(predicate)
                                             .Skip((pageNumber - 1) * pageSize)
-                                            .Take(pageSize)
-                                            .Where(predicate);
+                                            .Take(pageSize);
             }
 
             return sightings;
@@ -116,16 +116,18 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// Add a new sighting
         /// </summary>
         /// <param name="number"></param>
+        /// <param name="gender"></param>
         /// <param name="withYoung"></param>
         /// <param name="date"></param>
         /// <param name="locationId"></param>
         /// <param name="speciesId"></param>
         /// <returns></returns>
-        public Sighting Add(int number, bool withYoung, DateTime date, int locationId, int speciesId)
+        public Sighting Add(int number, Gender gender, bool withYoung, DateTime date, int locationId, int speciesId)
         {
             Sighting sighting = new Sighting
             {
                 Number = number,
+                Gender = gender,
                 WithYoung = withYoung,
                 Date = date,
                 LocationId = locationId,
@@ -162,23 +164,25 @@ namespace NatureRecorder.BusinessLogic.Logic
             Species species = _factory.Species.Add(template.Species.Name, template.Species.Category.Name);
 
             // Add a new sighting
-            return Add(template.Number, template.WithYoung, template.Date, location.Id, species.Id);
+            return Add(template.Number, template.Gender, template.WithYoung, template.Date, location.Id, species.Id);
         }
 
         /// <summary>
         /// Add a new sighting
         /// </summary>
         /// <param name="number"></param>
+        /// <param name="gender"></param>
         /// <param name="withYoung"></param>
         /// <param name="date"></param>
         /// <param name="locationId"></param>
         /// <param name="speciesId"></param>
         /// <returns></returns>
-        public async Task<Sighting> AddAsync(int number, bool withYoung, DateTime date, int locationId, int speciesId)
+        public async Task<Sighting> AddAsync(int number, Gender gender, bool withYoung, DateTime date, int locationId, int speciesId)
         {
             Sighting sighting = new Sighting
             {
                 Number = number,
+                Gender = gender,
                 WithYoung = withYoung,
                 Date = date,
                 LocationId = locationId,

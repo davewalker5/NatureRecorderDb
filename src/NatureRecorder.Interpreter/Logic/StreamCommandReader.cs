@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using NatureRecorder.Interpreter.Interfaces;
@@ -60,6 +61,26 @@ namespace NatureRecorder.Interpreter.Logic
         }
 
         /// <summary>
+        /// Prompt for one of a set of single character options
+        /// </summary>
+        /// <param name="prompt"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public char? PromptForOption(string prompt, IEnumerable<char> options)
+        {
+            char? result = null;
+
+            Cancelled = _input.EndOfStream;
+            if (!Cancelled)
+            {
+                string input = _input.ReadLine().Trim();
+                result = input[0];
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Read the next line and return true if it's "y" or "Y" and false
         /// otherwise
         /// </summary>
@@ -67,16 +88,8 @@ namespace NatureRecorder.Interpreter.Logic
         /// <returns></returns>
         public bool PromptForYesNo(string prompt)
         {
-            bool result = false;
-
-            Cancelled = _input.EndOfStream;
-            if (!Cancelled)
-            {
-                string input = _input.ReadLine().Trim();
-                result = input.Equals("y", StringComparison.OrdinalIgnoreCase);
-            }
-
-            return result;
+            char? selected = PromptForOption(prompt, new char[] { 'Y', 'N' });
+            return (selected == 'Y');
         }
     }
 }
