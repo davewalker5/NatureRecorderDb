@@ -20,7 +20,7 @@ namespace NatureRecorder.Interpreter.Commands
             if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
                 string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(HelpCommand)).Location);
-                string helpFile = Path.Combine(path, "Content", "Help.txt");
+                string helpFile = Path.Combine(path, "Content", "help.txt");
 
                 using (StreamReader reader = new StreamReader(helpFile))
                 {

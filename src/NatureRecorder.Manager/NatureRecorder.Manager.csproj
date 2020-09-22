@@ -4,9 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Description>Database management tool for the wildlife sightings application</Description>
-    <Version>1.0.0.8</Version>
-    <ReleaseVersion>1.0.0.8</ReleaseVersion>
-    <PackageVersion>1.0.0.8</PackageVersion>
+    <Version>1.0.0.9</Version>
+    <ReleaseVersion>1.0.0.9</ReleaseVersion>
+    <PackageVersion>1.0.0.9</PackageVersion>
     <Authors>Dave Walker</Authors>
     <Copyright>Copyright (c) 2020 Dave Walker</Copyright>
     <Owners>Dave Walker</Owners>
@@ -34,7 +34,7 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Help.txt">
+    <Content Include="Content\help.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
