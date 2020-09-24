@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Interpreter.Entities;
@@ -8,6 +9,13 @@ namespace NatureRecorder.Interpreter.Base
     public abstract class AddEditCommandBase : CommandBase
     {
         protected const string DateFormat = "dd/MM/yyyy";
+        protected readonly Map<char, Gender> _genderMap = new Map<char, Gender>
+        {
+            { 'M', Gender.Male },
+            { 'F', Gender.Female },
+            { 'B', Gender.Both },
+            { 'U', Gender.Unknown },
+        };
 
         /// <summary>
         /// Read a line of input, supporting a default value if the user just hits enter
@@ -448,28 +456,15 @@ namespace NatureRecorder.Interpreter.Base
         {
             Gender? gender = null;
 
+            // Map the default gender to the corresponding option
+            char defaultOption = _genderMap.GetKey(defaultValue);
+
             // Read the gender. A null return means the entry was cancelled
-            char? selection = context.Reader.PromptForOption("Gender", new char[] { 'M', 'F', 'B', 'U' });
+            char? selection = context.Reader.PromptForOption("Gender", _genderMap.Keys, defaultOption);
             if (selection != null)
             {
                 // Map the option to the corresponding enum value
-                switch (selection)
-                {
-                    case 'M':
-                        gender = Gender.Male;
-                        break;
-                    case 'F':
-                        gender = Gender.Female;
-                        break;
-                    case 'B':
-                        gender = Gender.Both;
-                        break;
-                    case 'U':
-                        gender = Gender.Unknown;
-                        break;
-                    default:
-                        break;
-                }
+                gender = _genderMap[selection ?? defaultOption];
             }
 
             return gender;
@@ -515,7 +510,7 @@ namespace NatureRecorder.Interpreter.Base
             if (gender == null) return null;
 
             // Yes/No prompt for whether or not young were also seen
-            bool withYoung = context.Reader.PromptForYesNo("Seen with young");
+            bool withYoung = context.Reader.PromptForYesNo("Seen with young", 'N');
 
             return new Sighting
             {

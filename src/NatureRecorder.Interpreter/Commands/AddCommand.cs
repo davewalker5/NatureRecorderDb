@@ -174,7 +174,7 @@ namespace NatureRecorder.Interpreter.Commands
                 context.Output.Flush();
 
                 // Prompt for addition of another sighting
-                more = context.Reader.PromptForYesNo("\nAdd another?");
+                more = context.Reader.PromptForYesNo("\nAdd another?", 'Y');
             }
             while (more);
         }
