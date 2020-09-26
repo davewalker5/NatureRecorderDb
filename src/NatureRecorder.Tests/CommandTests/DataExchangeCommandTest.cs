@@ -79,5 +79,68 @@ namespace NatureRecorder.Tests.CommandTests
             TestHelpers.ConfirmJackdawSighting(sightings);
             TestHelpers.ConfirmLapwingSighting(sightings);
         }
+
+        [TestMethod]
+        public void ExportAllTest()
+        {
+            // Set up the data to export
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
+            _factory.Import.Import(importFilePath);
+
+            string[] arguments = new string[]
+            {
+                "all",
+                Path.GetTempFileName()
+            };
+
+            TestHelpers.ExportData(_factory, arguments);
+            TestHelpers.CompareFiles("export.txt", arguments[1]);
+        }
+
+        [TestMethod]
+        public void ExportAllFromDateTest()
+        {
+            // Set up the data to export
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
+            _factory.Import.Import(importFilePath);
+
+            string[] arguments = new string[]
+            {
+                "all",
+                Path.GetTempFileName(),
+                _factory.Sightings
+                        .List(null, 1, int.MaxValue)
+                        .OrderBy(s => s.Date)
+                        .First()
+                        .Date
+                        .ToString("yyyy-MM-dd")
+            };
+
+            TestHelpers.ExportData(_factory, arguments);
+            TestHelpers.CompareFiles("export.txt", arguments[1]);
+        }
+
+        [TestMethod]
+        public void ExportAllFromToDateTest()
+        {
+            // Set up the data to export
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
+            _factory.Import.Import(importFilePath);
+
+            IEnumerable<Sighting> sightings = _factory.Sightings
+                                                      .List(null, 1, int.MaxValue)
+                                                      .OrderBy(s => s.Date);
+
+            string[] arguments = new string[]
+            {
+                "all",
+                Path.GetTempFileName(),
+                sightings.First().Date.ToString("yyyy-MM-dd"),
+                sightings.Last().Date.ToString("yyyy-MM-dd")
+            };
+
+            TestHelpers.ExportData(_factory, arguments);
+            TestHelpers.CompareFiles("export.txt", arguments[1]);
+        }
     }
 }

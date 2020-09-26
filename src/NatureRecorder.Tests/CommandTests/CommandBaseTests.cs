@@ -32,25 +32,47 @@ namespace NatureRecorder.Tests.CommandTests
         }
 
         [TestMethod]
-        public void InvalidArgumentCountTest()
+        public void TooFewArgumentsTest()
         {
             string data;
             using (MemoryStream stream = new MemoryStream())
             {
                 using (StreamWriter output = new StreamWriter(stream))
                 {
-                    new AddCommand().Run(new CommandContext
+                    new ImportCommand().Run(new CommandContext
                     {
                         Output = output,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "user" }
+                        Arguments = new string[] { }
                     });
 
                     data = TestHelpers.ReadStream(stream);
                 }
             }
 
-            Assert.IsTrue(data.Contains("Incorrect argument count"));
+            Assert.IsTrue(data.Contains("expects"));
+        }
+
+        [TestMethod]
+        public void TooManyArgumentsTest()
+        {
+            string data;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new ImportCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Mode = CommandMode.CommandLine,
+                        Arguments = new string[] { "filename", "extra" }
+                    });
+
+                    data = TestHelpers.ReadStream(stream);
+                }
+            }
+
+            Assert.IsTrue(data.Contains("expects"));
         }
     }
 }

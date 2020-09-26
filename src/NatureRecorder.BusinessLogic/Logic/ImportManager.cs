@@ -9,6 +9,7 @@ using NatureRecorder.Entities.DataExchange;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Entities.Interfaces;
 using NatureRecorder.BusinessLogic.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NatureRecorder.BusinessLogic.Logic
 {
@@ -67,6 +68,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
+        [ExcludeFromCodeCoverage]
         private IList<CsvSighting> Read(string file)
         {
             IList<CsvSighting> records;
@@ -86,6 +88,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// Save the specified collection of CSV records to the database
         /// </summary>
         /// <param name="records"></param>
+        [ExcludeFromCodeCoverage]
         private void Save(IList<CsvSighting> records)
         {
             int count = 0;
@@ -106,6 +109,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="records"></param>
         /// <returns></returns>
+        [ExcludeFromCodeCoverage]
         private IList<string> GetNewLocations(IList<CsvSighting> records)
         {
             IEnumerable<string> locations = records.Select(r => _textInfo.ToTitleCase(r.Location.CleanString()));
@@ -120,6 +124,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="records"></param>
         /// <returns></returns>
+        [ExcludeFromCodeCoverage]
         private IList<string> GetNewSpecies(IList<CsvSighting> records)
         {
             IEnumerable<string> species = records.Select(r => _textInfo.ToTitleCase(r.Species.CleanString()));
@@ -134,6 +139,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// </summary>
         /// <param name="records"></param>
         /// <returns></returns>
+        [ExcludeFromCodeCoverage]
         private IList<string> GetNewCategories(IList<CsvSighting> records)
         {
             IEnumerable<string> categories = records.Select(r => _textInfo.ToTitleCase(r.Category.CleanString()));
@@ -149,6 +155,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <param name="values"></param>
         /// <param name="type"></param>
         /// <param name="output"></param>
+        [ExcludeFromCodeCoverage]
         private void WriteNewLookupsToStream(IList<string> values, string type, StreamWriter output)
         {
             if (values.Any())

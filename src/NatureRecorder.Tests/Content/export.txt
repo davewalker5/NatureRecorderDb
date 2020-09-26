@@ -1,0 +1,3 @@
+Species,Category,Number,Gender,WithYoung,Date,Location,Address,City,County,Postcode,Country,Latitude,Longitude
+"Jackdaw","Birds","0","Unknown","False","23/11/1996","Bagley Wood","","Kennington","Oxfordshire","","United Kingdom","51.7810","1.2611"
+"Lapwing","Birds","0","Unknown","True","03/01/2000","College Lake","","","","","","",""
