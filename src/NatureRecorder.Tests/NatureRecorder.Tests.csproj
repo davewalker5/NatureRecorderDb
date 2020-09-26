@@ -84,6 +84,9 @@
     <Content Include="Content\list-users.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\export.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\add-location.txt" />
@@ -103,5 +106,7 @@
     <None Remove="Content\report-summary %28copy%29.txt" />
     <None Remove="Content\report-category.txt" />
     <None Remove="Content\list-users.txt" />
+    <None Remove="Content\valid-import %28copy%29.csv" />
+    <None Remove="Content\export-all.txt" />
   </ItemGroup>
 </Project>

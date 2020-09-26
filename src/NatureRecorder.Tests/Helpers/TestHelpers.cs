@@ -6,7 +6,10 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Interpreter.Commands;
+using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Tests.UnitTests;
 
 namespace NatureRecorder.Tests.Helpers
@@ -89,6 +92,42 @@ namespace NatureRecorder.Tests.Helpers
                 string expected = Regex.Replace(expectedLines[i], @"\s", "");
                 string actual = Regex.Replace(actualLines[i], @"\s", "");
                 Assert.AreEqual(expected, actual);
+            }
+        }
+
+        /// <summary>
+        /// Compare the content of two files
+        /// </summary>
+        /// <param name="expected"></param>
+        /// <param name="comparison"></param>
+        public static void CompareFiles(string expected, string comparison)
+        {
+            string expectedFilePath = Path.Combine(_currentFolder, "Content", expected);
+            string expectedContent = File.ReadAllText(expectedFilePath);
+            string comparisonContent = File.ReadAllText(comparison);
+            Assert.AreEqual(expectedContent, comparisonContent);
+        }
+
+        /// <summary>
+        /// Run an export command using the specified arguments
+        /// </summary>
+        /// <param name="exportFile"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public static void ExportData(NatureRecorderFactory factory, string[] arguments)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new ExportCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = factory,
+                        Mode = CommandMode.Interactive,
+                        Arguments = arguments
+                    });
+                }
             }
         }
     }

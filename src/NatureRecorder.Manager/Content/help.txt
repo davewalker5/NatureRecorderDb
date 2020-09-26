@@ -66,6 +66,21 @@ DESCRIPTION
         must be in yyyy-mm-dd format e.g. 2020-06-07. Location and species
         names containing spaces must be enclosed in double quotes.
 
+    history [list|clear|location|n]
+        In interactive mode, commands entered are stored in a history file in the
+        user's profile. The history command allows the user to recall and rerun
+        previous commands.
+
+        If no parameter is given, the "list" parameter is assumed. If specified,
+        the first parameter must be one of the following:
+
+        list        List the numbered command history
+        clear       Clear the command history
+        location    Show the location of the history file
+        n           Retrieve command number "n" from the history and rerun it
+
+        !n is a shortcut for "history n", to recall and rerun command number "n". 
+
     import [file]
         Import the specified CSV file. The CSV file must have the following
         columns:

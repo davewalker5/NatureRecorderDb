@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using NatureRecorder.Entities.Db;
@@ -76,6 +77,7 @@ namespace NatureRecorder.Entities.Reporting
         /// </summary>
         /// <param name="sighting"></param>
         /// <param name="output"></param>
+        [ExcludeFromCodeCoverage]
         private void PrintRow(Location location, StreamWriter output)
         {
             IList<string> lines = BuildAddressLines(location);
@@ -107,6 +109,7 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="longitude"></param>
         /// <param name="isSeparatorRow"></param>
         /// <param name="output"></param>
+        [ExcludeFromCodeCoverage]
         private void PrintRow(string location, string address, string latitude, string longitude, bool isSeparatorRow, StreamWriter output)
         {
             output.Write(ColumnSeparator);
@@ -127,6 +130,7 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="value"></param>
         /// <param name="isSeparatorRow"></param>
         /// <param name="output"></param>
+        [ExcludeFromCodeCoverage]
         private void PrintCell(int columnWidth, string value, bool isSeparatorRow, StreamWriter output)
         {
             char paddingCharacter = (isSeparatorRow) ? RowSeparator : ' ';
@@ -138,6 +142,7 @@ namespace NatureRecorder.Entities.Reporting
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
+        [ExcludeFromCodeCoverage]
         private IList<string> BuildAddressLines(Location location)
         {
             // Build the list from the location's address components then filter

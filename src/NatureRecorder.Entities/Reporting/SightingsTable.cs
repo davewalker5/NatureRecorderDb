@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using NatureRecorder.Entities.Db;
@@ -80,6 +81,7 @@ namespace NatureRecorder.Entities.Reporting
         /// </summary>
         /// <param name="sighting"></param>
         /// <param name="output"></param>
+        [ExcludeFromCodeCoverage]
         private void PrintRow(Sighting sighting, StreamWriter output)
         {
             PrintRow(sighting.Id.ToString($"D{_idColumnWidth}"),
@@ -106,6 +108,7 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="withYoung"></param>
         /// <param name="isSeparatorRow"></param>
         /// <param name="output"></param>
+        [ExcludeFromCodeCoverage]
         private void PrintRow(string id, string date, string location, string species, string category, string gender, string number, string withYoung, bool isSeparatorRow, StreamWriter output)
         {
             output.Write(ColumnSeparator);
@@ -134,6 +137,7 @@ namespace NatureRecorder.Entities.Reporting
         /// <param name="value"></param>
         /// <param name="isSeparatorRow"></param>
         /// <param name="output"></param>
+        [ExcludeFromCodeCoverage]
         private void PrintCell(int columnWidth, string value, bool isSeparatorRow, StreamWriter output)
         {
             char paddingCharacter = (isSeparatorRow) ? RowSeparator : ' ';

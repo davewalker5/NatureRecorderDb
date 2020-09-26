@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace NatureRecorder.Data.Migrations
 {
+    [ExcludeFromCodeCoverage]
     public partial class record_gender : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
