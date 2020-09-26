@@ -19,6 +19,8 @@ namespace NatureRecorder.Interpreter.Entities
         public StreamWriter Output { get; set; }
         public Location CurrentLocation { get; set; }
         public DateTime? CurrentDate { get; set; }
+        public CommandHistory History { get; set; }
+        public string RecalledCommand { get; set; }
 
         /// <summary>
         /// Return a cleaned-up version of the specified argument converted to

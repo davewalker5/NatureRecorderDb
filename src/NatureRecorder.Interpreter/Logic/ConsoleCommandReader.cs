@@ -153,8 +153,9 @@ namespace NatureRecorder.Interpreter.Logic
         /// <param name="prompt"></param>
         /// <param name="options"></param>
         /// <param name="caseSensitive"></param>
+        /// <param name="defaultOption"></param>
         /// <returns></returns>
-        public char? PromptForOption(string prompt, IEnumerable<char> options)
+        public char? PromptForOption(string prompt, IEnumerable<char> options, char? defaultOption)
         {
             char? selected = null;
 
@@ -162,18 +163,30 @@ namespace NatureRecorder.Interpreter.Logic
             IEnumerable<char> distinctOptions = options.Select(o => Char.ToUpper(o)).Distinct();
             string optionList = string.Join(",", distinctOptions);
 
+            // Construct the prompt
+            string promptWithDefault = (defaultOption != null) ?
+                                            $"{prompt} ({optionList}) [{defaultOption}]" :
+                                            $"{prompt} ({optionList})";
+
             do
             {
-                string input = ReadLine($"{prompt} ({optionList})", false)
-                                    .Trim()
-                                    .ToUpper();
-                if (!Cancelled && (input.Length == 1) && distinctOptions.Contains(input[0]))
+                // Read the input, allowing blank input if the default option has been specified
+                string input = ReadLine(promptWithDefault, (defaultOption != null));
+                if (!Cancelled)
                 {
-                    selected = input[0];
-                }
-                else
-                {
-                    Console.WriteLine($"'{input}' is not a valid input");
+                    input = input.Trim().ToUpper();
+                    if ((defaultOption != null) && string.IsNullOrEmpty(input))
+                    {
+                        selected = defaultOption;
+                    }
+                    else if ((input.Length == 1) && distinctOptions.Contains(input[0]))
+                    {
+                        selected = input[0];
+                    }
+                    else
+                    {
+                        Console.WriteLine($"'{input}' is not a valid input");
+                    }
                 }
             }
             while (!Cancelled && (selected == null));
@@ -184,10 +197,12 @@ namespace NatureRecorder.Interpreter.Logic
         /// <summary>
         /// Prompt for a y/Y or n/N keypress
         /// </summary>
+        /// <param name="prompt"></param>
+        /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public bool PromptForYesNo(string prompt)
+        public bool PromptForYesNo(string prompt, char? defaultValue)
         {
-            char? selected = PromptForOption(prompt, new char[] { 'Y', 'N' });
+            char? selected = PromptForOption(prompt, new char[] { 'Y', 'N' }, defaultValue);
             return (selected == 'Y');
         }
     }

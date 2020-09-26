@@ -65,8 +65,9 @@ namespace NatureRecorder.Interpreter.Logic
         /// </summary>
         /// <param name="prompt"></param>
         /// <param name="options"></param>
+        /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public char? PromptForOption(string prompt, IEnumerable<char> options)
+        public char? PromptForOption(string prompt, IEnumerable<char> options, char? defaultValue)
         {
             char? result = null;
 
@@ -74,7 +75,7 @@ namespace NatureRecorder.Interpreter.Logic
             if (!Cancelled)
             {
                 string input = _input.ReadLine().Trim();
-                result = input[0];
+                result = (string.IsNullOrEmpty(input)) ? defaultValue : input[0];
             }
 
             return result;
@@ -85,10 +86,11 @@ namespace NatureRecorder.Interpreter.Logic
         /// otherwise
         /// </summary>
         /// <param name="prompt"></param>
+        /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public bool PromptForYesNo(string prompt)
+        public bool PromptForYesNo(string prompt, char? defaultValue)
         {
-            char? selected = PromptForOption(prompt, new char[] { 'Y', 'N' });
+            char? selected = PromptForOption(prompt, new char[] { 'Y', 'N' }, defaultValue);
             return (selected == 'Y');
         }
     }

@@ -10,6 +10,8 @@ namespace NatureRecorder.Interpreter.Logic
     [ExcludeFromCodeCoverage]
     public class CommandInterpreter
     {
+        private const string Prompt = ">>";
+
         private CommandBase[] _commands = new CommandBase[]
         {
             new AddCommand(),
@@ -20,6 +22,7 @@ namespace NatureRecorder.Interpreter.Logic
             new ExitCommand(),
             new ExportCommand(),
             new HelpCommand(),
+            new HistoryCommand(),
             new ImportCommand(),
             new InteractiveShellCommand(),
             new ListCommand(),
@@ -72,6 +75,10 @@ namespace NatureRecorder.Interpreter.Logic
                     // Run the command
                     _runner.Mode = CommandMode.CommandLine;
                     _runner.Run(command, arguments);
+
+                    // If the command comes back with a recalled command associated
+                    // with it, run that as this has been recalled from the command
+                    // history
                 }
                 catch (Exception ex)
                 {
@@ -91,6 +98,7 @@ namespace NatureRecorder.Interpreter.Logic
         {
             // Set up the command runner
             _runner.Mode = CommandMode.Interactive;
+            _runner.History = new CommandHistory();
             bool exit = false;
 
             // Show the current database connection
@@ -99,20 +107,36 @@ namespace NatureRecorder.Interpreter.Logic
             do
             {
                 // Read the next command
-                Console.Write(">> ");
+                Console.Write($"{Prompt} ");
                 string commandLine = Console.ReadLine().Trim();
-                if (!string.IsNullOrEmpty(commandLine))
+                while (!string.IsNullOrEmpty(commandLine))
                 {
+                    // Perform command shortcut replacements
+                    commandLine = ReplaceCommandShortcuts(commandLine);
+
                     // Split the command text into an arguments array and run it
                     string[] args = SplitCommandLine(commandLine);
                     (CommandBase command, string[] arguments) = IdentifyCommand(args);
                     if (command != null)
                     {
+                        // If the command isn't one of the "history" command variants
+                        // or the exit command, add it to the history
+                        if ((command.Type != CommandType.history) && (command.Type != CommandType.exit))
+                        {
+                            _runner.History.Add(commandLine);
+                        }
+
                         try
                         {
                             // Run the command and end if this was the exit command
                             exit = command.Type == CommandType.exit;
-                            _runner.Run(command, arguments);
+                            commandLine = _runner.Run(command, arguments);
+
+                            // If we have a recalled command, display and run it
+                            if (!string.IsNullOrEmpty(commandLine))
+                            {
+                                Console.WriteLine($"{Prompt} {commandLine}");
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -121,7 +145,12 @@ namespace NatureRecorder.Interpreter.Logic
                     }
                     else
                     {
+                        _runner.History.Add(commandLine);
                         Console.WriteLine("Error: Invalid command or arguments");
+
+                        // Must clear the command line, now, or we'll loop continuously.
+                        // There is no recalled command after an error
+                        commandLine = null;
                     }
 
                 }
@@ -181,6 +210,29 @@ namespace NatureRecorder.Interpreter.Logic
                                     .Select(arg => arg.Trim().TrimMatchingQuotes('\"'))
                                     .Where(arg => !string.IsNullOrEmpty(arg))
                                     .ToArray();
+        }
+
+        /// <summary>
+        /// Perform command shortcut replacements
+        /// </summary>
+        /// <param name="commandLine"></param>
+        /// <returns></returns>
+        private string ReplaceCommandShortcuts(string commandLine)
+        {
+            // Currently, there's only one command shortcut - "!" as the first
+            // character is short for the "history" command but *only* if it's
+            // followed by more text, which is assumed at this point to be the
+            // entry number to recall
+            string replaced = commandLine;
+
+            // By this point, we can rely on the command line already having been
+            // trimmed so [0] is the first non-whitespace character
+            if ((replaced[0] == '!') && (replaced.Length > 1))
+            {
+                replaced = $"{CommandType.history.ToString()} {replaced.Substring(1)}";
+            }
+
+            return replaced;
         }
     }
 }

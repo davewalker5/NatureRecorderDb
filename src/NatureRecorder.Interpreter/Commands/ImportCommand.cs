@@ -30,7 +30,7 @@ namespace NatureRecorder.Interpreter.Commands
                     context.Factory.Import.NewSpecies.Any() ||
                     context.Factory.Import.NewLocations.Any())
                 {
-                    import = context.Reader.PromptForYesNo("\nDo you want to import this file?");
+                    import = context.Reader.PromptForYesNo("\nDo you want to import this file?", 'N');
                 }
 
                 // If there are no duplicates or the user wants to import, complete the import

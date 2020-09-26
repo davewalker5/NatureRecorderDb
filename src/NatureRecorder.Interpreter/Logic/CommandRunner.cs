@@ -17,6 +17,7 @@ namespace NatureRecorder.Interpreter.Logic
         private DateTime? _currentDate = null;
 
         public CommandMode Mode { get; set; }
+        public CommandHistory History { get; set; }
 
         public CommandRunner(CommandMode mode)
         {
@@ -30,7 +31,8 @@ namespace NatureRecorder.Interpreter.Logic
         /// </summary>
         /// <param name="command"></param>
         /// <param name="arguments"></param>
-        public void Run(CommandBase command, string[] arguments)
+        /// <returns></returns>
+        public string Run(CommandBase command, string[] arguments)
         {
             // Create a context for running the command. The current date and
             // location are used to provide defaults during data entry, so the
@@ -44,7 +46,8 @@ namespace NatureRecorder.Interpreter.Logic
                 Mode = Mode,
                 Arguments = arguments,
                 CurrentLocation = _currentLocation,
-                CurrentDate = _currentDate
+                CurrentDate = _currentDate,
+                History = History
             };
 
             // Run the command and capture the current date and location, that
@@ -52,6 +55,10 @@ namespace NatureRecorder.Interpreter.Logic
             command.Run(context);
             _currentDate = context.CurrentDate;
             _currentLocation = context.CurrentLocation;
+
+            // If a command's been recalled from history, return it so it can
+            // also be run
+            return context.RecalledCommand;
         }
     }
 }
