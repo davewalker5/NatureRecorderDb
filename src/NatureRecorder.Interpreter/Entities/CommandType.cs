@@ -20,6 +20,7 @@
         move,
         rename,
         report,
+        settings,
         setpassword,
         species,
         summary,

@@ -83,6 +83,7 @@ namespace NatureRecorder.Tests.UnitTests
 
             // Import the exported file and validate the import
             _factory.Import.Import(exportFilePath);
+            File.Delete(exportFilePath);
             sightings = _factory.Sightings.List(null, 1, int.MaxValue);
             Assert.AreEqual(2, sightings.Count());
             TestHelpers.ConfirmJackdawSighting(sightings);

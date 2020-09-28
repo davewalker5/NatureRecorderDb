@@ -488,7 +488,7 @@ namespace NatureRecorder.Interpreter.Base
             bool isOptionalInput = (editing != null);
 
             // Prompt for the location
-            string defaultValue = editing?.Location.Name ?? context.CurrentLocation?.Name;
+            string defaultValue = editing?.Location.Name ?? context.CurrentLocation?.Name ?? context.Settings.Location;
             Location location = PromptForLocationByName(context, defaultValue, true);
             if (context.Reader.Cancelled) return null;
 

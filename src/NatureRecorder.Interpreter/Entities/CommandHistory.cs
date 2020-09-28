@@ -11,7 +11,7 @@ namespace NatureRecorder.Interpreter.Entities
 {
     public class CommandHistory
     {
-        private const string HistoryFileName = ".naturerecorder.history";
+        private const string HistoryFileName = "naturerecorder.history";
 
         private List<string> _history;
         private readonly string _historyFile;

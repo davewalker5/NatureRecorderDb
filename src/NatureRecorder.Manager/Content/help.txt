@@ -147,6 +147,18 @@ DESCRIPTION
         Update the password for the specified user in the database security
         table
 
+    settings [list|clear|location] [value]
+        In interactive mode, a set of user settings are maintained in a file
+        in the user profile, holding data such as the default location for data
+        entry. The settings command allows the user to manage those settings:
+
+        list        List the current value for each setting, including the
+                    setting file path. [value] should not be provided.
+        clear       Clear all of the user settings, except the setting file
+                    path. [value] should not be provided.
+        location    Set the default location to use when adding sightings to
+                    the specified [value]
+
     update
         Apply the latest database migrations to the database to ensure all
         table definitions are up-to-date.

@@ -20,6 +20,7 @@ namespace NatureRecorder.Interpreter.Entities
         public Location CurrentLocation { get; set; }
         public DateTime? CurrentDate { get; set; }
         public CommandHistory History { get; set; }
+        public UserSettings Settings { get; set; }
         public string RecalledCommand { get; set; }
 
         /// <summary>

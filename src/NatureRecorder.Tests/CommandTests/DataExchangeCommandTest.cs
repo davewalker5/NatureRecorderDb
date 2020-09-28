@@ -51,7 +51,7 @@ namespace NatureRecorder.Tests.CommandTests
                 }
             }
 
-            TestHelpers.CompareOutput(data, "check-import.txt");
+            TestHelpers.CompareOutput(data, "check-import.txt", 0);
         }
 
         [TestMethod]
@@ -95,6 +95,7 @@ namespace NatureRecorder.Tests.CommandTests
 
             TestHelpers.ExportData(_factory, arguments);
             TestHelpers.CompareFiles("export.txt", arguments[1]);
+            File.Delete(arguments[1]);
         }
 
         [TestMethod]
@@ -118,6 +119,7 @@ namespace NatureRecorder.Tests.CommandTests
 
             TestHelpers.ExportData(_factory, arguments);
             TestHelpers.CompareFiles("export.txt", arguments[1]);
+            File.Delete(arguments[1]);
         }
 
         [TestMethod]
@@ -141,6 +143,7 @@ namespace NatureRecorder.Tests.CommandTests
 
             TestHelpers.ExportData(_factory, arguments);
             TestHelpers.CompareFiles("export.txt", arguments[1]);
+            File.Delete(arguments[1]);
         }
     }
 }
