@@ -1,0 +1,2 @@
+﻿File     = naturerecorder.settings
+Location = My Default Location

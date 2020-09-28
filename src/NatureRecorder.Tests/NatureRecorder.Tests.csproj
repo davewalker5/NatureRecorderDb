@@ -87,6 +87,15 @@
     <Content Include="Content\export.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="**/*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\settings-clear.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\user-settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\add-location.txt" />
@@ -108,5 +117,8 @@
     <None Remove="Content\list-users.txt" />
     <None Remove="Content\valid-import %28copy%29.csv" />
     <None Remove="Content\export-all.txt" />
+    <None Remove="Content\settings-list.txt" />
+    <None Remove="Content\settings-clear.txt" />
+    <None Remove="Content\user-settings.json" />
   </ItemGroup>
 </Project>

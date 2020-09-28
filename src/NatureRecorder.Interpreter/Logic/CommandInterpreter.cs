@@ -29,6 +29,7 @@ namespace NatureRecorder.Interpreter.Logic
             new MoveCommand(),
             new RenameCommand(),
             new ReportCommand(),
+            new SettingsCommand(),
             new SetPasswordCommand(),
             new UpdateDatabaseCommand()
         };
@@ -99,6 +100,9 @@ namespace NatureRecorder.Interpreter.Logic
             // Set up the command runner
             _runner.Mode = CommandMode.Interactive;
             _runner.History = new CommandHistory();
+            _runner.Settings = new UserSettings();
+            _runner.Settings.Load();
+
             bool exit = false;
 
             // Show the current database connection
@@ -141,6 +145,10 @@ namespace NatureRecorder.Interpreter.Logic
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Error: {ex.Message}");
+
+                            // Must clear the command line, now, or we'll loop continuously.
+                            // There is no recalled command after an error
+                            commandLine = null;
                         }
                     }
                     else
@@ -152,7 +160,6 @@ namespace NatureRecorder.Interpreter.Logic
                         // There is no recalled command after an error
                         commandLine = null;
                     }
-
                 }
             }
             while (!exit);

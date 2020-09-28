@@ -29,7 +29,7 @@ namespace NatureRecorder.Tests.CommandTests
                 }
             }
 
-            TestHelpers.CompareOutput(data, "help.txt");
+            TestHelpers.CompareOutput(data, "help.txt", 0);
         }
     }
 }

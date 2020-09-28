@@ -75,7 +75,8 @@ namespace NatureRecorder.Tests.Helpers
         /// </summary>
         /// <param name="data"></param>
         /// <param name="file"></param>
-        public static void CompareOutput(string data, string file)
+        /// <param name="skipLines"></param>
+        public static void CompareOutput(string data, string file, int skipLines)
         {
             // Split the test results data, ignoring empty entries
             string[] actualLines = data.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -89,9 +90,12 @@ namespace NatureRecorder.Tests.Helpers
             Assert.AreEqual(expectedLines.Length, actualLines.Length);
             for (int i = 0; i < expectedLines.Length; i++)
             {
-                string expected = Regex.Replace(expectedLines[i], @"\s", "");
-                string actual = Regex.Replace(actualLines[i], @"\s", "");
-                Assert.AreEqual(expected, actual);
+                if ((i + 1) > skipLines)
+                {
+                    string expected = Regex.Replace(expectedLines[i], @"\s", "");
+                    string actual = Regex.Replace(actualLines[i], @"\s", "");
+                    Assert.AreEqual(expected, actual);
+                }
             }
         }
 

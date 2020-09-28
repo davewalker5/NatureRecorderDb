@@ -69,7 +69,7 @@ namespace NatureRecorder.Tests.CommandTests
                 }
             }
 
-            TestHelpers.CompareOutput(data, "report-summary.txt");
+            TestHelpers.CompareOutput(data, "report-summary.txt", 0);
         }
 
         [TestMethod]
@@ -96,7 +96,7 @@ namespace NatureRecorder.Tests.CommandTests
                 }
             }
 
-            TestHelpers.CompareOutput(data, "report-location.txt");
+            TestHelpers.CompareOutput(data, "report-location.txt", 0);
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ namespace NatureRecorder.Tests.CommandTests
                 }
             }
 
-            TestHelpers.CompareOutput(data, "report-category.txt");
+            TestHelpers.CompareOutput(data, "report-category.txt", 0);
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace NatureRecorder.Tests.CommandTests
                 }
             }
 
-            TestHelpers.CompareOutput(data, "report-category.txt");
+            TestHelpers.CompareOutput(data, "report-category.txt", 0);
         }
     }
 }

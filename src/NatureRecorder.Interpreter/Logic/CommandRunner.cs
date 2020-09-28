@@ -18,6 +18,7 @@ namespace NatureRecorder.Interpreter.Logic
 
         public CommandMode Mode { get; set; }
         public CommandHistory History { get; set; }
+        public UserSettings Settings { get; set; }
 
         public CommandRunner(CommandMode mode)
         {
@@ -47,7 +48,8 @@ namespace NatureRecorder.Interpreter.Logic
                 Arguments = arguments,
                 CurrentLocation = _currentLocation,
                 CurrentDate = _currentDate,
-                History = History
+                History = History,
+                Settings = Settings
             };
 
             // Run the command and capture the current date and location, that
