@@ -14,6 +14,7 @@ namespace NatureRecorder.BusinessLogic.Factory
         private readonly Lazy<IUserManager> _users = null;
         private readonly Lazy<IExportManager> _export = null;
         private readonly Lazy<IImportManager> _import = null;
+        private readonly Lazy<IStatusSchemeSchemeManager> _statusSchemes = null;
 
         public NatureRecorderDbContext Context { get; private set; }
         public ILocationManager Locations { get { return _locations.Value; } }
@@ -23,6 +24,7 @@ namespace NatureRecorder.BusinessLogic.Factory
         public IUserManager Users { get { return _users.Value; } }
         public IExportManager Export { get { return _export.Value; } }
         public IImportManager Import { get { return _import.Value; } }
+        public IStatusSchemeSchemeManager StatusSchemes { get { return _statusSchemes.Value; } }
 
         public NatureRecorderFactory(NatureRecorderDbContext context)
         {
@@ -34,6 +36,7 @@ namespace NatureRecorder.BusinessLogic.Factory
             _users = new Lazy<IUserManager>(() => new UserManager(context));
             _export = new Lazy<IExportManager>(() => new ExportManager());
             _import = new Lazy<IImportManager>(() => new ImportManager(this));
+            _statusSchemes = new Lazy<IStatusSchemeSchemeManager>(() => new StatusSchemeSchemeManager(this));
         }
     }
 }
