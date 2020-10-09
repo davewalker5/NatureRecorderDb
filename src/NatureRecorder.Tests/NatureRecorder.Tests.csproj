@@ -33,6 +33,37 @@
     <Folder Include="CommandTests\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="bin\Debug\netcoreapp3.1\tr\Microsoft.VisualStudio.TestPlatform.Common.resources.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.TestPlatform.CommunicationUtilities.resources.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.TestPlatform.CrossPlatEngine.resources.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.VisualStudio.TestPlatform.Common.resources.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.TestPlatform.CommunicationUtilities.resources.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\alpine-x64\native\libe_sqlite3.so" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\linux-arm\native\libe_sqlite3.so" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\linux-arm64\native\libe_sqlite3.so" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\linux-armel\native\libe_sqlite3.so" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\linux-musl-x64\native\libe_sqlite3.so" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\libe_sqlite3.so" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\linux-x86\native\libe_sqlite3.so" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\libe_sqlite3.dylib" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\win-arm\native\e_sqlite3.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.BusinessLogic.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Data.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Entities.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Interpreter.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.BusinessLogic.pdb" />
+    <Content Remove="bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Data.pdb" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Entities.pdb" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\export.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\CommandTests\CommandBaseTests.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\CommandTests\ConnectionCommandTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Content\valid-import.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

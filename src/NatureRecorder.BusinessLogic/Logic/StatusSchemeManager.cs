@@ -165,7 +165,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             StatusScheme newScheme = Get(s => s.Name == newName);
             if (newScheme != null)
             {
-                string message = $"Category '{newName}' already exists";
+                string message = $"Conservation status scheme '{newName}' already exists";
                 throw new StatusSchemeAlreadyExistsException();
             }
 
@@ -199,7 +199,7 @@ namespace NatureRecorder.BusinessLogic.Logic
             StatusScheme newScheme = await GetAsync(s => s.Name == newName);
             if (newScheme != null)
             {
-                string message = $"Category '{newName}' already exists";
+                string message = $"Conservation status scheme '{newName}' already exists";
                 throw new StatusSchemeAlreadyExistsException();
             }
 

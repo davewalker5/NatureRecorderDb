@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -117,7 +116,7 @@ namespace NatureRecorder.Tests.UnitTests
                                             .Rename(EntityName, RenamedEntityName);
             Assert.AreEqual(scheme.Name, RenamedEntityName);
 
-            Category original = _factory.Categories.Get(s => s.Name == EntityName);
+            StatusScheme original = _factory.StatusSchemes.Get(s => s.Name == EntityName);
             Assert.IsNull(original);
         }
 

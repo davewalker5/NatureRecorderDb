@@ -15,6 +15,8 @@ namespace NatureRecorder.BusinessLogic.Factory
         private readonly Lazy<IExportManager> _export = null;
         private readonly Lazy<IImportManager> _import = null;
         private readonly Lazy<IStatusSchemeSchemeManager> _statusSchemes = null;
+        private readonly Lazy<IStatusRatingManager> _statusRatings = null;
+        private readonly Lazy<ISpeciesStatusRatingManager> _speciesStatusRatings = null;
 
         public NatureRecorderDbContext Context { get; private set; }
         public ILocationManager Locations { get { return _locations.Value; } }
@@ -25,6 +27,8 @@ namespace NatureRecorder.BusinessLogic.Factory
         public IExportManager Export { get { return _export.Value; } }
         public IImportManager Import { get { return _import.Value; } }
         public IStatusSchemeSchemeManager StatusSchemes { get { return _statusSchemes.Value; } }
+        public IStatusRatingManager StatusRatings { get { return _statusRatings.Value; } }
+        public ISpeciesStatusRatingManager SpeciesStatusRatings { get { return _speciesStatusRatings.Value; } }
 
         public NatureRecorderFactory(NatureRecorderDbContext context)
         {
@@ -37,6 +41,8 @@ namespace NatureRecorder.BusinessLogic.Factory
             _export = new Lazy<IExportManager>(() => new ExportManager());
             _import = new Lazy<IImportManager>(() => new ImportManager(this));
             _statusSchemes = new Lazy<IStatusSchemeSchemeManager>(() => new StatusSchemeSchemeManager(this));
+            _statusRatings = new Lazy<IStatusRatingManager>(() => new StatusRatingManager(this));
+            _speciesStatusRatings = new Lazy<ISpeciesStatusRatingManager>(() => new SpeciesStatusRatingManager(this));
         }
     }
 }
