@@ -7,7 +7,7 @@ using NatureRecorder.Entities.Interfaces;
 
 namespace NatureRecorder.BusinessLogic.Logic
 {
-    internal class ExportManager : IExportManager
+    internal class SightingsExportManager : ISightingsExportManager
     {
         private readonly string[] ColumnHeaders =
         {

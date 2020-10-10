@@ -13,7 +13,7 @@ using NatureRecorder.Entities.Interfaces;
 
 namespace NatureRecorder.BusinessLogic.Logic
 {
-    public class StatusRatingManager : IStatusRatingManager
+    internal class StatusRatingManager : IStatusRatingManager
     {
         private readonly TextInfo _textInfo = CultureInfo.CurrentCulture.TextInfo;
         private NatureRecorderFactory _factory;

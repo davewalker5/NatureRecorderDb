@@ -5,7 +5,7 @@ using NatureRecorder.Entities.Db;
 
 namespace NatureRecorder.Entities.Interfaces
 {
-    public interface IExportManager
+    public interface ISightingsExportManager
     {
         event EventHandler<SightingDataExchangeEventArgs> RecordExport;
         void Export(IEnumerable<Sighting> sightings, string file);

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NatureRecorder.BusinessLogic.Factory;
+using NatureRecorder.Entities.Db;
 using NatureRecorder.Entities.Reporting;
 
 namespace NatureRecorder.Interpreter.Base
@@ -41,6 +43,53 @@ namespace NatureRecorder.Interpreter.Base
             else
             {
                 output.WriteLine($"There were no sightings on {from.ToShortDateString()}");
+                output.Flush();
+            }
+        }
+
+        /// <summary>
+        /// Summarise the conservation ratings for a specified species and scheme
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="speciesName"></param>
+        /// <param name="schemeName"></param>
+        /// <param name="output"></param>
+        public void SummariseConservationStatus(NatureRecorderFactory factory, string speciesName, string schemeName, StreamWriter output)
+        {
+            IEnumerable<SpeciesStatusRating> ratings;
+            string title;
+            string noMatchesMessage;
+            if (schemeName == null)
+            {
+                // Summary of conservation status for species against all schemes
+                title = $"Conservation status summary for {speciesName}";
+                noMatchesMessage = $"There are no ratings for species {speciesName}";
+                ratings = factory.SpeciesStatusRatings
+                                 .List(r => (r.Species.Name == speciesName),
+                                            1,
+                                            int.MaxValue);
+            }
+            else
+            {
+                // Summary of conservation status for species against a specific scheme
+                title = $"Conservation status summary for {speciesName} using scheme {schemeName}";
+                noMatchesMessage = $"There are no ratings for species {speciesName} using scheme {schemeName}";
+                ratings = factory.SpeciesStatusRatings
+                                 .List(r => (r.Species.Name == speciesName) &&
+                                            (r.Rating.Scheme.Name == schemeName),
+                                            1,
+                                            int.MaxValue);
+            }
+
+            if (ratings.Any())
+            {
+                output.WriteLine($"{title}:\n");
+                SpeciesStatusRatingTable table = new SpeciesStatusRatingTable(ratings);
+                table.PrintTable(output);
+            }
+            else
+            {
+                output.WriteLine(noMatchesMessage);
                 output.Flush();
             }
         }

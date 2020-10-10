@@ -13,7 +13,7 @@ using NatureRecorder.Entities.Interfaces;
 
 namespace NatureRecorder.BusinessLogic.Logic
 {
-    public class SpeciesStatusRatingManager : ISpeciesStatusRatingManager
+    internal class SpeciesStatusRatingManager : ISpeciesStatusRatingManager
     {
         private readonly TextInfo _textInfo = CultureInfo.CurrentCulture.TextInfo;
         private NatureRecorderFactory _factory;
@@ -342,6 +342,51 @@ namespace NatureRecorder.BusinessLogic.Logic
                 rating.End = DateTime.Now;
                 await _factory.Context.SaveChangesAsync();
             }
+        }
+
+        /// <summary>
+        /// Add a new conservation status rating based on the supplied template
+        /// </summary>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        public SpeciesStatusRating Add(SpeciesStatusRating template)
+        {
+            // Retrieve/create the category andspecies. The logic to create new
+            // records or return existing ones is in these methods
+            Species species = _factory.Species.Add(template.Species.Name, template.Species.Category.Name);
+
+            // If the scheme doesn't exist, create it
+            string schemeName = _textInfo.ToTitleCase(template.Rating.Scheme.Name.CleanString());
+            StatusScheme scheme = _factory.StatusSchemes.Get(s => s.Name == schemeName);
+            if (scheme == null)
+            {
+                scheme = _factory.StatusSchemes.Add(schemeName);
+            }
+
+            // If the rating doesn't exist, create it
+            string ratingName = _textInfo.ToTitleCase(template.Rating.Name.CleanString());
+            StatusRating rating = _factory.StatusRatings.Get(r => (r.Name == ratingName) && (r.StatusSchemeId == scheme.Id));
+            if (rating == null)
+            {
+                rating = _factory.StatusRatings.Add(ratingName, schemeName);
+            }
+
+            // Add a new species status rating. Note that we DON'T use the SetRating
+            // method as it manipulates prior records and we don't want to do that in
+            // this context (import of rating data)
+            SpeciesStatusRating newRating = new SpeciesStatusRating
+            {
+                SpeciesId = species.Id,
+                StatusRatingId = rating.Id,
+                Region = template.Region,
+                Start = template.Start,
+                End = template.End
+            };
+            _factory.Context.SpeciesStatusRatings.Add(newRating);
+            _factory.Context.SaveChanges();
+
+            // Load and return the new rating (to load related entities)
+            return Get(r => r.Id == newRating.Id);
         }
     }
 }

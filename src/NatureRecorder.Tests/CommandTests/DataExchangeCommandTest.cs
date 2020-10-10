@@ -69,7 +69,7 @@ namespace NatureRecorder.Tests.CommandTests
                         Output = output,
                         Factory = _factory,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { importFile }
+                        Arguments = new string[] { "sightings", importFile }
                     });
                 }
             }
@@ -85,7 +85,7 @@ namespace NatureRecorder.Tests.CommandTests
         {
             // Set up the data to export
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string[] arguments = new string[]
             {
@@ -103,7 +103,7 @@ namespace NatureRecorder.Tests.CommandTests
         {
             // Set up the data to export
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string[] arguments = new string[]
             {
@@ -127,7 +127,7 @@ namespace NatureRecorder.Tests.CommandTests
         {
             // Set up the data to export
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             IEnumerable<Sighting> sightings = _factory.Sightings
                                                       .List(null, 1, int.MaxValue)

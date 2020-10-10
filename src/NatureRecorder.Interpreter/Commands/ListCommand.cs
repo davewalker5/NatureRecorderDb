@@ -43,6 +43,12 @@ namespace NatureRecorder.Interpreter.Commands
                         case EntityType.User:
                             ListUsers(context);
                             break;
+                        case EntityType.Scheme:
+                            ListSchemes(context);
+                            break;
+                        case EntityType.Rating:
+                            ListRatings(context);
+                            break;
                     }
                 }
             }
@@ -92,6 +98,12 @@ namespace NatureRecorder.Interpreter.Commands
                 case EntityType.User:
                     count = 1;
                     break;
+                case EntityType.Scheme:
+                    count = 1;
+                    break;
+                case EntityType.Rating:
+                    count = 2;
+                    break;
                 default:
                     string message = $"Cannot list unknown entity type";
                     throw new UnknownEntityTypeException(message);
@@ -130,6 +142,12 @@ namespace NatureRecorder.Interpreter.Commands
                     break;
                 case "Users":
                     type = EntityType.User;
+                    break;
+                case "Schemes":
+                    type = EntityType.Scheme;
+                    break;
+                case "Ratings":
+                    type = EntityType.Rating;
                     break;
                 default:
                     string message = $"Cannot list unknown entity type";
@@ -242,6 +260,69 @@ namespace NatureRecorder.Interpreter.Commands
             else
             {
                 context.Output.WriteLine("There are no users in the database");
+            }
+
+            context.Output.Flush();
+        }
+
+        /// <summary>
+        /// List the available conservation status schemes
+        /// </summary>
+        /// <param name="context"></param>
+        [ExcludeFromCodeCoverage]
+        private void ListSchemes(CommandContext context)
+        {
+            IEnumerable<StatusScheme> schemes = context.Factory
+                                                       .StatusSchemes
+                                                       .List(null, 1, int.MaxValue)
+                                                       .OrderBy(s => s.Name);
+            if (schemes.Any())
+            {
+                context.Output.WriteLine($"There are {schemes.Count()} conservation status schemes in the database:\n");
+                foreach (StatusScheme scheme in schemes.OrderBy(s => s.Name))
+                {
+                    context.Output.WriteLine($"\t{scheme.Name}");
+                }
+            }
+            else
+            {
+                context.Output.WriteLine("There are no conservation status schemes in the database");
+            }
+
+            context.Output.Flush();
+        }
+
+        /// <summary>
+        /// List the available conservation status ratings for a scheme
+        /// </summary>
+        /// <param name="context"></param>
+        [ExcludeFromCodeCoverage]
+        private void ListRatings(CommandContext context)
+        {
+            string schemeName = context.CleanArgument(1);
+            StatusScheme scheme = context.Factory.StatusSchemes.Get(s => s.Name == schemeName);
+            if (scheme != null)
+            {
+                IEnumerable<StatusRating> ratings = context.Factory
+                                                           .StatusRatings
+                                                           .List(r => r.Scheme.Name == schemeName, 1, int.MaxValue)
+                                                           .OrderBy(s => s.Name);
+                if (ratings.Any())
+                {
+                    context.Output.WriteLine($"There are {ratings.Count()} ratings in conservation status scheme '{schemeName}':\n");
+                    foreach (StatusRating rating in ratings.OrderBy(r => r.Name))
+                    {
+                        context.Output.WriteLine($"\t{rating.Name}");
+                    }
+                }
+                else
+                {
+                    context.Output.WriteLine($"There are no ratings for conservation status scheme '{schemeName}'");
+                }
+            }
+            else
+            {
+                context.Output.WriteLine($"Conservation status scheme '{schemeName}' does not exist");
             }
 
             context.Output.Flush();

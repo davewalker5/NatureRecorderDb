@@ -14,7 +14,7 @@ namespace NatureRecorder.Interpreter.Commands
         {
             Type = CommandType.add;
             MinimumArguments = 1;
-            MaximiumArguments = 3;
+            MaximiumArguments = 4;
             RequiredMode = CommandMode.All;
         }
 
@@ -56,6 +56,15 @@ namespace NatureRecorder.Interpreter.Commands
                                 break;
                             case EntityType.User:
                                 AddUser(context);
+                                break;
+                            case EntityType.Scheme:
+                                AddScheme(context);
+                                break;
+                            case EntityType.Rating:
+                                AddRating(context);
+                                break;
+                            case EntityType.Status:
+                                AddStatus(context);
                                 break;
                         }
                     }
@@ -192,6 +201,50 @@ namespace NatureRecorder.Interpreter.Commands
         }
 
         /// <summary>
+        /// Add a conservation status scheme
+        /// </summary>
+        /// <param name="context"></param>
+        [ExcludeFromCodeCoverage]
+        private void AddScheme(CommandContext context)
+        {
+            context.Factory.StatusSchemes.Add(context.Arguments[1]);
+            context.Output.WriteLine($"Added conservation status scheme {context.Arguments[1]}");
+            context.Output.Flush();
+        }
+
+        /// <summary>
+        /// Add a conservation status rating to a scheme
+        /// </summary>
+        /// <param name="context"></param>
+        [ExcludeFromCodeCoverage]
+        private void AddRating(CommandContext context)
+        {
+            context.Factory.StatusRatings.Add(context.Arguments[1], context.Arguments[2]);
+            context.Output.WriteLine($"Added conservation status rating {context.Arguments[1]} to scheme {context.Arguments[2]}");
+            context.Output.Flush();
+        }
+
+        /// <summary>
+        /// Set the conservation status for a species
+        /// </summary>
+        /// <param name="context"></param>
+        private void AddStatus(CommandContext context)
+        {
+            if (context.CleanArgument(2) == "None")
+            {
+                context.Factory.SpeciesStatusRatings.ClearRating(context.Arguments[1], context.Arguments[3]);
+                context.Output.WriteLine($"Cleared the conservation status for {context.Arguments[1]} on scheme {context.Arguments[3]}");
+            }
+            else
+            {
+                context.Factory.SpeciesStatusRatings.SetRating(context.Arguments[1], context.Arguments[2], context.Arguments[3]);
+                context.Output.WriteLine($"Set the conservation status for {context.Arguments[1]} to {context.Arguments[2]} on scheme {context.Arguments[3]}");
+            }
+
+            context.Output.Flush();
+        }
+
+        /// <summary>
         /// Check the argument count is correct for the specified entity type
         /// </summary>
         /// <param name="context"></param>
@@ -226,6 +279,18 @@ namespace NatureRecorder.Interpreter.Commands
                 case EntityType.User:
                     counts.minimum = 3;
                     counts.maximum = 3;
+                    break;
+                case EntityType.Scheme:
+                    counts.minimum = 2;
+                    counts.maximum = 2;
+                    break;
+                case EntityType.Rating:
+                    counts.minimum = 3;
+                    counts.maximum = 3;
+                    break;
+                case EntityType.Status:
+                    counts.minimum = 4;
+                    counts.maximum = 4;
                     break;
                 default:
                     counts.minimum = 1;

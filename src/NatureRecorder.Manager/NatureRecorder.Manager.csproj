@@ -4,9 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Description>Database management tool for the wildlife sightings application</Description>
-    <Version>1.0.0.12</Version>
-    <ReleaseVersion>1.0.0.12</ReleaseVersion>
-    <PackageVersion>1.0.0.12</PackageVersion>
+    <Version>1.0.0.14</Version>
+    <ReleaseVersion>1.0.0.14</ReleaseVersion>
+    <PackageVersion>1.0.0.14</PackageVersion>
     <Authors>Dave Walker</Authors>
     <Copyright>Copyright (c) 2020 Dave Walker</Copyright>
     <Owners>Dave Walker</Owners>

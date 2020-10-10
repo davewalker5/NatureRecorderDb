@@ -32,7 +32,7 @@ namespace NatureRecorder.Tests.UnitTests
             Assert.AreEqual(0, initialCount);
 
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, int.MaxValue);
             Assert.AreEqual(2, sightings.Count());
@@ -45,12 +45,12 @@ namespace NatureRecorder.Tests.UnitTests
         {
             // Set up the data to export
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             // Export it
             string exportFilePath = Path.GetTempFileName();
             IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, int.MaxValue);
-            _factory.Export.Export(sightings, exportFilePath);
+            _factory.SightingsExport.Export(sightings, exportFilePath);
 
             // Clear the database
             foreach (Sighting sighting in sightings)
@@ -82,7 +82,7 @@ namespace NatureRecorder.Tests.UnitTests
             Assert.AreEqual(0, _factory.Context.Sightings.Count());
 
             // Import the exported file and validate the import
-            _factory.Import.Import(exportFilePath);
+            _factory.SightingsImport.Import(exportFilePath);
             File.Delete(exportFilePath);
             sightings = _factory.Sightings.List(null, 1, int.MaxValue);
             Assert.AreEqual(2, sightings.Count());

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NatureRecorder.Entities.Db
 {
+    [ExcludeFromCodeCoverage]
     public class StatusRating
     {
         [Key]

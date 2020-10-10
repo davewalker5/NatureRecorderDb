@@ -8,10 +8,8 @@ using NatureRecorder.Entities.DataExchange;
 namespace NatureRecorder.Entities.Db
 {
     [ExcludeFromCodeCoverage]
-    public class Sighting
+    public class Sighting : ExportableEntity
     {
-        private const string DateTimeFormat = "dd/MM/yyyy";
-
         [Key]
         public int Id { get; set; }
         public int LocationId { get; set; }
@@ -68,7 +66,7 @@ namespace NatureRecorder.Entities.Db
                 Number = record.Number,
                 Gender = record.Gender,
                 WithYoung = record.WithYoung,
-                Date = DateTime.ParseExact(record.Date, DateTimeFormat, CultureInfo.CurrentCulture),
+                Date = GetDateTimeFromField(record.Date),
                 Location = new Location
                 {
                     Name = record.Location,
@@ -81,33 +79,6 @@ namespace NatureRecorder.Entities.Db
                     Longitude = record.Longitude
                 }
             };
-        }
-
-        /// <summary>
-        /// Create a CSV field value from a property value
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="isLastColumn"></param>
-        public string MakeCsvField(object value, bool isLastColumn = false)
-        {
-            string csvValue = "";
-
-            if (value != null)
-            {
-                string type = value.GetType().Name;
-                switch (type)
-                {
-                    case "DateTime":
-                        csvValue = ((DateTime)value).ToString(DateTimeFormat);
-                        break;
-                    default:
-                        csvValue = value.ToString();
-                        break;
-                }
-            }
-
-            string separator = (isLastColumn) ? "" : ",";
-            return $"\"{csvValue}\"{separator}";
         }
     }
 }

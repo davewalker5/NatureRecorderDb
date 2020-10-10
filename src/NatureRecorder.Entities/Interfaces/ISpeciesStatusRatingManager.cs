@@ -8,6 +8,7 @@ namespace NatureRecorder.Entities.Interfaces
 {
     public interface ISpeciesStatusRatingManager
     {
+        SpeciesStatusRating Add(SpeciesStatusRating template);
         void ClearRating(string speciesName, string schemeName);
         Task ClearRatingAsync(string speciesName, string schemeName);
         SpeciesStatusRating Get(Expression<Func<SpeciesStatusRating, bool>> predicate);

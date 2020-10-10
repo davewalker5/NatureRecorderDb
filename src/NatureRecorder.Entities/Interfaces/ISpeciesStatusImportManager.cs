@@ -5,16 +5,17 @@ using NatureRecorder.Entities.DataExchange;
 
 namespace NatureRecorder.Entities.Interfaces
 {
-    public interface IImportManager
+    public interface ISpeciesStatusImportManager
     {
-        event EventHandler<SightingDataExchangeEventArgs> RecordImport;
-
-        IList<string> NewLocations { get; }
         IList<string> NewSpecies { get; }
         IList<string> NewCategories { get; }
+        IList<string> NewSchemes { get; }
+        IList<string> NewRatings { get; }
 
-        void Import(string file);
+        event EventHandler<SpeciesStatusDataExchangeEventArgs> RecordImport;
+
         void DetectNewLookups(string file);
+        void Import(string file);
         void WriteNewLookupsToStream(StreamWriter output);
     }
 }

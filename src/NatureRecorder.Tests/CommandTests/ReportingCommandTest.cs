@@ -49,7 +49,7 @@ namespace NatureRecorder.Tests.CommandTests
         public void SummaryReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string data;
 
@@ -76,7 +76,7 @@ namespace NatureRecorder.Tests.CommandTests
         public void LocationReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string data;
 
@@ -103,7 +103,7 @@ namespace NatureRecorder.Tests.CommandTests
         public void CategoryReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string data;
 
@@ -130,7 +130,7 @@ namespace NatureRecorder.Tests.CommandTests
         public void SpeciesReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string data;
 
