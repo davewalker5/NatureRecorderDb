@@ -97,10 +97,20 @@ namespace NatureRecorder.BusinessLogic.Logic
             int count = 0;
             foreach (CsvSpeciesStatusRating record in records)
             {
-                // Map the current CSV record to a conservation status rating and
-                // store it in the database
+                // Map the current CSV record to a conservation status rating, check it
+                // doesn't already exist and store it in the database
                 SpeciesStatusRating rating = SpeciesStatusRating.FromCsv(record);
-                rating = _factory.SpeciesStatusRatings.Add(rating);
+                SpeciesStatusRating existing = _factory.Context
+                                                       .SpeciesStatusRatings
+                                                       .FirstOrDefault(r => (r.Species.Name == rating.Species.Name) &&
+                                                                            (r.Rating.Name == rating.Rating.Name) &&
+                                                                            (r.Region == rating.Region) &&
+                                                                            ((r.Start == rating.Start) || ((r.Start == null) && (rating.Start == null))) &&
+                                                                            ((r.End == rating.End) || ((r.End == null) && (rating.End == null))));
+                if (existing == null)
+                {
+                    rating = _factory.SpeciesStatusRatings.Add(rating);
+                }
 
                 // Notify subscribers
                 count++;
