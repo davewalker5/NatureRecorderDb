@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using NatureRecorder.Entities.Db;
 using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Interpreter.Base;
 using NatureRecorder.Interpreter.Entities;
@@ -39,6 +38,9 @@ namespace NatureRecorder.Interpreter.Commands
                             break;
                         case ReportType.Species:
                             ShowSpeciesReport(context);
+                            break;
+                        case ReportType.Status:
+                            ShowStatusReport(context);
                             break;
                         default:
                             break;
@@ -133,6 +135,20 @@ namespace NatureRecorder.Interpreter.Commands
         }
 
         /// <summary>
+        /// Show the conservation status summary report for a specified species and scheme
+        /// </summary>
+        /// <param name="context"></param>
+        [ExcludeFromCodeCoverage]
+        private void ShowStatusReport(CommandContext context)
+        {
+            // report status species [scheme] [date]
+            string speciesName = context.CleanArgument(1);
+            string schemeName = (context.Arguments.Length >= 3) ? context.CleanArgument(2) : null;
+            DateTime? atDate = (context.Arguments.Length == 4) ? GetDateFromArgument(context.Arguments, 3, null, context.Output) : null;
+            SummariseConservationStatus(context.Factory, speciesName, schemeName, atDate, context.Output);
+        }
+
+        /// <summary>
         /// Check the argument count is correct for the specified report type
         /// </summary>
         /// <param name="context"></param>
@@ -179,6 +195,10 @@ namespace NatureRecorder.Interpreter.Commands
                 case ReportType.Species:
                     counts.minimum = 3;
                     counts.maximum = 5;
+                    break;
+                case ReportType.Status:
+                    counts.minimum = 2;
+                    counts.maximum = 4;
                     break;
                 default:
                     string message = "Cannot generate unknown report type";

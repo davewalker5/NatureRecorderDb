@@ -1,7 +1,9 @@
-﻿using NatureRecorder.Entities.Db;
+﻿using System.Diagnostics.CodeAnalysis;
+using NatureRecorder.Entities.Db;
 
 namespace NatureRecorder.Entities.DataExchange
 {
+    [ExcludeFromCodeCoverage]
     public class CsvSighting
     {
         public string Species { get; set; }

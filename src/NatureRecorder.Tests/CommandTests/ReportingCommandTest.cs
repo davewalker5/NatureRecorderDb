@@ -49,7 +49,7 @@ namespace NatureRecorder.Tests.CommandTests
         public void SummaryReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string data;
 
@@ -76,7 +76,7 @@ namespace NatureRecorder.Tests.CommandTests
         public void LocationReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string data;
 
@@ -103,7 +103,7 @@ namespace NatureRecorder.Tests.CommandTests
         public void CategoryReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string data;
 
@@ -130,7 +130,7 @@ namespace NatureRecorder.Tests.CommandTests
         public void SpeciesReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-            _factory.Import.Import(importFilePath);
+            _factory.SightingsImport.Import(importFilePath);
 
             string data;
 
@@ -151,6 +151,87 @@ namespace NatureRecorder.Tests.CommandTests
             }
 
             TestHelpers.CompareOutput(data, "report-category.txt", 0);
+        }
+
+        [TestMethod]
+        public void StatusReportTest()
+        {
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+            _factory.SpeciesStatusImport.Import(importFilePath);
+
+            string data;
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new ReportCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.CommandLine,
+                        Arguments = new string[] { "status", "white-fronted goose" }
+                    });
+
+                    data = TestHelpers.ReadStream(stream);
+                }
+            }
+
+            TestHelpers.CompareOutput(data, "report-status.txt", 0);
+        }
+
+        [TestMethod]
+        public void StatusReportForSchemeTest()
+        {
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+            _factory.SpeciesStatusImport.Import(importFilePath);
+
+            string data;
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new ReportCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.CommandLine,
+                        Arguments = new string[] { "status", "white-fronted goose", "BOCC4" }
+                    });
+
+                    data = TestHelpers.ReadStream(stream);
+                }
+            }
+
+            TestHelpers.CompareOutput(data, "report-status-for-scheme.txt", 0);
+        }
+
+        [TestMethod]
+        public void StatusReportAtDateTest()
+        {
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+            _factory.SpeciesStatusImport.Import(importFilePath);
+
+            string data;
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    new ReportCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.CommandLine,
+                        Arguments = new string[] { "status", "white-fronted goose", "BOCC4", "2016-12-31" }
+                    });
+
+                    data = TestHelpers.ReadStream(stream);
+                }
+            }
+
+            TestHelpers.CompareOutput(data, "report-status-at-date.txt", 0);
         }
     }
 }

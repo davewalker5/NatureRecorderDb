@@ -13,28 +13,40 @@ DESCRIPTION
     help
         Show this help text
 
-    add location|category|species|sighting
+    add location|category|species|sighting|scheme
         Prompt for details to add a new record of the specified type to the
         database then add it
+
+    add rating [name] [scheme]
+        Add the named conservation status rating to the specified scheme
+
+    add status [species] [rating] [scheme]
+        Set the current conservation status for the specified species on the
+        specified scheme to the named rating. To clear the status, use "None"
+        as the rating.
 
     add user [username] [password]
         Add a user with the specified name and password to the database security
         table. The security implementation is not used in the command line
         utility but is present to support implementation of a REST API and UI
 
-    check [file]
+    check [sightings|status] [file]
         Check the contents of the specified CSV file to see if importing the
-        data it contains would result in the creation of new locations, species
-        or categories
+        data it contains would result in the creation of new locations,
+        categories, species or conservation status schemes and ratings
 
     connection
         Show the database connection details
 
-    delete [location|category|species|sighting|user] [id]
+    delete [location|category|species|sighting|user|scheme] [id]
         Delete the record of the specified type with the specified identifier.
         For locations, categories and species, "id" is the name. For users, the
         "id" is the username. For sightings, "id" is the integer record ID
-        listed in the "report" command output.
+        listed in the "report" command output. For conservation schems, it is
+        the name of the conseration scheme.
+
+    delete rating [name] [scheme]
+        Delete the named rating from the specified conservation scheme.
 
     edit [location|sighting] [id]
         Edit the details for the specified location or sighting. For a location,
@@ -66,6 +78,11 @@ DESCRIPTION
         must be in yyyy-mm-dd format e.g. 2020-06-07. Location and species
         names containing spaces must be enclosed in double quotes.
 
+    export status [scheme] [file]
+        Export conservation status records to the specified CSV file. Scheme may
+        be a named conservation status scheme or "All" to export the data for
+        all schemes.
+
     history [list|clear|location|n]
         In interactive mode, commands entered are stored in a history file in the
         user's profile. The history command allows the user to recall and rerun
@@ -79,11 +96,12 @@ DESCRIPTION
         location    Show the location of the history file
         n           Retrieve command number "n" from the history and rerun it
 
-        !n is a shortcut for "history n", to recall and rerun command number "n". 
+        !n is a shortcut for "history n", to recall and rerun command number
+        "n". 
 
-    import [file]
-        Import the specified CSV file. The CSV file must have the following
-        columns:
+    import sightings [file]
+        Import sightings from the specified CSV file. The CSV file must have the
+        following columns:
 
         Species     The species name
         Category    The species category name
@@ -98,16 +116,31 @@ DESCRIPTION
         Latitude    Latitude for the location, or blank
         Longitude   Longitude for the location, or blank
 
+    import status [file]
+        Import species conservation status records from the specified CSV file.
+        The CSV file must have the following columns:
+
+        Species     The species name
+        Category    The species category name
+        Scheme      The name of the conservation status rating scheme
+        Rating      The rating for the species on the scheme
+        Region      The region in which the rating applies (or blank)
+        Start       The start date for the rating (or blank)
+        End         The end date for the rating (or blank)
+
     interactive
         Enter interactive mode. The application will continue to prompt for and
         run commands until the "exit" command is used to exit
 
-    list [locations|categories|users]
+    list [locations|categories|users|schemes]
         List all the records of the specified type in the database
 
     list species [category]
         List all the species in the database that belong to the specified
         category
+
+    list ratings [scheme]
+        List the conservation status ratings associated with the named scheme
 
     move species [name] [to-category]
         Change the category for a species to the specified "to-category". Names
@@ -142,6 +175,10 @@ DESCRIPTION
         dates must be in yyyy-mm-dd format e.g. 2020-06-07. If either date
         isn't specified, today's date is used. Location and category names
         containing spaces must be enclosed in double-quotes.
+
+    report status [species] [scheme]
+        Show a report on the species conservation status for the specified
+        species against the specified scheme. The scheme is optional
 
     setpassword [username] [password]
         Update the password for the specified user in the database security

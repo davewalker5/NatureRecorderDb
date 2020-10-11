@@ -1,10 +1,12 @@
 ﻿namespace NatureRecorder.Interpreter.Entities
 {
-    public enum ExportType
+    public enum DataExchangeType
     {
         All,
         Location,
         Category,
-        Species
+        Species,
+        Sightings,
+        Status
     }
 }

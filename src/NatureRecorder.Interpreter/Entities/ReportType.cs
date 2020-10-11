@@ -5,6 +5,7 @@
         Summary,
         Location,
         Category,
-        Species
+        Species,
+        Status
     }
 }

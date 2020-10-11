@@ -147,7 +147,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         /// <summary>
         /// Add a new sighting based on the supplied template
         /// </summary>
-        /// <param name="newSighting"></param>
+        /// <param name="template"></param>
         /// <returns></returns>
         public Sighting Add(Sighting template)
         {

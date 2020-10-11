@@ -23,30 +23,45 @@ namespace NatureRecorder.Interpreter.Commands
         {
             if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
-                // The first argument is the report type, that determines the
+                // The first argument is the export type, that determines the
                 // required argument count
-                ExportType type = GetExportType(context);
-                if (ArgumentCountCorrectForExportType(context, type))
+                DataExchangeType type = GetDataExchangeType(context);
+                if (ArgumentCountCorrectForDataExchangeType(context, type))
                 {
                     switch (type)
                     {
-                        case ExportType.All:
-                            ExportAll(context);
+                        case DataExchangeType.All:
+                            ExportAllSightings(context);
                             break;
-                        case ExportType.Location:
+                        case DataExchangeType.Location:
                             ExportLocationData(context);
                             break;
-                        case ExportType.Category:
+                        case DataExchangeType.Category:
                             ExportCategoryData(context);
                             break;
-                        case ExportType.Species:
+                        case DataExchangeType.Species:
                             ExportSpeciesData(context);
+                            break;
+                        case DataExchangeType.Status:
+                            ExportSpeciesStatusData(context);
                             break;
                         default:
                             break;
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Export conservation status ratings
+        /// </summary>
+        /// <param name="context"></param>
+        [ExcludeFromCodeCoverage]
+        private void ExportSpeciesStatusData(CommandContext context)
+        {
+            // export status [file]
+            IEnumerable<SpeciesStatusRating> ratings = GetRatings(context, 1);
+            ExportSpeciesStatusRatings(context, 2, ratings);
         }
 
         /// <summary>
@@ -90,11 +105,38 @@ namespace NatureRecorder.Interpreter.Commands
         /// </summary>
         /// <param name="context"></param>
         [ExcludeFromCodeCoverage]
-        private void ExportAll(CommandContext context)
+        private void ExportAllSightings(CommandContext context)
         {
             // export all [file] <from> <to>
             IEnumerable<Sighting> sightings = GetSightings(context, 2, 3, -1, -1, -1);
             ExportSightings(context, 1, sightings);
+        }
+
+        /// <summary>
+        /// Return a lit of species conservation status ratings matching the specified
+        /// criteria (none in the initial implementation)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        [ExcludeFromCodeCoverage]
+        private IEnumerable<SpeciesStatusRating> GetRatings(CommandContext context, int schemeIndex)
+        {
+            IEnumerable<SpeciesStatusRating> ratings;
+            string schemeName = context.CleanArgument(schemeIndex);
+            if (schemeName == "All")
+            {
+                ratings = context.Factory
+                                 .SpeciesStatusRatings
+                                 .List(null, 1, int.MaxValue);
+            }
+            else
+            {
+                ratings = context.Factory
+                                 .SpeciesStatusRatings
+                                 .List(r => r.Rating.Scheme.Name == schemeName, 1, int.MaxValue);
+            }
+
+            return ratings;
         }
 
         /// <summary>
@@ -165,11 +207,44 @@ namespace NatureRecorder.Interpreter.Commands
         [ExcludeFromCodeCoverage]
         private void ExportSightings(CommandContext context, int fileNameIndex, IEnumerable<Sighting> sightings)
         {
-            context.Factory.Export.RecordExport += OnRecordImportExport;
-            context.Factory.Export.Export(sightings, context.Arguments[fileNameIndex]);
-            context.Factory.Export.RecordExport -= OnRecordImportExport;
-            context.Output.WriteLine($"\nExported the database to {context.Arguments[fileNameIndex]}");
-            context.Output.Flush();
+            try
+            {
+                context.Factory.SightingsExport.RecordExport += OnSightingRecordImportExport;
+                context.Factory.SightingsExport.Export(sightings, context.Arguments[fileNameIndex]);
+                context.Output.WriteLine($"\nExported the database to {context.Arguments[fileNameIndex]}");
+                context.Factory.SightingsExport.RecordExport -= OnSightingRecordImportExport;
+                context.Output.Flush();
+            }
+            catch
+            {
+                context.Factory.SightingsExport.RecordExport -= OnSightingRecordImportExport;
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Export a collection of conservation status ratings to the file specified
+        /// in the context
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="fileNameIndex"></param>
+        /// <param name="ratings"></param>
+        [ExcludeFromCodeCoverage]
+        private void ExportSpeciesStatusRatings(CommandContext context, int fileNameIndex, IEnumerable<SpeciesStatusRating> ratings)
+        {
+            try
+            {
+                context.Factory.SpeciesStatusExport.RecordExport += OnSpeciesStatusRecordImportExport;
+                context.Factory.SpeciesStatusExport.Export(ratings, context.Arguments[fileNameIndex]);
+                context.Output.WriteLine($"\nExported the conservation status ratings to {context.Arguments[fileNameIndex]}");
+                context.Factory.SightingsExport.RecordExport -= OnSightingRecordImportExport;
+                context.Output.Flush();
+            }
+            catch
+            {
+                context.Factory.SpeciesStatusExport.RecordExport -= OnSpeciesStatusRecordImportExport;
+                throw;
+            }
         }
 
         /// <summary>
@@ -178,8 +253,7 @@ namespace NatureRecorder.Interpreter.Commands
         /// <param name="context"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        [ExcludeFromCodeCoverage]
-        private bool ArgumentCountCorrectForExportType(CommandContext context, ExportType type)
+        protected bool ArgumentCountCorrectForDataExchangeType(CommandContext context, DataExchangeType type)
         {
             (int minimum, int maximum) counts = GetRequiredArgumentCounts(type);
             bool correct = ((context.Arguments.Length >= counts.minimum) && (context.Arguments.Length <= counts.maximum));
@@ -198,52 +272,38 @@ namespace NatureRecorder.Interpreter.Commands
         /// <param name="type"></param>
         /// <returns></returns>
         [ExcludeFromCodeCoverage]
-        private (int minimum, int maximum) GetRequiredArgumentCounts(ExportType type)
+        private (int minimum, int maximum) GetRequiredArgumentCounts(DataExchangeType type)
         {
             (int minimum, int maximum) counts;
 
             switch (type)
             {
-                case ExportType.All:
+                case DataExchangeType.All:
                     counts.minimum = 2;
                     counts.maximum = 4;
                     break;
-                case ExportType.Location:
+                case DataExchangeType.Location:
                     counts.minimum = 3;
                     counts.maximum = 5;
                     break;
-                case ExportType.Category:
+                case DataExchangeType.Category:
                     counts.minimum = 4;
                     counts.maximum = 6;
                     break;
-                case ExportType.Species:
+                case DataExchangeType.Species:
                     counts.minimum = 4;
                     counts.maximum = 6;
+                    break;
+                case DataExchangeType.Status:
+                    counts.minimum = 3;
+                    counts.maximum = 3;
                     break;
                 default:
-                    string message = "Cannot generate unknown export type";
-                    throw new UnknownReportTypeException(message);
+                    string message = "Cannot export data for unknown export type";
+                    throw new UnknownDataExchangeTypeException(message);
             }
 
             return counts;
-        }
-
-        /// <summary>
-        /// Determine the required export type
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        [ExcludeFromCodeCoverage]
-        private ExportType GetExportType(CommandContext context)
-        {
-            string exportTypeName = context.CleanArgument(0);
-            if (!Enum.TryParse<ExportType>(exportTypeName, out ExportType type))
-            {
-                string message = "Cannot generate unknown export type";
-                throw new UnknownExportTypeException(message);
-            }
-
-            return type;
         }
     }
 }

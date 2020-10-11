@@ -13,7 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NatureRecorder.BusinessLogic.Logic
 {
-    public class ImportManager : IImportManager
+    public class SightingsImportManager : ISightingsImportManager
     {
         private NatureRecorderFactory _factory;
         private readonly TextInfo _textInfo = CultureInfo.CurrentCulture.TextInfo;
@@ -24,7 +24,7 @@ namespace NatureRecorder.BusinessLogic.Logic
         public IList<string> NewSpecies { get; private set; }
         public IList<string> NewCategories { get; private set; }
 
-        public ImportManager(NatureRecorderFactory factory)
+        public SightingsImportManager(NatureRecorderFactory factory)
         {
             _factory = factory;
         }

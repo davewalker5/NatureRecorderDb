@@ -13,6 +13,10 @@ namespace NatureRecorder.Data
         public virtual DbSet<Sighting> Sightings { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
+        public virtual DbSet<StatusScheme> StatusSchemes { get; set; }
+        public virtual DbSet<StatusRating> StatusRatings { get; set; }
+        public virtual DbSet<SpeciesStatusRating> SpeciesStatusRatings { get; set; }
+
         public NatureRecorderDbContext(DbContextOptions<NatureRecorderDbContext> options) : base(options)
         {
         }

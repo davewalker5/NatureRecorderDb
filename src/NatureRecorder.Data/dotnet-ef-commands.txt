@@ -3,4 +3,5 @@ dotnet ef migrations add security -s ../NatureRecorder.Manager/NatureRecorder.Ma
 dotnet ef migrations add location_details -s ../NatureRecorder.Manager/NatureRecorder.Manager.csproj
 dotnet ef migrations add sighting_enhancements -s ../NatureRecorder.Manager/NatureRecorder.Manager.csproj
 dotnet ef migrations add record_gender -s ../NatureRecorder.Manager/NatureRecorder.Manager.csproj
+dotnet ef migrations add conservation_status -s ../NatureRecorder.Manager/NatureRecorder.Manager.csproj
  

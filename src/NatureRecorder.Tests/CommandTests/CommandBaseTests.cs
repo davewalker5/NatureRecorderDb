@@ -65,7 +65,7 @@ namespace NatureRecorder.Tests.CommandTests
                     {
                         Output = output,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "filename", "extra" }
+                        Arguments = new string[] { "importtype", "filename", "extra" }
                     });
 
                     data = TestHelpers.ReadStream(stream);

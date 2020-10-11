@@ -6,6 +6,9 @@
         Category,
         Species,
         Sighting,
+        Scheme,
+        Rating,
+        Status,
         User
     }
 }
