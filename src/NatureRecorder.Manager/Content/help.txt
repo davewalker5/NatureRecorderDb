@@ -30,10 +30,10 @@ DESCRIPTION
         table. The security implementation is not used in the command line
         utility but is present to support implementation of a REST API and UI
 
-    check [file]
+    check [sightings|status] [file]
         Check the contents of the specified CSV file to see if importing the
-        data it contains would result in the creation of new locations, species
-        or categories
+        data it contains would result in the creation of new locations,
+        categories, species or conservation status schemes and ratings
 
     connection
         Show the database connection details

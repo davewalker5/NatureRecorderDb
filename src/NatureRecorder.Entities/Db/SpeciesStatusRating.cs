@@ -33,7 +33,7 @@ namespace NatureRecorder.Entities.Db
             builder.Append(MakeCsvField(Rating.Name));
             builder.Append(MakeCsvField(Region));
             builder.Append(MakeCsvField(Start));
-            builder.Append(MakeCsvField(End));
+            builder.Append(MakeCsvField(End, true));
             return builder.ToString();
         }
 

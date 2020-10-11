@@ -30,7 +30,7 @@ namespace NatureRecorder.Tests.CommandTests
         }
 
         [TestMethod]
-        public void CheckImportCommandTest()
+        public void CheckSightingsImportCommandTest()
         {
             string data;
 
@@ -44,7 +44,7 @@ namespace NatureRecorder.Tests.CommandTests
                         Output = output,
                         Factory = _factory,
                         Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { importFile }
+                        Arguments = new string[] { "sightings", importFile }
                     });
 
                     data = TestHelpers.ReadStream(stream);
@@ -55,7 +55,7 @@ namespace NatureRecorder.Tests.CommandTests
         }
 
         [TestMethod]
-        public void ImportCommandTest()
+        public void ImportSightingsCommandTest()
         {
             string commandFilePath = Path.Combine(_currentFolder, "Content", "import.txt");
             using (StreamReader input = new StreamReader(commandFilePath))
@@ -81,7 +81,7 @@ namespace NatureRecorder.Tests.CommandTests
         }
 
         [TestMethod]
-        public void ExportAllTest()
+        public void ExportAllSightingsTest()
         {
             // Set up the data to export
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
@@ -99,7 +99,7 @@ namespace NatureRecorder.Tests.CommandTests
         }
 
         [TestMethod]
-        public void ExportAllFromDateTest()
+        public void ExportAllSightingsFromDateTest()
         {
             // Set up the data to export
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
@@ -123,7 +123,7 @@ namespace NatureRecorder.Tests.CommandTests
         }
 
         [TestMethod]
-        public void ExportAllFromToDateTest()
+        public void ExportAllSightingsFromToDateTest()
         {
             // Set up the data to export
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
@@ -143,6 +143,94 @@ namespace NatureRecorder.Tests.CommandTests
 
             TestHelpers.ExportData(_factory, arguments);
             TestHelpers.CompareFiles("export.txt", arguments[1]);
+            File.Delete(arguments[1]);
+        }
+
+        [TestMethod]
+        public void CheckStatusImportCommandTest()
+        {
+            string data;
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter output = new StreamWriter(stream))
+                {
+                    string importFile = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+                    new CheckImportCommand().Run(new CommandContext
+                    {
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.CommandLine,
+                        Arguments = new string[] { "status", importFile }
+                    });
+
+                    data = TestHelpers.ReadStream(stream);
+                }
+            }
+
+            TestHelpers.CompareOutput(data, "check-status-import.txt", 0);
+        }
+
+        [TestMethod]
+        public void ImportStatusCommandTest()
+        {
+            string commandFilePath = Path.Combine(_currentFolder, "Content", "import.txt");
+            using (StreamReader input = new StreamReader(commandFilePath))
+            {
+                using (StreamWriter output = new StreamWriter(new MemoryStream()))
+                {
+                    string importFile = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+                    new ImportCommand().Run(new CommandContext
+                    {
+                        Reader = new StreamCommandReader(input),
+                        Output = output,
+                        Factory = _factory,
+                        Mode = CommandMode.CommandLine,
+                        Arguments = new string[] { "status", importFile }
+                    });
+                }
+            }
+
+            IEnumerable<SpeciesStatusRating> ratings = _factory.SpeciesStatusRatings.List(null, 1, int.MaxValue);
+            Assert.AreEqual(1, ratings.Count());
+            TestHelpers.ConfirmWhiteFrontedGooseRating(ratings);
+        }
+
+        [TestMethod]
+        public void ExportAllStatusesTest()
+        {
+            // Set up the data to export
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+            _factory.SpeciesStatusImport.Import(importFilePath);
+
+            string[] arguments = new string[]
+            {
+                "status",
+                "all",
+                Path.GetTempFileName()
+            };
+
+            TestHelpers.ExportData(_factory, arguments);
+            TestHelpers.CompareFiles("export-status.txt", arguments[2]);
+            File.Delete(arguments[1]);
+        }
+
+        [TestMethod]
+        public void ExportStatusSchemeTest()
+        {
+            // Set up the data to export
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+            _factory.SpeciesStatusImport.Import(importFilePath);
+
+            string[] arguments = new string[]
+            {
+                "status",
+                "BOCC4",
+                Path.GetTempFileName()
+            };
+
+            TestHelpers.ExportData(_factory, arguments);
+            TestHelpers.CompareFiles("export-status.txt", arguments[2]);
             File.Delete(arguments[1]);
         }
     }

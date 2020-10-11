@@ -59,6 +59,22 @@ namespace NatureRecorder.Tests.Helpers
         }
 
         /// <summary>
+        /// Confirm the presence of a BOCC4 rating for the White-Fronted Goose
+        /// in imported data
+        /// </summary>
+        /// <param name="sightings"></param>
+        public static void ConfirmWhiteFrontedGooseRating(IEnumerable<SpeciesStatusRating> ratings)
+        {
+            SpeciesStatusRating rating = ratings.First(s => s.Species.Name == "White-Fronted Goose");
+            Assert.AreEqual("Birds", rating.Species.Category.Name);
+            Assert.AreEqual("BOCC4", rating.Rating.Scheme.Name);
+            Assert.AreEqual("Red", rating.Rating.Name);
+            Assert.AreEqual("United Kingdom", rating.Region);
+            Assert.AreEqual(new DateTime(2015, 12, 1, 0, 0, 0), rating.Start);
+            Assert.IsNull(rating.End);
+        }
+
+        /// <summary>
         /// Read the specified memory stream's content to a string
         /// </summary>
         /// <param name="stream"></param>
@@ -113,7 +129,7 @@ namespace NatureRecorder.Tests.Helpers
         }
 
         /// <summary>
-        /// Run an export command using the specified arguments
+        /// Run an export command to export data using the specified arguments
         /// </summary>
         /// <param name="exportFile"></param>
         /// <param name="from"></param>

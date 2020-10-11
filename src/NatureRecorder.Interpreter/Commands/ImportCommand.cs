@@ -20,7 +20,7 @@ namespace NatureRecorder.Interpreter.Commands
         {
             if (ValidForCommandMode(context) && ArgumentCountCorrect(context))
             {
-                // The first argument is the export type
+                // The first argument is the import type
                 DataExchangeType type = GetDataExchangeType(context);
                 switch (type)
                 {

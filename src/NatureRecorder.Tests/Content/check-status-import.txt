@@ -1,0 +1,9 @@
+﻿Detected the following new Categories:
+	Birds
+
+Detected the following new Species:
+	White-Fronted Goose
+
+Detected the following new Conservation Status Schemes:
+	BOCC4
+Detected no new Conservation Status Ratings
