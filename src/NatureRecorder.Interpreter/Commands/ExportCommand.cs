@@ -31,7 +31,7 @@ namespace NatureRecorder.Interpreter.Commands
                     switch (type)
                     {
                         case DataExchangeType.All:
-                            ExportAll(context);
+                            ExportAllSightings(context);
                             break;
                         case DataExchangeType.Location:
                             ExportLocationData(context);
@@ -60,8 +60,8 @@ namespace NatureRecorder.Interpreter.Commands
         private void ExportSpeciesStatusData(CommandContext context)
         {
             // export status [file]
-            IEnumerable<SpeciesStatusRating> ratings = GetRatings(context);
-            ExportSpeciesStatusRatings(context, 1, ratings);
+            IEnumerable<SpeciesStatusRating> ratings = GetRatings(context, 1);
+            ExportSpeciesStatusRatings(context, 2, ratings);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace NatureRecorder.Interpreter.Commands
         /// </summary>
         /// <param name="context"></param>
         [ExcludeFromCodeCoverage]
-        private void ExportAll(CommandContext context)
+        private void ExportAllSightings(CommandContext context)
         {
             // export all [file] <from> <to>
             IEnumerable<Sighting> sightings = GetSightings(context, 2, 3, -1, -1, -1);
@@ -119,9 +119,23 @@ namespace NatureRecorder.Interpreter.Commands
         /// <param name="context"></param>
         /// <returns></returns>
         [ExcludeFromCodeCoverage]
-        private IEnumerable<SpeciesStatusRating> GetRatings(CommandContext context)
+        private IEnumerable<SpeciesStatusRating> GetRatings(CommandContext context, int schemeIndex)
         {
-            IEnumerable<SpeciesStatusRating> ratings = context.Factory.SpeciesStatusRatings.List(null, 1, int.MaxValue);
+            IEnumerable<SpeciesStatusRating> ratings;
+            string schemeName = context.CleanArgument(schemeIndex);
+            if (schemeName == "All")
+            {
+                ratings = context.Factory
+                                 .SpeciesStatusRatings
+                                 .List(null, 1, int.MaxValue);
+            }
+            else
+            {
+                ratings = context.Factory
+                                 .SpeciesStatusRatings
+                                 .List(r => r.Rating.Scheme.Name == schemeName, 1, int.MaxValue);
+            }
+
             return ratings;
         }
 
@@ -198,6 +212,7 @@ namespace NatureRecorder.Interpreter.Commands
                 context.Factory.SightingsExport.RecordExport += OnSightingRecordImportExport;
                 context.Factory.SightingsExport.Export(sightings, context.Arguments[fileNameIndex]);
                 context.Output.WriteLine($"\nExported the database to {context.Arguments[fileNameIndex]}");
+                context.Factory.SightingsExport.RecordExport -= OnSightingRecordImportExport;
                 context.Output.Flush();
             }
             catch
@@ -222,6 +237,7 @@ namespace NatureRecorder.Interpreter.Commands
                 context.Factory.SpeciesStatusExport.RecordExport += OnSpeciesStatusRecordImportExport;
                 context.Factory.SpeciesStatusExport.Export(ratings, context.Arguments[fileNameIndex]);
                 context.Output.WriteLine($"\nExported the conservation status ratings to {context.Arguments[fileNameIndex]}");
+                context.Factory.SightingsExport.RecordExport -= OnSightingRecordImportExport;
                 context.Output.Flush();
             }
             catch
@@ -279,8 +295,8 @@ namespace NatureRecorder.Interpreter.Commands
                     counts.maximum = 6;
                     break;
                 case DataExchangeType.Status:
-                    counts.minimum = 2;
-                    counts.maximum = 2;
+                    counts.minimum = 3;
+                    counts.maximum = 3;
                     break;
                 default:
                     string message = "Cannot export data for unknown export type";

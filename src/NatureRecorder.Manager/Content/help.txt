@@ -78,6 +78,11 @@ DESCRIPTION
         must be in yyyy-mm-dd format e.g. 2020-06-07. Location and species
         names containing spaces must be enclosed in double quotes.
 
+    export status [scheme] [file]
+        Export conservation status records to the specified CSV file. Scheme may
+        be a named conservation status scheme or "All" to export the data for
+        all schemes.
+
     history [list|clear|location|n]
         In interactive mode, commands entered are stored in a history file in the
         user's profile. The history command allows the user to recall and rerun
