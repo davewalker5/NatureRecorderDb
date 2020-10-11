@@ -68,10 +68,10 @@ namespace NatureRecorder.Tests.Helpers
             SpeciesStatusRating rating = ratings.First(s => s.Species.Name == "White-Fronted Goose");
             Assert.AreEqual("Birds", rating.Species.Category.Name);
             Assert.AreEqual("BOCC4", rating.Rating.Scheme.Name);
-            Assert.AreEqual("Red", rating.Rating.Name);
+            Assert.AreEqual("Amber", rating.Rating.Name);
             Assert.AreEqual("United Kingdom", rating.Region);
             Assert.AreEqual(new DateTime(2015, 12, 1, 0, 0, 0), rating.Start);
-            Assert.IsNull(rating.End);
+            Assert.AreEqual(new DateTime(2017, 12, 31, 0, 0, 0), rating.End);
         }
 
         /// <summary>

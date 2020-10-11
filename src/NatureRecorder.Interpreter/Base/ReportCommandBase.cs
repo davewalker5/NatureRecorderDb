@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Entities.Reporting;
@@ -53,34 +54,42 @@ namespace NatureRecorder.Interpreter.Base
         /// <param name="factory"></param>
         /// <param name="speciesName"></param>
         /// <param name="schemeName"></param>
+        /// <param name="atDate"></param>
         /// <param name="output"></param>
-        public void SummariseConservationStatus(NatureRecorderFactory factory, string speciesName, string schemeName, StreamWriter output)
+        public void SummariseConservationStatus(NatureRecorderFactory factory, string speciesName, string schemeName, DateTime? atDate, StreamWriter output)
         {
-            IEnumerable<SpeciesStatusRating> ratings;
+            Expression<Func<SpeciesStatusRating, bool>> predicate;
             string title;
             string noMatchesMessage;
+
+            // Construct the messages and filtering predicate based on the arguments
             if (schemeName == null)
             {
                 // Summary of conservation status for species against all schemes
+                predicate = r => (r.Species.Name == speciesName);
                 title = $"Conservation status summary for {speciesName}";
                 noMatchesMessage = $"There are no ratings for species {speciesName}";
-                ratings = factory.SpeciesStatusRatings
-                                 .List(r => (r.Species.Name == speciesName),
-                                            1,
-                                            int.MaxValue);
+            }
+            else if (atDate == null)
+            {
+                // Summary of conservation status for species against a specific scheme
+                predicate = r => (r.Species.Name == speciesName) && (r.Rating.Scheme.Name == schemeName);
+                title = $"Conservation status summary for {speciesName} using scheme {schemeName}";
+                noMatchesMessage = $"There are no ratings for species {speciesName} using scheme {schemeName}";
             }
             else
             {
-                // Summary of conservation status for species against a specific scheme
-                title = $"Conservation status summary for {speciesName} using scheme {schemeName}";
+                // Summary of conservation status for species against a specific scheme at a given date
+                predicate = r => (r.Species.Name == speciesName) &&
+                                 (r.Rating.Scheme.Name == schemeName) &&
+                                 ((r.Start == null) || (r.Start <= atDate)) &&
+                                 ((r.End == null) || (r.End >= atDate));
+                title = $"Conservation status summary for {speciesName} using scheme {schemeName} at {(atDate ?? DateTime.Now).ToString("dd-MMM-yyyy")}";
                 noMatchesMessage = $"There are no ratings for species {speciesName} using scheme {schemeName}";
-                ratings = factory.SpeciesStatusRatings
-                                 .List(r => (r.Species.Name == speciesName) &&
-                                            (r.Rating.Scheme.Name == schemeName),
-                                            1,
-                                            int.MaxValue);
             }
 
+            IEnumerable<SpeciesStatusRating> ratings = factory.SpeciesStatusRatings
+                                                              .List(predicate, 1, int.MaxValue);
             if (ratings.Any())
             {
                 output.WriteLine($"{title}:\n");

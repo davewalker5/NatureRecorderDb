@@ -192,7 +192,7 @@ namespace NatureRecorder.Tests.CommandTests
             }
 
             IEnumerable<SpeciesStatusRating> ratings = _factory.SpeciesStatusRatings.List(null, 1, int.MaxValue);
-            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(2, ratings.Count());
             TestHelpers.ConfirmWhiteFrontedGooseRating(ratings);
         }
 
@@ -217,6 +217,25 @@ namespace NatureRecorder.Tests.CommandTests
 
         [TestMethod]
         public void ExportStatusSchemeTest()
+        {
+            // Set up the data to export
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+            _factory.SpeciesStatusImport.Import(importFilePath);
+
+            string[] arguments = new string[]
+            {
+                "status",
+                "BOCC4",
+                Path.GetTempFileName()
+            };
+
+            TestHelpers.ExportData(_factory, arguments);
+            TestHelpers.CompareFiles("export-status.txt", arguments[2]);
+            File.Delete(arguments[1]);
+        }
+
+        [TestMethod]
+        public void ExportStatusSchemeAtDateTest()
         {
             // Set up the data to export
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");

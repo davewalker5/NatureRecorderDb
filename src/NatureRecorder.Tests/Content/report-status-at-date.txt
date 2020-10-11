@@ -1,0 +1,5 @@
+﻿Conservation status summary for White-Fronted Goose using scheme BOCC4 at 31-Dec-2016:
+
+| Species             | Scheme | Rating | From              | To                |
+| ------------------- | ------ | ------ | ----------------- | ----------------- |
+| White-Fronted Goose | BOCC4  | Amber  | 01-Dec-2015 00:00 | 31-Dec-2017 00:00 |
