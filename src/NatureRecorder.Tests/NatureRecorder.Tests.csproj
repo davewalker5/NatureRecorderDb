@@ -1172,6 +1172,8 @@
     <Content Remove="bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\UnitTests\SightingsManagerTest.cs" />
     <Content Remove="bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\Content\add-sighting.txt" />
     <Content Remove="bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\bin\Debug\netcoreapp3.1\obj\Debug\netcoreapp3.1\.NETCoreApp,Version=v3.1.AssemblyAttributes.cs" />
+    <Content Remove="Content\list-schemes.txt" />
+    <Content Remove="Content\list-ratings.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\valid-import.csv">

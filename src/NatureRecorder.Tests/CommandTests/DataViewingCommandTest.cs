@@ -71,5 +71,25 @@ namespace NatureRecorder.Tests.CommandTests
             string[] arguments = new string[] { "users" };
             TestHelpers.RunCommand(_factory, arguments, new ListCommand(), CommandMode.CommandLine, null, null, null, "list-users.txt", 0);
         }
+
+        [TestMethod]
+        public void ListSchemesTest()
+        {
+            _factory.StatusSchemes.Add("BOCC4");
+
+            string[] arguments = new string[] { "schemes" };
+            TestHelpers.RunCommand(_factory, arguments, new ListCommand(), CommandMode.CommandLine, null, null, null, "list-schemes.txt", 0);
+        }
+
+        [TestMethod]
+        public void ListRatingsTest()
+        {
+            _factory.StatusSchemes.Add("BOCC4");
+            _factory.StatusRatings.Add("Red", "BOCC4");
+            _factory.StatusRatings.Add("Amber", "BOCC4");
+
+            string[] arguments = new string[] { "ratings", "BOCC4" };
+            TestHelpers.RunCommand(_factory, arguments, new ListCommand(), CommandMode.CommandLine, null, null, null, "list-ratings.txt", 0);
+        }
     }
 }
