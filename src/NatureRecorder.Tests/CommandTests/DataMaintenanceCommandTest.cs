@@ -92,6 +92,29 @@ namespace NatureRecorder.Tests.CommandTests
         }
 
         [TestMethod]
+        public void AddSightingCommandTest()
+        {
+            _factory.Categories.Add("birds");
+            _factory.Species.Add("robin", "birds");
+            _factory.Locations.Add("Radley Lakes", null, null, null, null, null, null, null);
+
+            string[] arguments = new string[] { "sighting" };
+            TestHelpers.RunCommand(_factory, arguments, new AddCommand(), CommandMode.Interactive, null, "naturerecorder.settings", "add-sighting.txt", null, 0);
+
+            Sighting sighting = _factory.Sightings
+                                        .List(null, 1, int.MaxValue)
+                                        .FirstOrDefault();
+            Assert.IsNotNull(sighting);
+            Assert.AreEqual("Robin", sighting.Species.Name);
+            Assert.AreEqual("Birds", sighting.Species.Category.Name);
+            Assert.AreEqual("Radley Lakes", sighting.Location.Name);
+            Assert.AreEqual(new DateTime(2020, 1, 1), sighting.Date);
+            Assert.AreEqual(0, sighting.Number);
+            Assert.AreEqual(Gender.Unknown, sighting.Gender);
+            Assert.IsFalse(sighting.WithYoung);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(UnknownEntityTypeException))]
         public void RenameInvalidEntityCommandTest()
         {
