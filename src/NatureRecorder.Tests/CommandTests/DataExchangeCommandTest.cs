@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Tests.Helpers;
@@ -34,6 +35,30 @@ namespace NatureRecorder.Tests.CommandTests
             string importFile = Path.Combine(_currentFolder, "Content", "valid-import.csv");
             string[] arguments = new string[] { "sightings", importFile };
             TestHelpers.RunCommand(_factory, arguments, new CheckImportCommand(), CommandMode.CommandLine, null, null, null, "check-import.txt", 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnknownDataExchangeTypeException))]
+        public void CheckInvalidDataExchangeType()
+        {
+            string[] arguments = new string[] { "invalid", "filename" };
+            TestHelpers.RunCommand(_factory, arguments, new CheckImportCommand(), CommandMode.CommandLine, null, null, null,  null, 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnknownDataExchangeTypeException))]
+        public void ImportInvalidDataExchangeType()
+        {
+            string[] arguments = new string[] { "invalid", "filename" };
+            TestHelpers.RunCommand(_factory, arguments, new ImportCommand(), CommandMode.CommandLine, null, null, null, null, 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnknownDataExchangeTypeException))]
+        public void ExportInvalidDataExchangeType()
+        {
+            string[] arguments = new string[] { "invalid", "filename" };
+            TestHelpers.RunCommand(_factory, arguments, new ExportCommand(), CommandMode.CommandLine, null, null, null, null, 0);
         }
 
         [TestMethod]
