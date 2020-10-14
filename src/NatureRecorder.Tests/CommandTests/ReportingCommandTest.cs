@@ -45,6 +45,17 @@ namespace NatureRecorder.Tests.CommandTests
         }
 
         [TestMethod]
+        public void SummaryReportNoResultsTest()
+        {
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
+            _factory.SightingsImport.Import(importFilePath);
+
+            string[] arguments = new string[] { "summary", "1900-01-01", "1900-01-01" };
+            string data = TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, null, 0);
+            Assert.IsTrue(data.StartsWith("There were no sightings on"));
+        }
+
+        [TestMethod]
         public void LocationReportTest()
         {
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
