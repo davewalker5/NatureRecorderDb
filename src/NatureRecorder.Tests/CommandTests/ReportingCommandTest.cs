@@ -30,19 +30,8 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(UnknownReportTypeException))]
         public void InvalidReportTypeTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ReportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "invalid" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "invalid" };
+            TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -51,25 +40,8 @@ namespace NatureRecorder.Tests.CommandTests
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
             _factory.SightingsImport.Import(importFilePath);
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ReportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "summary", "1996-11-23", "2000-01-01" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "report-summary.txt", 0);
+            string[] arguments = new string[] { "summary", "1996-11-23", "2000-01-01" };
+            TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, "report-summary.txt", 0);
         }
 
         [TestMethod]
@@ -78,25 +50,8 @@ namespace NatureRecorder.Tests.CommandTests
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
             _factory.SightingsImport.Import(importFilePath);
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ReportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "location", "bagley wood", "1996-11-23", "2000-01-31" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "report-location.txt", 0);
+            string[] arguments = new string[] { "location", "bagley wood", "1996-11-23", "2000-01-31" };
+            TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, "report-location.txt", 0);
         }
 
         [TestMethod]
@@ -105,25 +60,8 @@ namespace NatureRecorder.Tests.CommandTests
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
             _factory.SightingsImport.Import(importFilePath);
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ReportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "category", "birds", "bagley wood", "1996-11-23", "2000-01-01" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "report-category.txt", 0);
+            string[] arguments = new string[] { "category", "birds", "bagley wood", "1996-11-23", "2000-01-01" };
+            TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, "report-category.txt", 0);
         }
 
         [TestMethod]
@@ -132,25 +70,8 @@ namespace NatureRecorder.Tests.CommandTests
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
             _factory.SightingsImport.Import(importFilePath);
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ReportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "species", "jackdaw", "bagley wood", "1996-11-23", "2000-01-01" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "report-category.txt", 0);
+            string[] arguments = new string[] { "species", "jackdaw", "bagley wood", "1996-11-23", "2000-01-01" };
+            TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, "report-species.txt", 0);
         }
 
         [TestMethod]
@@ -159,25 +80,8 @@ namespace NatureRecorder.Tests.CommandTests
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
             _factory.SpeciesStatusImport.Import(importFilePath);
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ReportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "status", "white-fronted goose" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "report-status.txt", 0);
+            string[] arguments = new string[] { "status", "white-fronted goose" };
+            TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, "report-status.txt", 0);
         }
 
         [TestMethod]
@@ -186,25 +90,8 @@ namespace NatureRecorder.Tests.CommandTests
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
             _factory.SpeciesStatusImport.Import(importFilePath);
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ReportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "status", "white-fronted goose", "BOCC4" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "report-status-for-scheme.txt", 0);
+            string[] arguments = new string[] { "status", "white-fronted goose", "BOCC4" };
+            TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, "report-status-for-scheme.txt", 0);
         }
 
         [TestMethod]
@@ -213,25 +100,8 @@ namespace NatureRecorder.Tests.CommandTests
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
             _factory.SpeciesStatusImport.Import(importFilePath);
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ReportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "status", "white-fronted goose", "BOCC4", "2016-12-31" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "report-status-at-date.txt", 0);
+            string[] arguments = new string[] { "status", "white-fronted goose", "BOCC4", "2016-12-31" };
+            TestHelpers.RunCommand(_factory, arguments, new ReportCommand(), CommandMode.CommandLine, null, null, null, "report-status-at-date.txt", 0);
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
+using NatureRecorder.Tests.Helpers;
 
 namespace NatureRecorder.Tests.CommandTests
 {
@@ -30,16 +30,8 @@ namespace NatureRecorder.Tests.CommandTests
         {
             Assert.IsFalse(_factory.Context.Users.Any());
 
-            using (StreamWriter output = new StreamWriter(new MemoryStream()))
-            {
-                new AddCommand().Run(new CommandContext
-                {
-                    Output = output,
-                    Factory = _factory,
-                    Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { "user", UserName, Password }
-                });
-            }
+            string[] arguments = new string[] { "user", UserName, Password };
+            TestHelpers.RunCommand(_factory, arguments, new AddCommand(), CommandMode.CommandLine, null, null, null, null, 0);
 
             Assert.AreEqual(1, _factory.Context.Users.Count());
 
@@ -52,57 +44,31 @@ namespace NatureRecorder.Tests.CommandTests
         [TestMethod]
         public void SetPasswordCommandTest()
         {
-            using (StreamWriter output = new StreamWriter(new MemoryStream()))
-            {
-                new AddCommand().Run(new CommandContext
-                {
-                    Output = output,
-                    Factory = _factory,
-                    Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { "user", UserName, Password }
-                });
+            string[] arguments = new string[] { "user", UserName, Password };
+            TestHelpers.RunCommand(_factory, arguments, new AddCommand(), CommandMode.CommandLine, null, null, null, null, 0);
 
-                Assert.IsTrue(_factory.Users.Authenticate(UserName, Password));
-                Assert.IsFalse(_factory.Users.Authenticate(UserName, UpdatedPassword));
+            Assert.IsTrue(_factory.Users.Authenticate(UserName, Password));
+            Assert.IsFalse(_factory.Users.Authenticate(UserName, UpdatedPassword));
 
-                new SetPasswordCommand().Run(new CommandContext
-                {
-                    Output = output,
-                    Factory = _factory,
-                    Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { UserName, UpdatedPassword }
-                });
+            arguments = new string[] { UserName, UpdatedPassword };
+            TestHelpers.RunCommand(_factory, arguments, new SetPasswordCommand(), CommandMode.CommandLine, null, null, null, null, 0);
 
-                Assert.IsFalse(_factory.Users.Authenticate(UserName, Password));
-                Assert.IsTrue(_factory.Users.Authenticate(UserName, UpdatedPassword));
-            }
+            Assert.IsFalse(_factory.Users.Authenticate(UserName, Password));
+            Assert.IsTrue(_factory.Users.Authenticate(UserName, UpdatedPassword));
         }
 
         [TestMethod]
         public void DeleteUserCommandTest()
         {
-            using (StreamWriter output = new StreamWriter(new MemoryStream()))
-            {
-                new AddCommand().Run(new CommandContext
-                {
-                    Output = output,
-                    Factory = _factory,
-                    Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { "user", UserName, Password }
-                });
+            string[] arguments = new string[] { "user", UserName, Password };
+            TestHelpers.RunCommand(_factory, arguments, new AddCommand(), CommandMode.CommandLine, null, null, null, null, 0);
 
-                Assert.IsTrue(_factory.Users.Authenticate(UserName, Password));
+            Assert.IsTrue(_factory.Users.Authenticate(UserName, Password));
 
-                new DeleteCommand().Run(new CommandContext
-                {
-                    Output = output,
-                    Factory = _factory,
-                    Mode = CommandMode.CommandLine,
-                    Arguments = new string[] { "user", UserName }
-                });
+            arguments = new string[] { "user", UserName };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.CommandLine, null, null, null, null, 0);
 
-                Assert.IsFalse(_factory.Context.Users.Any());
-            }
+            Assert.IsFalse(_factory.Context.Users.Any());
         }
     }
 }

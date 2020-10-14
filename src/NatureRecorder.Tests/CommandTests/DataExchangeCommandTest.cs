@@ -8,7 +8,6 @@ using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
-using NatureRecorder.Interpreter.Logic;
 using NatureRecorder.Tests.Helpers;
 using NatureRecorder.Tests.UnitTests;
 
@@ -32,47 +31,17 @@ namespace NatureRecorder.Tests.CommandTests
         [TestMethod]
         public void CheckSightingsImportCommandTest()
         {
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    string importFile = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-                    new CheckImportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "sightings", importFile }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "check-import.txt", 0);
+            string importFile = Path.Combine(_currentFolder, "Content", "valid-import.csv");
+            string[] arguments = new string[] { "sightings", importFile };
+            TestHelpers.RunCommand(_factory, arguments, new CheckImportCommand(), CommandMode.CommandLine, null, null, null, "check-import.txt", 0);
         }
 
         [TestMethod]
         public void ImportSightingsCommandTest()
         {
-            string commandFilePath = Path.Combine(_currentFolder, "Content", "import.txt");
-            using (StreamReader input = new StreamReader(commandFilePath))
-            {
-                using (StreamWriter output = new StreamWriter(new MemoryStream()))
-                {
-                    string importFile = Path.Combine(_currentFolder, "Content", "valid-import.csv");
-                    new ImportCommand().Run(new CommandContext
-                    {
-                        Reader = new StreamCommandReader(input),
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "sightings", importFile }
-                    });
-                }
-            }
+            string importFile = Path.Combine(_currentFolder, "Content", "valid-import.csv");
+            string[] arguments = new string[] { "sightings", importFile };
+            TestHelpers.RunCommand(_factory, arguments, new ImportCommand(), CommandMode.CommandLine, null, null, "import.txt", null, 0);
 
             IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, int.MaxValue);
             Assert.AreEqual(2, sightings.Count());
@@ -149,47 +118,17 @@ namespace NatureRecorder.Tests.CommandTests
         [TestMethod]
         public void CheckStatusImportCommandTest()
         {
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    string importFile = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
-                    new CheckImportCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "status", importFile }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "check-status-import.txt", 0);
+            string importFile = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+            string[] arguments = new string[] { "status", importFile };
+            TestHelpers.RunCommand(_factory, arguments, new CheckImportCommand(), CommandMode.CommandLine, null, null, null, "check-status-import.txt", 0);
         }
 
         [TestMethod]
         public void ImportStatusCommandTest()
         {
-            string commandFilePath = Path.Combine(_currentFolder, "Content", "import.txt");
-            using (StreamReader input = new StreamReader(commandFilePath))
-            {
-                using (StreamWriter output = new StreamWriter(new MemoryStream()))
-                {
-                    string importFile = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
-                    new ImportCommand().Run(new CommandContext
-                    {
-                        Reader = new StreamCommandReader(input),
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "status", importFile }
-                    });
-                }
-            }
+            string importFile = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
+            string[] arguments = new string[] { "status", importFile };
+            TestHelpers.RunCommand(_factory, arguments, new ImportCommand(), CommandMode.CommandLine, null, null, "import.txt", null, 0);
 
             IEnumerable<SpeciesStatusRating> ratings = _factory.SpeciesStatusRatings.List(null, 1, int.MaxValue);
             Assert.AreEqual(2, ratings.Count());

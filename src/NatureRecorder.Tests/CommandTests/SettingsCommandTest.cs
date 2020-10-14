@@ -14,7 +14,7 @@ namespace NatureRecorder.Tests.CommandTests
     {
         private const string Location = "My Default Location";
 
-        private UserSettings _settings = new UserSettings();
+        private const string SettingsFile = "naturerecorder.settings";
         private NatureRecorderFactory _factory;
 
         [TestInitialize]
@@ -22,15 +22,14 @@ namespace NatureRecorder.Tests.CommandTests
         {
             NatureRecorderDbContext context = new NatureRecorderDbContextFactory().CreateInMemoryDbContext();
             _factory = new NatureRecorderFactory(context);
-            _settings = new UserSettings(Path.GetTempFileName());
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            if (File.Exists(_settings.SettingsFilePath))
+            if (File.Exists(SettingsFile))
             {
-                File.Delete(_settings.SettingsFilePath);
+                File.Delete(SettingsFile);
             }
         }
 
@@ -38,40 +37,16 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(LocationDoesNotExistException))]
         public void SetInvalidLocationTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new SettingsCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "location", Location },
-                        Settings = _settings
-                    });
-                }
-            }
+            string[] arguments = new string[] { "location", Location };
+            TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, null, 0);
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnknownSettingTypeException))]
         public void RequestInvalidActionTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new SettingsCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "notvalid" },
-                        Settings = _settings
-                    });
-                }
-            }
+            string[] arguments = new string[] { "notvalid" };
+            TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, null, 0);
         }
 
         [TestMethod]
@@ -79,75 +54,34 @@ namespace NatureRecorder.Tests.CommandTests
         {
             _factory.Locations.Add(Location, "", "", "", "", "", null, null);
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new SettingsCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "location", Location },
-                        Settings = _settings
-                    });
-                }
-            }
+            string[] arguments = new string[] { "location", Location };
+            TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, null, 0);
 
-            Assert.AreEqual(Location, _settings.Location);
-            TestHelpers.CompareFiles("user-settings.json", _settings.SettingsFilePath);
+            TestHelpers.CompareFiles("user-settings.json", SettingsFile);
         }
 
         [TestMethod]
         public void ListSettingsTest()
         {
-            _settings.Location = Location;
+            _factory.Locations.Add(Location, "", "", "", "", "", null, null);
 
-            string data;
+            string[] arguments = new string[] { "location", Location };
+            TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, null, 0);
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new SettingsCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "list" },
-                        Settings = _settings
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "settings-list.txt", 1);
+            arguments = new string[] { "list" };
+            TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, "settings-list.txt", 0);
         }
 
         [TestMethod]
         public void ClearSettingsTest()
         {
-            _settings.Location = Location;
+            _factory.Locations.Add(Location, "", "", "", "", "", null, null);
 
-            string data;
+            string[] arguments = new string[] { "location", Location };
+            TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, null, 0);
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new SettingsCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "clear" },
-                        Settings = _settings
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "settings-clear.txt", 1);
+            arguments = new string[] { "clear" };
+            TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, "settings-clear.txt", 0);
         }
     }
 }

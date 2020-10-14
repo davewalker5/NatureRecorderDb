@@ -9,8 +9,7 @@ using NatureRecorder.Entities.Db;
 using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
-using NatureRecorder.Interpreter.Logic;
-using NatureRecorder.Tests.UnitTests;
+using NatureRecorder.Tests.Helpers;
 
 namespace NatureRecorder.Tests.CommandTests
 {
@@ -26,26 +25,15 @@ namespace NatureRecorder.Tests.CommandTests
             NatureRecorderDbContext context = new NatureRecorderDbContextFactory().CreateInMemoryDbContext();
             _factory = new NatureRecorderFactory(context);
 
-            _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ImportExportManagerTest)).Location);
+            _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(DataMaintenanceCommandTest)).Location);
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnknownEntityTypeException))]
         public void AddInvalidEntityCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new AddCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "something" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "something" };
+            TestHelpers.RunCommand(_factory, arguments, new AddCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -53,21 +41,8 @@ namespace NatureRecorder.Tests.CommandTests
         {
             Assert.IsFalse(_factory.Locations.List(null, 1, int.MaxValue).Any());
 
-            string commandFilePath = Path.Combine(_currentFolder, "Content", "add-location.txt");
-            using (StreamReader input = new StreamReader(commandFilePath))
-            {
-                using (StreamWriter output = new StreamWriter(new MemoryStream()))
-                {
-                    new AddCommand().Run(new CommandContext
-                    {
-                        Reader = new StreamCommandReader(input),
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "location" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "location" };
+            TestHelpers.RunCommand(_factory, arguments, new AddCommand(), CommandMode.Interactive, null, null, "add-location.txt", null, 0);
 
             Location location = _factory.Locations
                                         .List(null, 1, int.MaxValue)
@@ -88,21 +63,8 @@ namespace NatureRecorder.Tests.CommandTests
         {
             Assert.IsFalse(_factory.Categories.List(null, 1, int.MaxValue).Any());
 
-            string commandFilePath = Path.Combine(_currentFolder, "Content", "add-category.txt");
-            using (StreamReader input = new StreamReader(commandFilePath))
-            {
-                using (StreamWriter output = new StreamWriter(new MemoryStream()))
-                {
-                    new AddCommand().Run(new CommandContext
-                    {
-                        Reader = new StreamCommandReader(input),
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "category" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "category" };
+            TestHelpers.RunCommand(_factory, arguments, new AddCommand(), CommandMode.Interactive, null, null, "add-category.txt", null, 0);
 
             Category category = _factory.Categories
                                         .List(null, 1, int.MaxValue)
@@ -118,21 +80,8 @@ namespace NatureRecorder.Tests.CommandTests
 
             _factory.Categories.Add("birds");
 
-            string commandFilePath = Path.Combine(_currentFolder, "Content", "add-species.txt");
-            using (StreamReader input = new StreamReader(commandFilePath))
-            {
-                using (StreamWriter output = new StreamWriter(new MemoryStream()))
-                {
-                    new AddCommand().Run(new CommandContext
-                    {
-                        Reader = new StreamCommandReader(input),
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "species" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "species" };
+            TestHelpers.RunCommand(_factory, arguments, new AddCommand(), CommandMode.Interactive, null, null, "add-species.txt", null, 0);
 
             Species species = _factory.Species
                                       .List(null, 1, int.MaxValue)
@@ -146,19 +95,8 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(UnknownEntityTypeException))]
         public void RenameInvalidEntityCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new RenameCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "something", "value", "value" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "something", "value", "value" };
+            TestHelpers.RunCommand(_factory, arguments, new RenameCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -166,19 +104,8 @@ namespace NatureRecorder.Tests.CommandTests
         {
             _factory.Categories.Add("birds");
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new RenameCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "category", "birds", "things with wings" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "category", "birds", "things with wings" };
+            TestHelpers.RunCommand(_factory, arguments, new RenameCommand(), CommandMode.Interactive, null, null, null, null, 0);
 
             Category category = _factory.Categories.Get(s => s.Name == "Things With Wings");
             Assert.IsNotNull(category);
@@ -190,19 +117,8 @@ namespace NatureRecorder.Tests.CommandTests
             _factory.Categories.Add("birds");
             _factory.Species.Add("blackbird", "birds");
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new RenameCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "species", "blackbird", "robin" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "species", "blackbird", "robin" };
+            TestHelpers.RunCommand(_factory, arguments, new RenameCommand(), CommandMode.Interactive, null, null, null, null, 0);
 
             Species species = _factory.Species.Get(s => s.Name == "Robin");
             Assert.IsNotNull(species);
@@ -212,19 +128,8 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(UnknownEntityTypeException))]
         public void MoveInvalidEntityCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new MoveCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "something", "value", "value" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "something", "value", "value" };
+            TestHelpers.RunCommand(_factory, arguments, new MoveCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -234,19 +139,8 @@ namespace NatureRecorder.Tests.CommandTests
             _factory.Categories.Add("things with wings");
             _factory.Species.Add("blackbird", "birds");
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new MoveCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "species", "blackbird", "things with wings" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "species", "blackbird", "things with wings" };
+            TestHelpers.RunCommand(_factory, arguments, new MoveCommand(), CommandMode.Interactive, null, null, null, null, 0);
 
             Species species = _factory.Species.Get(s => s.Name == "Blackbird");
             Assert.AreEqual(species.Category.Name, "Things With Wings");
@@ -256,19 +150,8 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(UnknownEntityTypeException))]
         public void DeleteInvalidEntityCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "something", "id" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "something", "id" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -276,19 +159,8 @@ namespace NatureRecorder.Tests.CommandTests
         {
             _factory.Locations.Add("somewhere", "", "", "", "", "", null, null);
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "location", "somewhere" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "location", "somewhere" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
 
             Location location = _factory.Locations.Get(l => l.Name == "somewhere");
             Assert.IsNull(location);
@@ -298,19 +170,8 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(LocationDoesNotExistException))]
         public void DeleteMissingLocationCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "location", "somewhere" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "location", "somewhere" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -322,19 +183,8 @@ namespace NatureRecorder.Tests.CommandTests
             Species species = _factory.Species.Add("robin", "birds");
             _factory.Sightings.Add(0, Gender.Unknown, false, DateTime.Now, location.Id, species.Id);
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "location", "somewhere" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "location", "somewhere" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -342,41 +192,19 @@ namespace NatureRecorder.Tests.CommandTests
         {
             _factory.Categories.Add("birds");
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "category", "birds" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "category", "birds" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
 
-            Location location = _factory.Locations.Get(l => l.Name == "somewhere");
-            Assert.IsNull(location);
+            Category category = _factory.Categories.Get(c => c.Name == "birds");
+            Assert.IsNull(category);
         }
 
         [TestMethod]
         [ExpectedException(typeof(CategoryDoesNotExistException))]
         public void DeleteMissingCategoryCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "category", "birds" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "category", "birds" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -386,19 +214,8 @@ namespace NatureRecorder.Tests.CommandTests
             _factory.Categories.Add("birds");
             _factory.Species.Add("robin", "birds");
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "category", "birds" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "category", "birds" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -407,19 +224,8 @@ namespace NatureRecorder.Tests.CommandTests
             _factory.Categories.Add("birds");
             _factory.Species.Add("robin", "birds");
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "species", "robin" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "species", "robin" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
 
             Species species = _factory.Species.Get(l => l.Name == "robin");
             Assert.IsNull(species);
@@ -429,19 +235,8 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(SpeciesDoesNotExistException))]
         public void DeleteMissingSpeciesCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "species", "robin" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "species", "robin" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -453,19 +248,8 @@ namespace NatureRecorder.Tests.CommandTests
             Species species = _factory.Species.Add("robin", "birds");
             _factory.Sightings.Add(0, Gender.Unknown, false, DateTime.Now, location.Id, species.Id);
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "species", "robin" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "species", "robin" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -476,19 +260,8 @@ namespace NatureRecorder.Tests.CommandTests
             Species species = _factory.Species.Add("robin", "birds");
             Sighting sighting = _factory.Sightings.Add(0, Gender.Unknown, false, DateTime.Now, location.Id, species.Id);
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "sighting", sighting.Id.ToString() }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "sighting", sighting.Id.ToString() };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
 
             Assert.IsFalse(_factory.Context.Sightings.Any());
         }
@@ -497,19 +270,8 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(SightingDoesNotExistException))]
         public void DeleteMissingSightingCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new DeleteCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "sighting", "1" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "sighting", "1" };
+            TestHelpers.RunCommand(_factory, arguments, new DeleteCommand(), CommandMode.Interactive, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -529,23 +291,10 @@ namespace NatureRecorder.Tests.CommandTests
             Assert.IsNull(location.Latitude);
             Assert.IsNull(location.Longitude);
 
-            // The promting during editing is identical to that during adding new locations
+            // The prompting during editing is identical to that during adding new locations
             // so we can reuse the "add" test input file
-            string commandFilePath = Path.Combine(_currentFolder, "Content", "add-location.txt");
-            using (StreamReader input = new StreamReader(commandFilePath))
-            {
-                using (StreamWriter output = new StreamWriter(new MemoryStream()))
-                {
-                    new EditCommand().Run(new CommandContext
-                    {
-                        Reader = new StreamCommandReader(input),
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = new string[] { "location", "Radley Lakes" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "location", "Radley Lakes" };
+            TestHelpers.RunCommand(_factory, arguments, new EditCommand(), CommandMode.Interactive, null, null, "add-location.txt", null, 0);
 
             location = _factory.Locations
                                .List(null, 1, int.MaxValue)

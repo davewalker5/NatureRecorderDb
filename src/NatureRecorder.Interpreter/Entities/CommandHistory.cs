@@ -12,16 +12,29 @@ namespace NatureRecorder.Interpreter.Entities
     public class CommandHistory
     {
         private const string HistoryFileName = "naturerecorder.history";
+        private static string _defaultLocation = Path.Combine(Environment.GetFolderPath(SpecialFolder.LocalApplicationData, SpecialFolderOption.DoNotVerify), HistoryFileName);
 
         private List<string> _history;
-        private readonly string _historyFile;
 
         public int Count { get { return _history?.Count ?? 0;  } }
+        public string HistoryFile { get; set; }
 
-        public CommandHistory()
+        /// <summary>
+        /// Default constructor - the history file is in the user's profile
+        /// </summary>
+        [ExcludeFromCodeCoverage]
+        public CommandHistory() : this(_defaultLocation)
         {
-            // Get the history file path and, if it exists, load the history from it
-            _historyFile = Path.Combine(Environment.GetFolderPath(SpecialFolder.LocalApplicationData, SpecialFolderOption.DoNotVerify), HistoryFileName);
+        }
+
+        /// <summary>
+        /// Construct the instance using the specified location for the history
+        /// file
+        /// </summary>
+        /// <param name="location"></param>
+        public CommandHistory(string location)
+        {
+            HistoryFile = location;
             Read();
         }
 
@@ -50,7 +63,7 @@ namespace NatureRecorder.Interpreter.Entities
         {
             _history.Add(command);
 
-            using (StreamWriter writer = new StreamWriter(_historyFile, true))
+            using (StreamWriter writer = new StreamWriter(HistoryFile, true))
             {
                 writer.WriteLine(command);
             }
@@ -62,7 +75,7 @@ namespace NatureRecorder.Interpreter.Entities
         /// <param name="writer"></param>
         public void Location(StreamWriter writer)
         {
-            writer.WriteLine(_historyFile);
+            writer.WriteLine(HistoryFile);
             writer.Flush();
         }
 
@@ -95,9 +108,9 @@ namespace NatureRecorder.Interpreter.Entities
         {
             _history.Clear();
 
-            if (File.Exists(_historyFile))
+            if (File.Exists(HistoryFile))
             {
-                File.Delete(_historyFile);
+                File.Delete(HistoryFile);
             }
         }
 
@@ -106,9 +119,9 @@ namespace NatureRecorder.Interpreter.Entities
         /// </summary>
         private void Read()
         {
-            if (File.Exists(_historyFile))
+            if (File.Exists(HistoryFile))
             {
-                _history = File.ReadAllLines(_historyFile).ToList();
+                _history = File.ReadAllLines(HistoryFile).ToList();
             }
             else
             {

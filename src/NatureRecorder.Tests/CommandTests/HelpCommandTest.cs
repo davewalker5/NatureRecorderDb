@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Tests.Helpers;
@@ -12,24 +11,8 @@ namespace NatureRecorder.Tests.CommandTests
         [TestMethod]
         public void ShowHelpCommandTest()
         {
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new HelpCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "help.txt", 0);
+            string[] arguments = new string[] { "something" };
+            TestHelpers.RunCommand(null, null, new HelpCommand(), CommandMode.CommandLine, null, null, null, "help.txt", 0);
         }
     }
 }

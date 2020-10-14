@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Exceptions;
@@ -25,19 +24,8 @@ namespace NatureRecorder.Tests.CommandTests
         [ExpectedException(typeof(UnknownEntityTypeException))]
         public void ListInvalidEntityTypeCommandTest()
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ListCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "something" }
-                    });
-                }
-            }
+            string[] arguments = new string[] { "something" };
+            TestHelpers.RunCommand(_factory, arguments, new ListCommand(), CommandMode.CommandLine, null, null, null, null, 0);
         }
 
         [TestMethod]
@@ -52,25 +40,8 @@ namespace NatureRecorder.Tests.CommandTests
                                    51.6741263M,
                                    -1.2496157M);
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ListCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "locations" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "list-locations.txt", 0);
+            string[] arguments = new string[] { "locations" };
+            TestHelpers.RunCommand(_factory, arguments, new ListCommand(), CommandMode.CommandLine, null, null, null, "list-locations.txt", 0);
         }
 
         [TestMethod]
@@ -78,25 +49,8 @@ namespace NatureRecorder.Tests.CommandTests
         {
             _factory.Categories.Add("birds");
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ListCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "categories" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "list-categories.txt", 0);
+            string[] arguments = new string[] { "categories" };
+            TestHelpers.RunCommand(_factory, arguments, new ListCommand(), CommandMode.CommandLine, null, null, null, "list-categories.txt", 0);
         }
 
         [TestMethod]
@@ -105,25 +59,8 @@ namespace NatureRecorder.Tests.CommandTests
             _factory.Categories.Add("birds");
             _factory.Species.Add("blackbird", "birds");
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ListCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "species", "birds" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "list-species.txt", 0);
+            string[] arguments = new string[] { "species", "birds" };
+            TestHelpers.RunCommand(_factory, arguments, new ListCommand(), CommandMode.CommandLine, null, null, null, "list-species.txt", 0);
         }
 
         [TestMethod]
@@ -131,25 +68,8 @@ namespace NatureRecorder.Tests.CommandTests
         {
             _factory.Users.AddUser("someone", "somepassword");
 
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ListCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Factory = _factory,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { "users" }
-                    });
-
-                    data = TestHelpers.ReadStream(stream);
-                }
-            }
-
-            TestHelpers.CompareOutput(data, "list-users.txt", 0);
+            string[] arguments = new string[] { "users" };
+            TestHelpers.RunCommand(_factory, arguments, new ListCommand(), CommandMode.CommandLine, null, null, null, "list-users.txt", 0);
         }
     }
 }

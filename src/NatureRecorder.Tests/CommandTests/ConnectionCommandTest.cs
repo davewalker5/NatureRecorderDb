@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Tests.Helpers;
@@ -14,24 +13,8 @@ namespace NatureRecorder.Tests.CommandTests
         [TestMethod]
         public void ShowConnectionCommandTest()
         {
-            string data;
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter output = new StreamWriter(stream))
-                {
-                    new ConnectionCommand().Run(new CommandContext
-                    {
-                        Output = output,
-                        Mode = CommandMode.CommandLine,
-                        Arguments = new string[] { }
-                    });
-
-                    data = TestHelpers.ReadStream(stream).Replace("\n", "");
-                }
-            }
-
-            Assert.AreEqual(ExpectedConnection, data);
+            string data = TestHelpers.RunCommand(null, null, new ConnectionCommand(), CommandMode.CommandLine, null, null, null, null, 0);
+            Assert.AreEqual(ExpectedConnection, data.Replace("\n", ""));
         }
     }
 }

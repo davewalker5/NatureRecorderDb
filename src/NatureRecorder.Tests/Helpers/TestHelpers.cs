@@ -7,9 +7,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
+using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Interpreter.Base;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
+using NatureRecorder.Interpreter.Logic;
 using NatureRecorder.Tests.UnitTests;
 
 namespace NatureRecorder.Tests.Helpers
@@ -136,19 +139,86 @@ namespace NatureRecorder.Tests.Helpers
         /// <param name="to"></param>
         public static void ExportData(NatureRecorderFactory factory, string[] arguments)
         {
+            RunCommand(factory, arguments, new ExportCommand(), CommandMode.Interactive, null, null, null, null, 0);
+        }
+
+        /// <summary>
+        /// Run a command and return the output as a string, optionally comparing
+        /// it to a comparison file containing expected output. Input to the command
+        /// is taken from an (optional) input file containing one entry per line
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="arguments"></param>
+        /// <param name="command"></param>
+        /// <param name="mode"></param>
+        /// <param name="historyFile"></param>
+        /// <param name="settingsFile"></param>
+        /// <param name="inputFile"></param>
+        /// <param name="comparisonFile"></param>
+        /// <param name="skipLines"></param>
+        /// <returns></returns>
+        public static string RunCommand(NatureRecorderFactory factory,
+                                        string[] arguments,
+                                        CommandBase command,
+                                        CommandMode mode,
+                                        string historyFile,
+                                        string settingsFile,
+                                        string inputFile,
+                                        string comparisonFile,
+                                        int skipLines)
+        {
+            string data;
+            StreamReader input = null;
+
+            // Open the input file, if specified
+            if (!string.IsNullOrEmpty(inputFile))
+            {
+                string commandFilePath = Path.Combine(_currentFolder, "Content", inputFile);
+                input = new StreamReader(commandFilePath);
+            }
+
+            // Run the command, capturing the output
             using (MemoryStream stream = new MemoryStream())
             {
                 using (StreamWriter output = new StreamWriter(stream))
                 {
-                    new ExportCommand().Run(new CommandContext
+                    // Load user settings, if required
+                    UserSettings settings = null;
+                    if (!string.IsNullOrEmpty(settingsFile))
                     {
-                        Output = output,
+                        settings = new UserSettings(settingsFile);
+                        settings.Load();
+                    }
+
+                    //  Run the command
+                    command.Run(new CommandContext
+                    {
                         Factory = factory,
-                        Mode = CommandMode.Interactive,
-                        Arguments = arguments
+                        Mode = mode,
+                        Arguments = arguments ?? new string[] { },
+                        Reader = (input != null) ? new StreamCommandReader(input) : null,
+                        Output = output,
+                        History = (!string.IsNullOrEmpty(historyFile)) ? new CommandHistory(historyFile) : null,
+                        Settings = settings
                     });
+
+                    data = TestHelpers.ReadStream(stream);
                 }
             }
+
+            // Close the input file
+            if (input != null)
+            {
+                input.Dispose();
+            }
+
+            // Compare the output to the comparison file, if specified
+            if (!string.IsNullOrEmpty(comparisonFile))
+            {
+                TestHelpers.CompareOutput(data, comparisonFile, skipLines);
+            }
+
+            return data;
         }
     }
 }
