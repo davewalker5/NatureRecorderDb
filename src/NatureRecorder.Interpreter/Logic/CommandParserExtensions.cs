@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NatureRecorder.Interpreter.Logic
 {
@@ -7,6 +8,7 @@ namespace NatureRecorder.Interpreter.Logic
     /// Methods in this class are taken from the following Stack Overflow page:
     /// https://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp/298990#298990
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class CommandParserExtensions
     {
         public static IEnumerable<string> Split(this string str, Func<char, bool> controller)
