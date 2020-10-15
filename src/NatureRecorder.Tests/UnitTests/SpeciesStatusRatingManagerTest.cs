@@ -136,6 +136,52 @@ namespace NatureRecorder.Tests.UnitTests
         }
 
         [TestMethod]
+        public void ListRatingsTest()
+        {
+            IEnumerable<SpeciesStatusRating> ratings = _factory.SpeciesStatusRatings
+                                                               .List(null, 1, int.MaxValue);
+            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(SpeciesName, ratings.First().Species.Name);
+            Assert.AreEqual(RatingName, ratings.First().Rating.Name);
+            Assert.AreEqual(SchemeName, ratings.First().Rating.Scheme.Name);
+        }
+
+        [TestMethod]
+        public async Task ListRatingsAsyncTest()
+        {
+            List<SpeciesStatusRating> ratings = await _factory.SpeciesStatusRatings
+                                                              .ListAsync(null, 1, int.MaxValue)
+                                                              .ToListAsync();
+            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(SpeciesName, ratings.First().Species.Name);
+            Assert.AreEqual(RatingName, ratings.First().Rating.Name);
+            Assert.AreEqual(SchemeName, ratings.First().Rating.Scheme.Name);
+        }
+
+        [TestMethod]
+        public void ListRatingsForSpeciesTest()
+        {
+            IEnumerable<SpeciesStatusRating> ratings = _factory.SpeciesStatusRatings
+                                                               .List(r => r.Species.Name == SpeciesName, 1, int.MaxValue);
+            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(SpeciesName, ratings.First().Species.Name);
+            Assert.AreEqual(RatingName, ratings.First().Rating.Name);
+            Assert.AreEqual(SchemeName, ratings.First().Rating.Scheme.Name);
+        }
+
+        [TestMethod]
+        public async Task ListRatingsForSpeciesAsyncTest()
+        {
+            List<SpeciesStatusRating> ratings = await _factory.SpeciesStatusRatings
+                                                              .ListAsync(r => r.Species.Name == SpeciesName, 1, int.MaxValue)
+                                                              .ToListAsync();
+            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(SpeciesName, ratings.First().Species.Name);
+            Assert.AreEqual(RatingName, ratings.First().Rating.Name);
+            Assert.AreEqual(SchemeName, ratings.First().Rating.Scheme.Name);
+        }
+
+        [TestMethod]
         public void ReplaceExistingRatingTest()
         {
             // Calculate the new start date and, from that, both the start and end dates for
