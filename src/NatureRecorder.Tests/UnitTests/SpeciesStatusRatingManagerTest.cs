@@ -52,6 +52,48 @@ namespace NatureRecorder.Tests.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public void SetRatingForMissingSpeciesTest()
+        {
+            _factory.SpeciesStatusRatings.SetRating("", RatingName, SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public async Task SetRatingForMissingSpeciesAsyncTest()
+        {
+            await _factory.SpeciesStatusRatings.SetRatingAsync("", RatingName, SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusRatingDoesNotExistException))]
+        public void SetInvalidRatingTest()
+        {
+            _factory.SpeciesStatusRatings.SetRating(SpeciesName, "", SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusRatingDoesNotExistException))]
+        public async Task SetInvalidRatingAsyncTest()
+        {
+            await _factory.SpeciesStatusRatings.SetRatingAsync(SpeciesName, "", SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusRatingDoesNotExistException))]
+        public void SetInvalidSchemeTest()
+        {
+            _factory.SpeciesStatusRatings.SetRating(SpeciesName, RatingName, "");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusRatingDoesNotExistException))]
+        public async Task SetInvalidSchemeAsyncTest()
+        {
+            await _factory.SpeciesStatusRatings.SetRatingAsync(SpeciesName, RatingName, "");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
         public void GetCurrentForMissingSpeciesTest()
         {
             _factory.SpeciesStatusRatings.GetCurrent("", SchemeName);
