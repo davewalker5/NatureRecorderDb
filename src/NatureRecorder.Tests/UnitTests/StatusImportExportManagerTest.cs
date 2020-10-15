@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -47,6 +48,28 @@ namespace NatureRecorder.Tests.UnitTests
             _factory.StatusRatings.Add("amber", "BOCC4");
             _factory.Categories.Add("birds");
             _factory.Species.Add("white-fronted goose", "birds");
+            _factory.SpeciesStatusRatings.Add(new SpeciesStatusRating
+            {
+                Species = new Species
+                {
+                    Name = "White-Fronted Goose",
+                    Category = new Category
+                    {
+                        Name = "Birds"
+                    }
+                },
+                Rating = new StatusRating
+                {
+                    Name = "Red",
+                    Scheme = new StatusScheme
+                    {
+                        Name = "BOCC4"
+                    }
+                },
+                Region = "United Kingdom",
+                Start = new DateTime(2018,1,1,0,0,0),
+                End = null
+            });
 
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-status-import.csv");
             _factory.SpeciesStatusImport.Import(importFilePath);
