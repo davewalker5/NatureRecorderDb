@@ -59,6 +59,20 @@ namespace NatureRecorder.Tests.UnitTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(StatusSchemeDoesNotExistException))]
+        public void AddToInvalidSchemeTest()
+        {
+            _factory.StatusRatings.Add("Blue", "");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusSchemeDoesNotExistException))]
+        public async Task AddToInvalidSchemeAsyncTest()
+        {
+            await _factory.StatusRatings.AddAsync("Blue", "");
+        }
+
+        [TestMethod]
         public void GetMissingTest()
         {
             StatusRating entity = _factory.StatusRatings.Get(a => (a.Name == "Missing") && (a.Scheme.Name == SchemeName));
@@ -166,6 +180,20 @@ namespace NatureRecorder.Tests.UnitTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(StatusSchemeDoesNotExistException))]
+        public void RenameForInvalidSchemeTest()
+        {
+            _factory.StatusRatings.Rename(RatingName, RenamedRatingName, "");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusSchemeDoesNotExistException))]
+        public async Task RenameForInvalidSchemeAsyncTest()
+        {
+            await _factory.StatusRatings.RenameAsync(RatingName, RenamedRatingName, "");
+        }
+
+        [TestMethod]
         public void DeleteTest()
         {
             _factory.StatusRatings.Delete(RatingName, SchemeName);
@@ -225,6 +253,20 @@ namespace NatureRecorder.Tests.UnitTests
 
             await _factory.Context.SaveChangesAsync();
             await _factory.StatusRatings.DeleteAsync(RatingName, SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusSchemeDoesNotExistException))]
+        public void DeleteFromInvalidSchemeTest()
+        {
+            _factory.StatusRatings.Delete(RatingName, "");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusSchemeDoesNotExistException))]
+        public async Task DeleteFromInvalidSchemeAsyncTest()
+        {
+            await _factory.StatusRatings.DeleteAsync(RatingName, "");
         }
     }
 }
