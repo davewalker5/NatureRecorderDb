@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
 using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Entities.Reporting;
 
 namespace NatureRecorder.Tests.UnitTests
@@ -163,11 +164,25 @@ namespace NatureRecorder.Tests.UnitTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(SightingDoesNotExistException))]
+        public void DeleteMisingTest()
+        {
+            _factory.Sightings.Delete(100);
+        }
+
+        [TestMethod]
         public async Task DeleteAsyncTest()
         {
             Sighting sighting = await _factory.Sightings.ListAsync(null, 1, int.MaxValue).FirstAsync();
             await _factory.Sightings.DeleteAsync(sighting.Id);
             Assert.AreEqual(0, _factory.Context.Sightings.Count());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SightingDoesNotExistException))]
+        public async Task DeleteMisingAsyncTest()
+        {
+            await _factory.Sightings.DeleteAsync(100);
         }
     }
 }

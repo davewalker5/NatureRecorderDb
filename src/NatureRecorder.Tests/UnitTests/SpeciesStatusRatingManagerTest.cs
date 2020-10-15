@@ -17,7 +17,6 @@ namespace NatureRecorder.Tests.UnitTests
         private const string SpeciesName = "Nightingale";
         private const string SchemeName = "BOCC4";
         private const string RatingName = "Red";
-        private const string AsyncRatingName = "Green";
         private const string NewRatingName = "Amber";
 
         private NatureRecorderFactory _factory;
@@ -49,6 +48,48 @@ namespace NatureRecorder.Tests.UnitTests
             DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
             Assert.AreEqual(startDate, entity.Start);
             Assert.IsNull(entity.End);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public void SetRatingForMissingSpeciesTest()
+        {
+            _factory.SpeciesStatusRatings.SetRating("", RatingName, SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpeciesDoesNotExistException))]
+        public async Task SetRatingForMissingSpeciesAsyncTest()
+        {
+            await _factory.SpeciesStatusRatings.SetRatingAsync("", RatingName, SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusRatingDoesNotExistException))]
+        public void SetInvalidRatingTest()
+        {
+            _factory.SpeciesStatusRatings.SetRating(SpeciesName, "", SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusRatingDoesNotExistException))]
+        public async Task SetInvalidRatingAsyncTest()
+        {
+            await _factory.SpeciesStatusRatings.SetRatingAsync(SpeciesName, "", SchemeName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusRatingDoesNotExistException))]
+        public void SetInvalidSchemeTest()
+        {
+            _factory.SpeciesStatusRatings.SetRating(SpeciesName, RatingName, "");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StatusRatingDoesNotExistException))]
+        public async Task SetInvalidSchemeAsyncTest()
+        {
+            await _factory.SpeciesStatusRatings.SetRatingAsync(SpeciesName, RatingName, "");
         }
 
         [TestMethod]
@@ -92,6 +133,52 @@ namespace NatureRecorder.Tests.UnitTests
         public async Task GetCurrentForMissingSchemeAsyncTest()
         {
             await _factory.SpeciesStatusRatings.GetCurrentAsync(SpeciesName, "");
+        }
+
+        [TestMethod]
+        public void ListRatingsTest()
+        {
+            IEnumerable<SpeciesStatusRating> ratings = _factory.SpeciesStatusRatings
+                                                               .List(null, 1, int.MaxValue);
+            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(SpeciesName, ratings.First().Species.Name);
+            Assert.AreEqual(RatingName, ratings.First().Rating.Name);
+            Assert.AreEqual(SchemeName, ratings.First().Rating.Scheme.Name);
+        }
+
+        [TestMethod]
+        public async Task ListRatingsAsyncTest()
+        {
+            List<SpeciesStatusRating> ratings = await _factory.SpeciesStatusRatings
+                                                              .ListAsync(null, 1, int.MaxValue)
+                                                              .ToListAsync();
+            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(SpeciesName, ratings.First().Species.Name);
+            Assert.AreEqual(RatingName, ratings.First().Rating.Name);
+            Assert.AreEqual(SchemeName, ratings.First().Rating.Scheme.Name);
+        }
+
+        [TestMethod]
+        public void ListRatingsForSpeciesTest()
+        {
+            IEnumerable<SpeciesStatusRating> ratings = _factory.SpeciesStatusRatings
+                                                               .List(r => r.Species.Name == SpeciesName, 1, int.MaxValue);
+            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(SpeciesName, ratings.First().Species.Name);
+            Assert.AreEqual(RatingName, ratings.First().Rating.Name);
+            Assert.AreEqual(SchemeName, ratings.First().Rating.Scheme.Name);
+        }
+
+        [TestMethod]
+        public async Task ListRatingsForSpeciesAsyncTest()
+        {
+            List<SpeciesStatusRating> ratings = await _factory.SpeciesStatusRatings
+                                                              .ListAsync(r => r.Species.Name == SpeciesName, 1, int.MaxValue)
+                                                              .ToListAsync();
+            Assert.AreEqual(1, ratings.Count());
+            Assert.AreEqual(SpeciesName, ratings.First().Species.Name);
+            Assert.AreEqual(RatingName, ratings.First().Rating.Name);
+            Assert.AreEqual(SchemeName, ratings.First().Rating.Scheme.Name);
         }
 
         [TestMethod]

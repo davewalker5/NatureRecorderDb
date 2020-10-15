@@ -7,19 +7,17 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NatureRecorder.BusinessLogic.Factory;
-using NatureRecorder.Data;
 using NatureRecorder.Entities.Db;
 using NatureRecorder.Interpreter.Base;
 using NatureRecorder.Interpreter.Commands;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Interpreter.Logic;
-using NatureRecorder.Tests.UnitTests;
 
 namespace NatureRecorder.Tests.Helpers
 {
     internal static class TestHelpers
     {
-        private static string _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ImportExportManagerTest)).Location);
+        private static string _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(TestHelpers)).Location);
 
         /// <summary>
         /// Confirm the presence of a Jackdaw sighting in imported data
@@ -68,7 +66,8 @@ namespace NatureRecorder.Tests.Helpers
         /// <param name="sightings"></param>
         public static void ConfirmWhiteFrontedGooseRating(IEnumerable<SpeciesStatusRating> ratings)
         {
-            SpeciesStatusRating rating = ratings.First(s => s.Species.Name == "White-Fronted Goose");
+            SpeciesStatusRating rating = ratings.OrderBy(r => r.Start)
+                                                .First(s => s.Species.Name == "White-Fronted Goose");
             Assert.AreEqual("Birds", rating.Species.Category.Name);
             Assert.AreEqual("BOCC4", rating.Rating.Scheme.Name);
             Assert.AreEqual("Amber", rating.Rating.Name);

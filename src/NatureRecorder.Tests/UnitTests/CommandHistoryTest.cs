@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NatureRecorder.Entities.Exceptions;
 using NatureRecorder.Interpreter.Entities;
 using NatureRecorder.Tests.Helpers;
 
@@ -33,6 +34,29 @@ namespace NatureRecorder.Tests.UnitTests
             _history.Add(Command);
             Assert.AreEqual(1, _history.Count);
             Assert.AreEqual(Command, _history.Get(1));
+        }
+
+        [TestMethod]
+        public void GetHistoryTest()
+        {
+            _history.Add(Command);
+            string command = _history.Get(1);
+            Assert.AreEqual(Command, command);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidHistoryEntryException))]
+        public void GetEmptyHistoryTest()
+        {
+            _history.Get(1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidHistoryEntryException))]
+        public void GetInvalidHistoryTest()
+        {
+            _history.Add(Command);
+            _history.Get(0);
         }
 
         [TestMethod]

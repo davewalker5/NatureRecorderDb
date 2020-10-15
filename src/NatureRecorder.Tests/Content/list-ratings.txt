@@ -1,0 +1,4 @@
+﻿There are 2 ratings in conservation status scheme 'BOCC4':
+
+	Amber
+	Red

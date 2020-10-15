@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using NatureRecorder.BusinessLogic.Extensions;
@@ -21,6 +22,8 @@ namespace NatureRecorder.Interpreter.Entities
         public DateTime? CurrentDate { get; set; }
         public CommandHistory History { get; set; }
         public UserSettings Settings { get; set; }
+
+        [ExcludeFromCodeCoverage]
         public string RecalledCommand { get; set; }
 
         /// <summary>
