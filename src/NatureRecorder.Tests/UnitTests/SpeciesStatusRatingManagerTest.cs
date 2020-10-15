@@ -17,7 +17,6 @@ namespace NatureRecorder.Tests.UnitTests
         private const string SpeciesName = "Nightingale";
         private const string SchemeName = "BOCC4";
         private const string RatingName = "Red";
-        private const string AsyncRatingName = "Green";
         private const string NewRatingName = "Amber";
 
         private NatureRecorderFactory _factory;

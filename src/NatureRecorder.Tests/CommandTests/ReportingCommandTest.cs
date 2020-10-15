@@ -23,7 +23,7 @@ namespace NatureRecorder.Tests.CommandTests
             NatureRecorderDbContext context = new NatureRecorderDbContextFactory().CreateInMemoryDbContext();
             _factory = new NatureRecorderFactory(context);
 
-            _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ImportExportManagerTest)).Location);
+            _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ReportingCommandTest)).Location);
         }
 
         [TestMethod]

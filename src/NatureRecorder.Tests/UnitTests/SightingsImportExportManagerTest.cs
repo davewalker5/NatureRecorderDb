@@ -11,7 +11,7 @@ using NatureRecorder.Tests.Helpers;
 namespace NatureRecorder.Tests.UnitTests
 {
     [TestClass]
-    public class ImportExportManagerTest
+    public class SightingsImportExportManagerTest
     {
         private NatureRecorderFactory _factory;
         private string _currentFolder;
@@ -22,7 +22,7 @@ namespace NatureRecorder.Tests.UnitTests
             NatureRecorderDbContext context = new NatureRecorderDbContextFactory().CreateInMemoryDbContext();
             _factory = new NatureRecorderFactory(context);
 
-            _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ImportExportManagerTest)).Location);
+            _currentFolder = Path.GetDirectoryName(Assembly.GetAssembly(typeof(SightingsImportExportManagerTest)).Location);
         }
 
         [TestMethod]
@@ -33,6 +33,28 @@ namespace NatureRecorder.Tests.UnitTests
 
             string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
             _factory.SightingsImport.Import(importFilePath);
+
+            IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, int.MaxValue);
+            Assert.AreEqual(2, sightings.Count());
+            TestHelpers.ConfirmJackdawSighting(sightings);
+            TestHelpers.ConfirmLapwingSighting(sightings);
+        }
+
+        [TestMethod]
+        public void ImportForExistingEntitiesTest()
+        {
+            _factory.Locations.Add("bagley wood", null, "Kennington", "Oxfordshire", null, "United Kingdom", 51.781M, 1.2611M);
+            _factory.Locations.Add("college lake", null, null, null, null, null, null, null);
+            _factory.Categories.Add("birds");
+            _factory.Species.Add("lapwing", "birds");
+            _factory.Species.Add("jackdaw", "birds");
+
+            string importFilePath = Path.Combine(_currentFolder, "Content", "valid-import.csv");
+            _factory.SightingsImport.Import(importFilePath);
+
+            Assert.AreEqual(2, _factory.Context.Locations.Count());
+            Assert.AreEqual(1, _factory.Context.Categories.Count());
+            Assert.AreEqual(2, _factory.Context.Species.Count());
 
             IEnumerable<Sighting> sightings = _factory.Sightings.List(null, 1, int.MaxValue);
             Assert.AreEqual(2, sightings.Count());
