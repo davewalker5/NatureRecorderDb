@@ -84,7 +84,7 @@ namespace NatureRecorder.Tests.Helpers
         public static string ReadStream(MemoryStream stream)
         {
             stream.Seek(0, SeekOrigin.Begin);
-            return Encoding.UTF8.GetString(stream.ToArray());
+            return Encoding.ASCII.GetString(stream.ToArray());
         }
 
         /// <summary>

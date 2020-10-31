@@ -31,6 +31,9 @@ namespace NatureRecorder.Interpreter.Commands
                         case SettingType.Location:
                             SetDefaultLocation(context);
                             break;
+                        case SettingType.Prompt:
+                            SetPrompt(context);
+                            break;
                         case SettingType.List:
                             context.Settings.List(context.Output);
                             break;
@@ -90,6 +93,19 @@ namespace NatureRecorder.Interpreter.Commands
                 string message = $"Location '{locationName}' does not exist";
                 throw new LocationDoesNotExistException(message);
             }
+        }
+
+        /// <summary>
+        /// Set the interactive prompt
+        /// </summary>
+        /// <param name="context"></param>
+        [ExcludeFromCodeCoverage]
+        private void SetPrompt(CommandContext context)
+        {
+            context.Settings.Prompt = context.Arguments[1].Trim();
+            context.Settings.Save();
+            context.Output.WriteLine($"Interactive prompt set to '{context.Settings.Prompt}'");
+            context.Output.Flush();
         }
 
         /// <summary>

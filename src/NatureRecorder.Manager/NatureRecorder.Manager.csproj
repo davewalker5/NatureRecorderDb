@@ -4,9 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Description>Database management tool for the wildlife sightings application</Description>
-    <Version>1.0.0.14</Version>
-    <ReleaseVersion>1.0.0.14</ReleaseVersion>
-    <PackageVersion>1.0.0.14</PackageVersion>
+    <Version>1.0.0.15</Version>
+    <ReleaseVersion>1.0.0.15</ReleaseVersion>
+    <PackageVersion>1.0.0.15</PackageVersion>
     <Authors>Dave Walker</Authors>
     <Copyright>Copyright (c) 2020 Dave Walker</Copyright>
     <Owners>Dave Walker</Owners>
@@ -23,9 +23,11 @@
     <ProjectReference Include="..\NatureRecorder.Interpreter\NatureRecorder.Interpreter.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+<PrivateAssets>all</PrivateAssets>
+</PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />

@@ -8,6 +8,7 @@ namespace NatureRecorder.Tests.UnitTests
     public class UserSettingsTest
     {
         private const string Location = "My Default Location";
+        private const string Prompt = "$";
 
         [TestMethod]
         public void DefaultSettingsTest()
@@ -15,6 +16,7 @@ namespace NatureRecorder.Tests.UnitTests
             UserSettings settings = new UserSettings();
             Assert.IsFalse(string.IsNullOrEmpty(settings.SettingsFilePath));
             Assert.IsTrue(string.IsNullOrEmpty(settings.Location));
+            Assert.AreEqual(">>", settings.Prompt);
         }
 
         [TestMethod]
@@ -30,6 +32,7 @@ namespace NatureRecorder.Tests.UnitTests
         {
             UserSettings settings = new UserSettings(Path.GetTempFileName());
             settings.Location = Location;
+            settings.Prompt = Prompt;
             settings.Save();
 
             UserSettings loaded = new UserSettings(settings.SettingsFilePath);
@@ -37,6 +40,7 @@ namespace NatureRecorder.Tests.UnitTests
             File.Delete(loaded.SettingsFilePath);
 
             Assert.AreEqual(Location, loaded.Location);
+            Assert.AreEqual(Prompt, loaded.Prompt);
         }
     }
 }

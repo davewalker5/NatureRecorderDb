@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
     <PackageReference Include="coverlet.collector" Version="1.3.0"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 <PrivateAssets>all</PrivateAssets>
 </PackageReference>
@@ -1175,6 +1175,50 @@
     <Content Remove="Content\list-schemes.txt" />
     <Content Remove="Content\list-ratings.txt" />
     <Content Remove="obj\Debug\netcoreapp3.1\NatureRecorder.Tests.AssemblyInfoInputs.cache" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\export-status.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\report-species.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\report-status-for-scheme.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\report-status-at-date.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\report-status.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\settings-clear.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\settings-list.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\user-settings-change-prompt.json" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\user-settings.json" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Content\valid-status-import.csv" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Helpers\TestHelpers.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Tests.csproj" />
+    <Content Remove="bin\Debug\netcoreapp3.1\obj\Debug\netcoreapp3.1\.NETCoreApp,Version=v3.1.AssemblyAttributes.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\obj\Debug\netcoreapp3.1\NatureRecorder.Tests.assets.cache" />
+    <Content Remove="bin\Debug\netcoreapp3.1\obj\NatureRecorder.Tests.csproj.nuget.dgspec.json" />
+    <Content Remove="bin\Debug\netcoreapp3.1\obj\NatureRecorder.Tests.csproj.nuget.g.props" />
+    <Content Remove="bin\Debug\netcoreapp3.1\obj\Debug\netcoreapp3.1\NatureRecorder.Tests.csproj.FileListAbsolute.txt" />
+    <Content Remove="bin\Debug\netcoreapp3.1\obj\NatureRecorder.Tests.csproj.nuget.g.targets" />
+    <Content Remove="bin\Debug\netcoreapp3.1\obj\project.assets.json" />
+    <Content Remove="bin\Debug\netcoreapp3.1\obj\project.nuget.cache" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\CategoryManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\CommandHistoryTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\CommandHistoryTests.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\LocationManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\SightingsImportExportManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\SightingsManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\SpeciesStatusRatingManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\SpeciesManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\StatusImportExportManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\StatusRatingManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\StatusSchemeManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\UserManagerTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\UnitTests\UserSettingsTest.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Wrappers\CommandBaseWrapper.cs" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Tests.deps.json" />
+    <Content Remove="obj\Debug\netcoreapp3.1\NatureRecorder.Tests.genruntimeconfig.cache" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Tests.runtimeconfig.json" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Tests.runtimeconfig.dev.json" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Tests.dll" />
+    <Content Remove="bin\Debug\netcoreapp3.1\NatureRecorder.Tests.pdb" />
+    <Content Remove="Content\user-settings-change-prompt.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\valid-import.csv">
