@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Environment;
@@ -9,8 +10,10 @@ namespace NatureRecorder.Interpreter.Entities
     public class UserSettings
     {
         private const string DefaultSettingsFileName = "naturerecorder.settings";
+        private const string DefaultPrompt = ">>";
 
         public string Location { get; set; }
+        public string Prompt { get; set; }
 
         [JsonIgnore]
         public string SettingsFilePath { get; set; }
@@ -19,12 +22,14 @@ namespace NatureRecorder.Interpreter.Entities
         {
             SettingsFilePath = Path.Combine(Environment.GetFolderPath(SpecialFolder.LocalApplicationData, SpecialFolderOption.DoNotVerify), DefaultSettingsFileName);
             Location = "";
+            Prompt = DefaultPrompt;
         }
 
         public UserSettings(string settingsFilePath)
         {
             SettingsFilePath = settingsFilePath;
             Location = "";
+            Prompt = DefaultPrompt;
         }
 
         /// <summary>
@@ -35,8 +40,13 @@ namespace NatureRecorder.Interpreter.Entities
             string settingsFile = SettingsFilePath;
             using (StreamWriter writer = new StreamWriter(settingsFile))
             {
-                JsonSerializerOptions options = new JsonSerializerOptions() { WriteIndented = true };
-                writer.WriteLine(JsonSerializer.Serialize<UserSettings>(this, options));
+                JsonSerializerOptions options = new JsonSerializerOptions()
+                {
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    WriteIndented = true
+                };
+                string settings = JsonSerializer.Serialize<UserSettings>(this, options);
+                writer.WriteLine(settings);
             }
         }
 
@@ -55,6 +65,7 @@ namespace NatureRecorder.Interpreter.Entities
 
                 // And copy the properties
                 Location = settings.Location;
+                Prompt = (!string.IsNullOrEmpty(settings.Prompt)) ? settings.Prompt : DefaultPrompt;
             }
         }
 
@@ -66,6 +77,7 @@ namespace NatureRecorder.Interpreter.Entities
         {
             writer.WriteLine($"File     = {SettingsFilePath ?? "Empty"}");
             writer.WriteLine($"Location = {Location ?? "Empty"}");
+            writer.WriteLine($"Prompt   = {Prompt ?? "Empty"}");
             writer.Flush();
         }
 

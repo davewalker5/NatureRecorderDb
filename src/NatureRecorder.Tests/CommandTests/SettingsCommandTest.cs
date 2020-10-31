@@ -10,9 +10,10 @@ using NatureRecorder.Tests.Helpers;
 namespace NatureRecorder.Tests.CommandTests
 {
     [TestClass]
-	public class SettingsCommandTest
+    public class SettingsCommandTest
     {
         private const string Location = "My Default Location";
+        private const string Prompt = "$";
 
         private const string SettingsFile = "naturerecorder.settings";
         private NatureRecorderFactory _factory;
@@ -58,6 +59,15 @@ namespace NatureRecorder.Tests.CommandTests
             TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, null, 0);
 
             TestHelpers.CompareFiles("user-settings.json", SettingsFile);
+        }
+
+        [TestMethod]
+        public void SetPromptTest()
+        {
+            string[] arguments = new string[] { "prompt", Prompt };
+            TestHelpers.RunCommand(_factory, arguments, new SettingsCommand(), CommandMode.Interactive, null, SettingsFile, null, null, 0);
+
+            TestHelpers.CompareFiles("user-settings-change-prompt.json", SettingsFile);
         }
 
         [TestMethod]

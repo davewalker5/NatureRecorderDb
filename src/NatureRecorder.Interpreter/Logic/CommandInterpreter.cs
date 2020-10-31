@@ -10,8 +10,6 @@ namespace NatureRecorder.Interpreter.Logic
     [ExcludeFromCodeCoverage]
     public class CommandInterpreter
     {
-        private const string Prompt = ">>";
-
         private CommandBase[] _commands = new CommandBase[]
         {
             new AddCommand(),
@@ -111,7 +109,7 @@ namespace NatureRecorder.Interpreter.Logic
             do
             {
                 // Read the next command
-                Console.Write($"{Prompt} ");
+                Console.Write($"{_runner.Settings.Prompt} ");
                 string commandLine = Console.ReadLine().Trim();
                 while (!string.IsNullOrEmpty(commandLine))
                 {
@@ -139,7 +137,7 @@ namespace NatureRecorder.Interpreter.Logic
                             // If we have a recalled command, display and run it
                             if (!string.IsNullOrEmpty(commandLine))
                             {
-                                Console.WriteLine($"{Prompt} {commandLine}");
+                                Console.WriteLine($"{_runner.Settings.Prompt} {commandLine}");
                             }
                         }
                         catch (Exception ex)
